@@ -150,9 +150,17 @@ body {
   line-height: 1.2;
 }
 
+.hero-tagline {
+  color: var(--text);
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
 .hero-sub {
   color: var(--text-dim);
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-size: clamp(0.8rem, 1.3vw, 0.9rem);
   letter-spacing: 0.1em;
   margin-bottom: 2.5rem;
 }
@@ -299,7 +307,7 @@ body {
 }
 
 .dir-entry {
-  margin-bottom: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .dir-branch {
@@ -384,14 +392,30 @@ body {
 
 /* More link */
 .file-more {
-  color: var(--text-dim);
-  text-decoration: none;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-accent);
   font-size: clamp(0.78rem, 1.1vw, 0.88rem);
-  transition: color 0.3s;
+  transition: color 0.3s, text-decoration-color 0.3s;
   margin-left: 0.75ch;
 }
 
 .file-more:hover {
+  color: var(--text);
+  text-decoration-color: var(--accent-light);
+}
+
+/* Inline link in dir-file */
+.file-link {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-accent);
+  transition: color 0.3s;
+}
+
+.file-link:hover {
   color: var(--accent-light);
 }
 
@@ -605,7 +629,7 @@ body {
   }
 
   .dir-entry {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .tag {
