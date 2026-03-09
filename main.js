@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDirToggle();
   initToggleAll();
   initContactForm();
+  initTooltip();
 });
 
 // ローディング画面（実際の読み込み完了で消す）
@@ -235,6 +236,78 @@ function initToggleAll() {
       }
     });
   });
+}
+
+// ツールチップ（技術スタック）
+function initTooltip() {
+  const tooltip = document.getElementById('tooltip');
+  const wrapper = document.querySelector('.marquee-wrapper');
+  if (!tooltip || !wrapper) return;
+
+  const isTouchDevice = () => 'ontouchstart' in window;
+  let activeSpan = null;
+
+  function show(span) {
+    const tip = span.dataset.tip;
+    if (!tip) return;
+
+    tooltip.textContent = tip;
+    tooltip.classList.add('is-visible');
+    tooltip.setAttribute('aria-hidden', 'false');
+    activeSpan = span;
+
+    const rect = span.getBoundingClientRect();
+    let left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2;
+    const top = rect.top - tooltip.offsetHeight - 8;
+
+    // viewport clamp
+    left = Math.max(8, Math.min(left, window.innerWidth - tooltip.offsetWidth - 8));
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  }
+
+  function hide() {
+    tooltip.classList.remove('is-visible');
+    tooltip.setAttribute('aria-hidden', 'true');
+    activeSpan = null;
+  }
+
+  // Desktop: mouseover/mouseleave via event delegation
+  wrapper.addEventListener('mouseover', (e) => {
+    if (isTouchDevice()) return;
+    const span = e.target.closest('.marquee-content span[data-tip]');
+    if (span) show(span);
+  });
+
+  wrapper.addEventListener('mouseleave', () => {
+    if (isTouchDevice()) return;
+    hide();
+  });
+
+  wrapper.addEventListener('mouseout', (e) => {
+    if (isTouchDevice()) return;
+    const span = e.target.closest('.marquee-content span[data-tip]');
+    if (span) hide();
+  });
+
+  // Mobile: tap toggle
+  wrapper.addEventListener('click', (e) => {
+    if (!isTouchDevice()) return;
+    const span = e.target.closest('.marquee-content span[data-tip]');
+    if (!span) { hide(); return; }
+    if (activeSpan === span) { hide(); return; }
+    show(span);
+  });
+
+  // Close on outside tap (mobile)
+  document.addEventListener('click', (e) => {
+    if (!activeSpan) return;
+    if (!wrapper.contains(e.target)) hide();
+  });
+
+  // Hide on scroll
+  window.addEventListener('scroll', hide, { passive: true });
 }
 
 // コンタクトフォーム（UIのみ）

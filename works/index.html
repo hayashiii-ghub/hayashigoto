@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>works/ | はやしごと</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="header-nav">
+        <a href="/">/home</a>
+        <a href="/#about">/about</a>
+        <a href="/#contact">/contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="dir-section work-detail">
+        <div class="dir-section-inner">
+          <h1 class="cli-line">
+            <span class="cli-prompt">></span> <span class="cli-cmd">ls</span> <span class="cli-path">/works</span>
+          </h1>
+
+          <div class="dir-tree">
+            <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">corporate-renewal/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">企業のコーポレートサイトをフルリニューアル。既存のWordPressサイトからNext.jsベースのモダンなSPAに移行。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">Next.js</span> <span class="tag">TypeScript</span> <span class="tag">Tailwind CSS</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><a href="/works/corporate-renewal.html" class="file-more">./README.md →</a></div>
+              </div>
+            </div>
+
+            <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">ec-spa/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">ECサイトをSPAとしてゼロから構築。商品一覧・詳細・カート・決済フローまでのUI実装。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">React</span> <span class="tag">Hono</span> <span class="tag">Cloudflare</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><a href="/works/ec-spa.html" class="file-more">./README.md →</a></div>
+              </div>
+            </div>
+
+            <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">brand-site/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">ブランドの世界観を表現するビジュアル重視のサイトを制作。インタラクティブな演出を多数実装。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">Vite</span> <span class="tag">GSAP</span> <span class="tag">Figma</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><a href="/works/brand-site.html" class="file-more">./README.md →</a></div>
+              </div>
+            </div>
+
+            <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">└──</span>
+              <span class="dir-name">dashboard/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc">社内向け業務管理ダッシュボードのUI設計とフロントエンド開発。</span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">React</span> <span class="tag">TypeScript</span> <span class="tag">Supabase</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><a href="/works/dashboard.html" class="file-more">./README.md →</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="footer-copy">&copy; はやしごと &mdash; hay@shigoto.dev</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

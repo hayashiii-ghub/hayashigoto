@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dashboard/ | はやしごと</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="header-nav">
+        <a href="/">/home</a>
+        <a href="/#works">/works</a>
+        <a href="/#contact">/contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="dir-section work-detail">
+        <div class="dir-section-inner">
+          <h1 class="cli-line">
+            <span class="cli-prompt">></span> <span class="cli-cmd">cat</span> <span class="cli-path">/works/dashboard/README.md</span>
+          </h1>
+
+          <div class="dir-tree">
+            <div class="dir-file"><span class="file-label">title:</span><span class="file-value">業務管理ダッシュボード</span></div>
+            <div class="dir-file"><span class="file-label">year:</span><span class="file-value">2024</span></div>
+            <div class="dir-file"><span class="file-label">role:</span><span class="file-value">UI Design / Frontend</span></div>
+            <div class="dir-file"><span class="file-label">stack:</span><span class="file-value"><span class="tag">React</span> <span class="tag">TypeScript</span> <span class="tag">Supabase</span></span></div>
+
+            <div class="work-detail-body">
+              <p>社内向け業務管理ダッシュボードのUI設計とフロントエンド開発。タスク管理、スケジュール、分析チャートなど複数の機能をコンポーネント設計しました。</p>
+              <p>Supabaseのリアルタイム機能を活用し、チームメンバー間でのタスク更新が即座に反映される仕組みを構築。Row Level Securityにより、部署ごとのアクセス制御も実装しています。</p>
+              <p>チャート表示にはRechartsを採用し、KPIの可視化とデータドリブンな意思決定を支援するUIを設計しました。</p>
+            </div>
+
+            <div class="dir-file work-back">
+              <a href="/#works" class="file-more">← cd /works</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="footer-copy">&copy; はやしごと &mdash; hay@shigoto.dev</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
