@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>はやしごと | hay@shigoto.dev</title>
+    <meta name="description" content="はやしごと - 林 祐太の個人事業。Dev & Design。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+      <div class="loader-text">> loading<span class="loader-dots"></span></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <nav class="header-nav">
+        <a href="#about">/about</a>
+        <a href="#works">/works</a>
+        <a href="#contact">/contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-inner">
+          <h1 class="sr-only">はやしごと - 林 祐太 | Dev & Design</h1>
+          <div class="hero-logo">
+            <img src="/logo.png" alt="はやしごと" class="hero-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <div class="hero-logo-fallback">はやしごと</div>
+          </div>
+          <p class="hero-sub">hay@shigoto.dev | dev design</p>
+          <div class="hero-sns">
+            <a href="https://instagram.com/hayashigoto" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="https://x.com/hayashigoto" target="_blank" rel="noopener noreferrer" aria-label="X">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="https://github.com/hayashigoto" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="scroll-hint" aria-hidden="true">
+          <span>scroll</span>
+          <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v12M3 12l5 5 5-5"/></svg>
+        </div>
+      </section>
+
+      <!-- Tech Stack Marquee -->
+      <section class="tech-stack">
+        <div class="marquee-wrapper">
+          <div class="marquee marquee--forward">
+            <div class="marquee-track">
+              <div class="marquee-content">
+                <span>Next.js</span><span>React</span><span>Supabase</span><span>Vercel</span><span>Cloudflare</span><span>Claude Code</span><span>Resend</span><span>Neon</span>
+              </div>
+              <div class="marquee-content" aria-hidden="true">
+                <span>Next.js</span><span>React</span><span>Supabase</span><span>Vercel</span><span>Cloudflare</span><span>Claude Code</span><span>Resend</span><span>Neon</span>
+              </div>
+            </div>
+          </div>
+          <div class="marquee marquee--reverse">
+            <div class="marquee-track">
+              <div class="marquee-content">
+                <span>TypeScript</span><span>Node.js</span><span>Vite</span><span>Tailwind CSS</span><span>Hono</span><span>Figma</span><span>Cursor</span><span>Codex</span>
+              </div>
+              <div class="marquee-content" aria-hidden="true">
+                <span>TypeScript</span><span>Node.js</span><span>Vite</span><span>Tailwind CSS</span><span>Hono</span><span>Figma</span><span>Cursor</span><span>Codex</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="dir-section" id="about">
+        <div class="dir-section-inner">
+          <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
+            <span class="cli-prompt">></span> <span class="cli-path">/about</span>
+          </h2>
+
+          <div class="dir-tree">
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">profile.yml</span>
+              <div class="dir-expand">
+                <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/名称未設定のデザイン.svg" alt="はやしごと" class="profile-logo" /></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">name:</span><span class="file-value">林 祐太 / yuta hayashi</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">brand:</span><span class="file-value">はやしごと</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">email:</span><span class="file-value">hay@shigoto.dev</span></div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">skills/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">-</span><span class="file-value">Dev</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">-</span><span class="file-value">Design</span></div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">philosophy.md</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">「引き算」の哲学で、本質だけを残す。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value">AIの進化でコードの価値が相対化される今、エンジニアの真価は「どこに思考とリソースを投じるか」を見極める視座にあると考えています。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value">車輪の再発明や無駄な複雑さを退け、最新のテクノロジーで省けるコストを徹底的に削ぎ落とす。そうして生まれた余白のすべてを、お客様の本質的な課題解決に注ぎ込む。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value">常にその瞬間のベストな選択とパフォーマンスを追求し続ける姿勢が、私のエンジニアリングです。</span></div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 4" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">└──</span>
+              <span class="dir-name">links.txt</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">web:</span><span class="file-value">linktr.ee/hayashigoto</span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">ig:</span><span class="file-value">@hayashigoto</span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">gh:</span><span class="file-value">@hayashigoto</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Works Section -->
+      <section class="dir-section" id="works">
+        <div class="dir-section-inner">
+          <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
+            <span class="cli-prompt">></span> <span class="cli-path">/works</span>
+          </h2>
+
+          <div class="dir-tree">
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">corporate-renewal/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">企業のコーポレートサイトをフルリニューアル。既存のWordPressサイトからNext.jsベースのモダンなSPAに移行。デザインシステムの構築からフロントエンド実装、パフォーマンス最適化まで一貫して担当。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">Next.js</span> <span class="tag">TypeScript</span> <span class="tag">Tailwind CSS</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">role:</span><span class="file-value">Design / Frontend</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">year:</span><span class="file-value">2025</span></div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">ec-spa/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">ECサイトをSPAとしてゼロから構築。商品一覧・詳細・カート・決済フローまでのUI実装と、Hono + Cloudflare Workersによるエッジサーバーサイドを担当。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">React</span> <span class="tag">Hono</span> <span class="tag">Cloudflare</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">role:</span><span class="file-value">Full Stack</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">year:</span><span class="file-value">2025</span></div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">brand-site/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">ブランドの世界観を表現するビジュアル重視のサイトを制作。スクロール連動アニメーション、パララックス効果など、インタラクティブな演出を多数実装。</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">Vite</span> <span class="tag">GSAP</span> <span class="tag">Figma</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">role:</span><span class="file-value">Design / Frontend</span></div>
+                <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">year:</span><span class="file-value">2024</span></div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 4" role="button" aria-expanded="false" tabindex="0">
+              <span class="dir-branch">└──</span>
+              <span class="dir-name">dashboard/</span>
+              <div class="dir-expand">
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc">社内向け業務管理ダッシュボードのUI設計とフロントエンド開発。タスク管理、スケジュール、分析チャートなど複数の機能をコンポーネント設計。</span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">stack:</span><span class="file-value"><span class="tag">React</span> <span class="tag">TypeScript</span> <span class="tag">Supabase</span></span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">role:</span><span class="file-value">UI Design / Frontend</span></div>
+                <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-label">year:</span><span class="file-value">2024</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="dir-section" id="contact">
+        <div class="dir-section-inner">
+          <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
+            <span class="cli-prompt">></span> <span class="cli-path">/contact</span>
+          </h2>
+
+          <form class="dir-tree contact-form" id="contact-form">
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">name.txt</span>
+              <div class="dir-expand">
+                <div class="dir-file">
+                  <span class="dir-pipe">│</span>
+                  <input type="text" id="name" name="name" required placeholder="your name" autocomplete="name" />
+                </div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">email.txt</span>
+              <div class="dir-expand">
+                <div class="dir-file">
+                  <span class="dir-pipe">│</span>
+                  <input type="email" id="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+                </div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3">
+              <span class="dir-branch">├──</span>
+              <span class="dir-name">message.md</span>
+              <div class="dir-expand">
+                <div class="dir-file">
+                  <span class="dir-pipe">│</span>
+                  <textarea id="message" name="message" rows="5" required placeholder="your message..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="dir-entry cli-reveal" style="--reveal-delay: 4">
+              <span class="dir-branch">└──</span>
+              <button type="submit" class="dir-submit">./send.sh<span class="cursor-blink">_</span></button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-sns">
+          <a href="https://instagram.com/hayashigoto" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://x.com/hayashigoto" target="_blank" rel="noopener noreferrer" aria-label="X">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://github.com/hayashigoto" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </a>
+        </div>
+        <p class="footer-copy">&copy; はやしごと &mdash; hay@shigoto.dev</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
