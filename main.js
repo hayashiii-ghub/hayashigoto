@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
+  initMarquee();
   initSmoothScroll();
   initScrollReveal();
   initDirToggle();
@@ -21,6 +22,77 @@ function initLoader() {
   } else {
     window.addEventListener('load', dismiss);
   }
+}
+
+// マーキー（画面幅に応じて動的に複製・アニメーション設定）
+function initMarquee() {
+  let counter = 0;
+
+  document.querySelectorAll('.marquee').forEach(marquee => {
+    const track = marquee.querySelector('.marquee-track');
+    const original = track.querySelector('.marquee-content');
+    if (!original) return;
+
+    const isReverse = marquee.classList.contains('marquee--reverse');
+    const trackGap = parseFloat(getComputedStyle(track).gap) || 16;
+
+    function setup() {
+      // 既存の複製を削除
+      track.querySelectorAll('.marquee-content[aria-hidden]').forEach(el => el.remove());
+
+      // 1セット分の幅を計測（トラックのgap込み）
+      const oneSetWidth = original.scrollWidth + trackGap;
+      const viewWidth = marquee.offsetWidth;
+
+      // 画面を隙間なく埋めるのに必要な複製数（最低1つ）
+      const copies = Math.ceil(viewWidth / oneSetWidth) + 1;
+
+      for (let i = 0; i < copies; i++) {
+        const clone = original.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.appendChild(clone);
+      }
+
+      // 1セット分だけ移動してループ
+      const name = `marquee-${counter++}`;
+      const from = isReverse ? `-${oneSetWidth}px` : '0px';
+      const to = isReverse ? '0px' : `-${oneSetWidth}px`;
+
+      const keyframes = new KeyframeEffect(
+        track,
+        [
+          { transform: `translateX(${from})` },
+          { transform: `translateX(${to})` }
+        ],
+        {
+          duration: oneSetWidth * 25,
+          iterations: Infinity,
+          easing: 'linear'
+        }
+      );
+
+      // 既存アニメーションを停止
+      track.getAnimations().forEach(a => a.cancel());
+
+      const anim = new Animation(keyframes, document.timeline);
+      anim.play();
+
+      // ホバーで一時停止
+      marquee.onmouseenter = () => anim.pause();
+      marquee.onmouseleave = () => anim.play();
+    }
+
+    setup();
+    window.addEventListener('resize', debounce(setup, 300));
+  });
+}
+
+function debounce(fn, ms) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
 }
 
 // スムーズスクロール

@@ -194,7 +194,7 @@ body {
 
 /* ---- Tech Stack Marquee ---- */
 .tech-stack {
-  padding: var(--section-gap) 0;
+  padding: 48px 0;
   overflow: hidden;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
@@ -213,11 +213,7 @@ body {
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 40s linear infinite;
-}
-
-.marquee--reverse .marquee-track {
-  animation-name: marquee-reverse;
+  gap: 1rem;
 }
 
 .marquee:hover .marquee-track {
@@ -228,7 +224,6 @@ body {
   display: flex;
   flex-shrink: 0;
   gap: 1rem;
-  padding-right: 1rem;
 }
 
 .marquee-content span {
@@ -252,15 +247,6 @@ body {
   border-color: var(--accent-light);
 }
 
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes marquee-reverse {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}
 
 /* ========================================
    Directory Tree / CLI Section
@@ -396,6 +382,19 @@ body {
   word-break: break-word;
 }
 
+/* More link */
+.file-more {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: clamp(0.78rem, 1.1vw, 0.88rem);
+  transition: color 0.3s;
+  margin-left: 0.75ch;
+}
+
+.file-more:hover {
+  color: var(--accent-light);
+}
+
 /* Works description text */
 .dir-desc {
   color: var(--text);
@@ -497,6 +496,33 @@ body {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* ---- Work Detail Page ---- */
+.work-detail {
+  padding-top: calc(var(--section-gap) + 3rem);
+}
+
+.work-detail-body {
+  margin: 2rem 0;
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--border-accent);
+}
+
+.work-detail-body p {
+  color: var(--text);
+  opacity: 0.85;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  line-height: 2;
+  margin-bottom: 1.25rem;
+}
+
+.work-detail-body p:last-child {
+  margin-bottom: 0;
+}
+
+.work-back {
+  margin-top: 2rem;
 }
 
 /* ---- Footer ---- */
