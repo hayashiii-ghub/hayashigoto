@@ -29,6 +29,8 @@ function initLoader() {
 function initMarquee() {
   let counter = 0;
 
+  const MARQUEE_SPEED = 50; // px per second（全行共通）
+
   document.querySelectorAll('.marquee').forEach(marquee => {
     const track = marquee.querySelector('.marquee-track');
     const original = track.querySelector('.marquee-content');
@@ -66,7 +68,7 @@ function initMarquee() {
           { transform: `translateX(${to})` }
         ],
         {
-          duration: oneSetWidth * 25,
+          duration: (oneSetWidth / MARQUEE_SPEED) * 1000,
           iterations: Infinity,
           easing: 'linear'
         }
@@ -83,8 +85,15 @@ function initMarquee() {
       marquee.onmouseleave = () => anim.play();
     }
 
+    let lastWidth = marquee.offsetWidth;
     setup();
-    window.addEventListener('resize', debounce(setup, 300));
+    window.addEventListener('resize', debounce(() => {
+      const currentWidth = marquee.offsetWidth;
+      if (currentWidth !== lastWidth) {
+        lastWidth = currentWidth;
+        setup();
+      }
+    }, 300));
   });
 }
 
