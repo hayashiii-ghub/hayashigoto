@@ -527,7 +527,8 @@ body {
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  color: #444;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
 }
 
 .contact-form input:focus,

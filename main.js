@@ -324,7 +324,7 @@ function initContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const btn = form.querySelector('.dir-submit');
@@ -333,14 +333,31 @@ function initContactForm() {
     btn.innerHTML = './sending...<span class="cursor-blink">_</span>';
     btn.disabled = true;
 
-    setTimeout(() => {
-      btn.innerHTML = 'sent <span style="color:#5a7f4f">&#10003;</span>';
+    try {
+      const res = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.value,
+          email: form.email.value,
+          message: form.message.value,
+        }),
+      });
 
+      if (!res.ok) throw new Error('送信失敗');
+
+      btn.innerHTML = 'sent <span style="color:#5a7f4f">&#10003;</span>';
       setTimeout(() => {
         form.reset();
         btn.innerHTML = original;
         btn.disabled = false;
       }, 2000);
-    }, 1000);
+    } catch {
+      btn.innerHTML = 'error <span style="color:#c44">&#10007;</span>';
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.disabled = false;
+      }, 2000);
+    }
   });
 }
