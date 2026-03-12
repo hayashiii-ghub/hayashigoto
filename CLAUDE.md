@@ -1,35 +1,33 @@
-# はやしごと - Claude Code 用プロジェクト説明
+# CLAUDE.md
 
-個人事業「はやしごと」のポートフォリオサイト。
+## プロジェクト概要
 
-## 技術スタック
+「はやしごと」— 林 祐太の個人事業ポートフォリオサイト。バニラJS構成の軽量サイト。
 
-- **ビルド**: Vite
-- **フロント**: バニラ HTML / CSS / JavaScript
-- **メール送信**: Resend（Vercel Serverless Functions 経由）
-- **デプロイ**: Vercel
-- **パッケージマネージャ**: npm
+## READMEの技術スタック記載ルール
 
-## ディレクトリ構成
+README.md の「技術スタック」セクションには、使用している技術とその選定理由を簡潔に併記すること。
+新しい技術を追加・削除した場合は README.md も同時に更新する。
 
-- `index.html` - エントリの HTML
-- `style.css` - スタイル
-- `main.js` - メインの JS
-- `api/send.js` - お問い合わせメール送信の Serverless Function（Resend）
-- `vite.config.js` - Vite 設定
-- `vercel.json` - Vercel 設定
-- `public/` - 静的アセット（ロゴ画像など）
-- `works/` - 制作実績の個別ページ
+記載フォーマット:
+```
+- **カテゴリ**: ツール名 — 選定理由（1行）
+```
 
-## 開発コマンド
+## コマンド
 
-- `npm run dev` - 開発サーバー起動（ホットリロード）
-- `npm run build` - 本番ビルド
-- `npm run preview` - ビルド結果のプレビュー
+- `npm run dev` — 開発サーバー起動
+- `npm run build` — 本番ビルド
+- `npm run preview` — ビルド後プレビュー
 
-## 編集時の注意
+## 構成
 
-- スタイルは `style.css` に追加する
-- ページ構造は `index.html`、挙動は `main.js` を編集する
-- メール送信ロジックは `api/send.js` を編集する
-- 環境変数 `RESEND_API_KEY` は Vercel ダッシュボードで設定済み
+- `index.html` / `main.js` / `style.css` — メインのフロントエンド
+- `api/send.js` — お問い合わせ送信 (Vercel Serverless Function)
+- `works/` — 制作実績の個別ページ
+- `public/` — 静的アセット（画像・robots.txt・sitemap.xml）
+- `vercel.json` — Vercelデプロイ設定・セキュリティヘッダー
+
+## 環境変数（Vercel側で設定）
+
+- `RESEND_API_KEY` — Resend APIキー

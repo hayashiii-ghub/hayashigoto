@@ -4,10 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>はやしごと | hay@shigoto.dev</title>
-    <meta name="description" content="はやしごと - 林 祐太の個人事業。Dev & Design。" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <meta name="description" content="はやしごと - 林 祐太の個人事業。Web開発 & デザイン。" />
+
+    <!-- OGP -->
+    <meta property="og:title" content="はやしごと | hay@shigoto.dev" />
+    <meta property="og:description" content="はやしごと - 林 祐太の個人事業。Web開発 & デザイン。" />
+    <meta property="og:url" content="https://shigoto.dev/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="はやしごと | hay@shigoto.dev" />
+    <meta name="twitter:description" content="はやしごと - 林 祐太の個人事業。Web開発 & デザイン。" />
+
+    <!-- Canonical & Favicon -->
+    <link rel="canonical" href="https://shigoto.dev/" />
+    <link rel="icon" href="/logo.webp" type="image/webp" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <!-- Preload hero logo -->
+    <link rel="preload" as="image" type="image/webp" href="/logo.webp" />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "林 祐太",
+      "alternateName": "はやしごと",
+      "url": "https://shigoto.dev",
+      "email": "hay@shigoto.dev",
+      "jobTitle": "Web Developer & Designer",
+      "sameAs": [
+        "https://github.com/hayashiii-ghub",
+        "https://x.com/hayashiii_X",
+        "https://instagram.com/hayashiii_inst",
+        "https://note.com/hayashiii_note"
+      ]
+    }
+    </script>
+
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
@@ -31,7 +68,10 @@
         <div class="hero-inner">
           <h1 class="sr-only">はやしごと - 林 祐太 | Dev & Design</h1>
           <div class="hero-logo">
-            <img src="/logo.png" alt="はやしごと" class="hero-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <picture>
+              <source srcset="/logo.webp" type="image/webp" />
+              <img src="/logo.png" alt="はやしごと" class="hero-logo-img" onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.display='block';" />
+            </picture>
             <div class="hero-logo-fallback">はやしごと</div>
           </div>
           <p class="hero-tagline">Web開発 & デザイン</p>
@@ -89,7 +129,7 @@
               <span class="dir-branch">├──</span>
               <span class="dir-name">profile.yml</span>
               <div class="dir-expand">
-                <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/名称未設定のデザイン.svg" alt="はやしごと" class="profile-logo" /></div>
+                <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/profile.webp" alt="はやしごと" class="profile-logo" /></div>
                 <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">name:</span><span class="file-value">林 祐太 / yuta hayashi</span></div>
                 <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">brand:</span><span class="file-value">はやしごと</span></div>
                 <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">email:</span><span class="file-value">hay@shigoto.dev</span></div>
@@ -186,6 +226,12 @@
           </h2>
 
           <form class="dir-tree contact-form" id="contact-form">
+            <!-- Honeypot -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="website">Website</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+
             <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1">
               <span class="dir-branch">├──</span>
               <span class="dir-name">name.txt</span>

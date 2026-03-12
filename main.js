@@ -1,5 +1,19 @@
 // はやしごと - メインの JavaScript
 
+// Fontsource (self-hosted fonts)
+import '@fontsource/ibm-plex-mono/300.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '@fontsource/noto-sans-jp/300.css';
+import '@fontsource/noto-sans-jp/400.css';
+import '@fontsource/noto-sans-jp/500.css';
+import '@fontsource/noto-sans-jp/600.css';
+
+// Vercel Analytics
+import { inject } from '@vercel/analytics';
+inject();
+
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initMarquee();
@@ -27,28 +41,51 @@ function initLoader() {
 
 // マーキー（画面幅に応じて動的に複製・アニメーション設定）
 function initMarquee() {
-  let counter = 0;
-
   const MARQUEE_SPEED = 50; // px per second（全行共通）
 
   document.querySelectorAll('.marquee').forEach(marquee => {
     const track = marquee.querySelector('.marquee-track');
+    if (!track) return;
     const original = track.querySelector('.marquee-content');
     if (!original) return;
 
     const isReverse = marquee.classList.contains('marquee--reverse');
-    const trackGap = parseFloat(getComputedStyle(track).gap) || 16;
+    let animation;
+    let frameId = 0;
+    let lastSignature = '';
+
+    function clearClones() {
+      track.querySelectorAll('.marquee-content[aria-hidden]').forEach(el => el.remove());
+    }
+
+    function stopAnimation() {
+      animation?.cancel();
+      animation = undefined;
+    }
 
     function setup() {
-      // 既存の複製を削除
-      track.querySelectorAll('.marquee-content[aria-hidden]').forEach(el => el.remove());
+      frameId = 0;
+      const trackGap = parseFloat(getComputedStyle(track).gap) || 16;
 
-      // 1セット分の幅を計測（トラックのgap込み）
-      const oneSetWidth = original.scrollWidth + trackGap;
-      const viewWidth = marquee.offsetWidth;
+      // scrollWidth / offsetWidth は整数丸めされるため、ループ境界がずれてガクつきやすい
+      const oneSetWidth = original.getBoundingClientRect().width + trackGap;
+      const viewWidth = marquee.getBoundingClientRect().width;
+
+      if (!oneSetWidth || !viewWidth) {
+        clearClones();
+        stopAnimation();
+        lastSignature = '';
+        return;
+      }
 
       // 画面を隙間なく埋めるのに必要な複製数（最低1つ）
       const copies = Math.ceil(viewWidth / oneSetWidth) + 1;
+      const signature = `${oneSetWidth.toFixed(2)}:${viewWidth.toFixed(2)}:${copies}`;
+
+      if (signature === lastSignature && animation) return;
+      lastSignature = signature;
+
+      clearClones();
 
       for (let i = 0; i < copies; i++) {
         const clone = original.cloneNode(true);
@@ -57,12 +94,12 @@ function initMarquee() {
       }
 
       // 1セット分だけ移動してループ
-      const name = `marquee-${counter++}`;
       const from = isReverse ? `-${oneSetWidth}px` : '0px';
       const to = isReverse ? '0px' : `-${oneSetWidth}px`;
 
-      const keyframes = new KeyframeEffect(
-        track,
+      stopAnimation();
+
+      animation = track.animate(
         [
           { transform: `translateX(${from})` },
           { transform: `translateX(${to})` }
@@ -73,27 +110,30 @@ function initMarquee() {
           easing: 'linear'
         }
       );
-
-      // 既存アニメーションを停止
-      track.getAnimations().forEach(a => a.cancel());
-
-      const anim = new Animation(keyframes, document.timeline);
-      anim.play();
-
-      // ホバーで一時停止
-      marquee.onmouseenter = () => anim.pause();
-      marquee.onmouseleave = () => anim.play();
     }
 
-    let lastWidth = marquee.offsetWidth;
-    setup();
-    window.addEventListener('resize', debounce(() => {
-      const currentWidth = marquee.offsetWidth;
-      if (currentWidth !== lastWidth) {
-        lastWidth = currentWidth;
-        setup();
-      }
-    }, 300));
+    function queueSetup() {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(setup);
+    }
+
+    marquee.addEventListener('mouseenter', () => animation?.pause());
+    marquee.addEventListener('mouseleave', () => animation?.play());
+
+    queueSetup();
+
+    // Webフォント読み込みでもコンテンツ幅が変わるため、初期化後に再計測する
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(queueSetup).catch(() => {});
+    }
+
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(queueSetup);
+      observer.observe(marquee);
+      observer.observe(original);
+    } else {
+      window.addEventListener('resize', debounce(queueSetup, 300));
+    }
   });
 }
 
@@ -319,7 +359,7 @@ function initTooltip() {
   window.addEventListener('scroll', hide, { passive: true });
 }
 
-// コンタクトフォーム（UIのみ）
+// コンタクトフォーム
 function initContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
@@ -341,19 +381,20 @@ function initContactForm() {
           name: form.name.value,
           email: form.email.value,
           message: form.message.value,
+          website: form.website?.value || '',
         }),
       });
 
       if (!res.ok) throw new Error('送信失敗');
 
-      btn.innerHTML = 'sent <span style="color:#5a7f4f">&#10003;</span>';
+      btn.innerHTML = 'sent <span class="status-ok">&#10003;</span>';
       setTimeout(() => {
         form.reset();
         btn.innerHTML = original;
         btn.disabled = false;
       }, 2000);
     } catch {
-      btn.innerHTML = 'error <span style="color:#c44">&#10007;</span>';
+      btn.innerHTML = 'error <span class="status-error">&#10007;</span>';
       setTimeout(() => {
         btn.innerHTML = original;
         btn.disabled = false;

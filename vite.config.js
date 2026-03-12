@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   root: '.',
@@ -8,11 +11,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        // works/ をリポジトリに追加したら以下を有効化
-        // 'corporate-renewal': resolve(__dirname, 'works/corporate-renewal.html'),
-        // 'ec-spa': resolve(__dirname, 'works/ec-spa.html'),
-        // 'brand-site': resolve(__dirname, 'works/brand-site.html'),
-        // 'dashboard': resolve(__dirname, 'works/dashboard.html'),
+        'works-index': resolve(__dirname, 'works/index.html'),
+        'corporate-renewal': resolve(__dirname, 'works/corporate-renewal.html'),
+        'ec-spa': resolve(__dirname, 'works/ec-spa.html'),
+        'brand-site': resolve(__dirname, 'works/brand-site.html'),
+        'dashboard': resolve(__dirname, 'works/dashboard.html'),
       },
     },
   },

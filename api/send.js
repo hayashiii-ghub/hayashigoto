@@ -4,13 +4,31 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message } = req.body;
+  const { name, email, message, website } = req.body;
+
+  // Honeypot check
+  if (website) {
+    return res.status(200).json({ success: true });
+  }
 
   if (!name || !email || !message) {
     return res.status(400).json({ error: '必須項目が入力されていません' });
+  }
+
+  if (String(name).length > 100) {
+    return res.status(400).json({ error: '名前は100文字以内で入力してください' });
+  }
+  if (String(message).length > 5000) {
+    return res.status(400).json({ error: 'メッセージは5000文字以内で入力してください' });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'メールアドレスの形式が正しくありません' });
   }
 
   try {

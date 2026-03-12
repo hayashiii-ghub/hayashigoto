@@ -242,10 +242,8 @@ body {
   display: flex;
   width: max-content;
   gap: 1rem;
-}
-
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .marquee-content {
@@ -505,6 +503,18 @@ body {
   transform: translateY(0);
 }
 
+/* ---- Honeypot (spam trap) ---- */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 /* ---- Contact Form inside dir-tree ---- */
 .contact-form {
   list-style: none;
@@ -561,6 +571,14 @@ body {
   color: #7aad6e;
   border-color: var(--accent-light);
   background: rgba(74, 103, 65, 0.1);
+}
+
+.status-ok {
+  color: var(--accent-light);
+}
+
+.status-error {
+  color: #c44;
 }
 
 .cursor-blink {
