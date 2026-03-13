@@ -1,11 +1,10 @@
 // 名刺ビューアー — 表裏・縦横・チルトを分離して操作性を安定化
 
 document.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('card-canvas');
   const tilt = document.getElementById('card-tilt');
   const orientation = document.getElementById('card-orientation');
   const card = document.getElementById('card-body');
-  if (!canvas || !tilt || !orientation || !card) return;
+  if (!tilt || !orientation || !card) return;
 
   const buttons = {
     flip: document.querySelector('[data-card-action="flip"]'),
@@ -22,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     pointerId: null,
     startX: 0,
     startY: 0,
+    startTiltX: 0,
+    startTiltY: 0,
+    dragRect: null,
     moved: false,
     switching: false,
   };
@@ -45,9 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderCard() {
     card.dataset.side = state.side;
-
-    const orientationZ = state.orientation === 'portrait' ? 90 : 0;
-    orientation.style.transform = `rotateZ(${orientationZ}deg)`;
+    orientation.dataset.orientation = state.orientation;
 
     if (buttons.flip) {
       buttons.flip.textContent = state.side === 'front' ? 'show back' : 'show front';
@@ -101,13 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
     resetFrame = requestAnimationFrame(step);
   }
 
-  function updateTiltFromPointer(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    const normalizedX = ((clientX - rect.left) / rect.width - 0.5) * 2;
-    const normalizedY = ((clientY - rect.top) / rect.height - 0.5) * 2;
+  function updateTiltFromDrag(clientX, clientY, rect = card.getBoundingClientRect()) {
+    const deltaX = clientX - state.startX;
+    const deltaY = clientY - state.startY;
+    const normalizedX = rect.width ? (deltaX / rect.width) * 2.1 : 0;
+    const normalizedY = rect.height ? (deltaY / rect.height) * 2.1 : 0;
 
-    state.tiltY = clamp(normalizedX * MAX_TILT_Y, -MAX_TILT_Y, MAX_TILT_Y);
-    state.tiltX = clamp(-normalizedY * MAX_TILT_X, -MAX_TILT_X, MAX_TILT_X);
+    state.tiltY = clamp(state.startTiltY + normalizedX * MAX_TILT_Y, -MAX_TILT_Y, MAX_TILT_Y);
+    state.tiltX = clamp(state.startTiltX - normalizedY * MAX_TILT_X, -MAX_TILT_X, MAX_TILT_X);
     renderTilt();
   }
 
@@ -158,7 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     state.dragging = false;
     state.pointerId = null;
-    canvas.classList.remove('is-dragging');
+    state.dragRect = null;
+    state.startTiltX = state.tiltX;
+    state.startTiltY = state.tiltY;
+    card.classList.remove('is-dragging');
+    tilt.classList.remove('is-dragging');
 
     if (!state.moved) {
       toggleSide();
@@ -167,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animateTiltToRest();
   }
 
-  canvas.addEventListener('pointerdown', (event) => {
+  card.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
 
     cancelReset();
@@ -175,34 +180,41 @@ document.addEventListener('DOMContentLoaded', () => {
     state.pointerId = event.pointerId;
     state.startX = event.clientX;
     state.startY = event.clientY;
+    state.startTiltX = state.tiltX;
+    state.startTiltY = state.tiltY;
+    state.dragRect = card.getBoundingClientRect();
     state.moved = false;
 
-    canvas.setPointerCapture(event.pointerId);
-    canvas.classList.add('is-dragging');
-    updateTiltFromPointer(event.clientX, event.clientY);
+    card.setPointerCapture(event.pointerId);
+    card.classList.add('is-dragging');
+    tilt.classList.add('is-dragging');
   });
 
-  canvas.addEventListener('pointermove', (event) => {
+  card.addEventListener('pointermove', (event) => {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
 
     const movedX = Math.abs(event.clientX - state.startX);
     const movedY = Math.abs(event.clientY - state.startY);
     state.moved = state.moved || movedX > TAP_THRESHOLD || movedY > TAP_THRESHOLD;
 
-    updateTiltFromPointer(event.clientX, event.clientY);
+    updateTiltFromDrag(event.clientX, event.clientY, state.dragRect || undefined);
   });
 
-  canvas.addEventListener('pointerup', endDrag);
-  canvas.addEventListener('pointercancel', endDrag);
-  canvas.addEventListener('lostpointercapture', (event) => {
+  card.addEventListener('pointerup', endDrag);
+  card.addEventListener('pointercancel', endDrag);
+  card.addEventListener('lostpointercapture', (event) => {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
     state.dragging = false;
     state.pointerId = null;
-    canvas.classList.remove('is-dragging');
+    state.dragRect = null;
+    state.startTiltX = state.tiltX;
+    state.startTiltY = state.tiltY;
+    card.classList.remove('is-dragging');
+    tilt.classList.remove('is-dragging');
     animateTiltToRest();
   });
 
-  canvas.addEventListener('keydown', (event) => {
+  card.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase();
 
     if (key === 'enter' || key === ' ') {
@@ -230,9 +242,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (action === 'flip') toggleSide();
       if (action === 'orientation') toggleOrientation();
       if (action === 'reset') resetCard();
-      canvas.focus();
+      card.focus();
     });
   });
 
   render();
+  requestAnimationFrame(() => {
+    orientation.classList.add('is-ready');
+  });
 });

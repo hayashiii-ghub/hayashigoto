@@ -19,7 +19,7 @@
       <section class="dir-section work-detail">
         <div class="dir-section-inner">
           <h1 class="cli-line">
-            <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <span class="cli-path">/about/card/</span>
+            <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <span class="cli-path"><a href="/#about" class="cli-path-link">/about</a>/card/</span>
           </h1>
 
           <div class="card-controls" aria-label="名刺ビューアー操作">
@@ -28,10 +28,10 @@
             <button type="button" class="card-btn" data-card-action="reset">reset</button>
           </div>
 
-          <div class="card-canvas" id="card-canvas" tabindex="0" aria-label="名刺ビューアー">
+          <div class="card-canvas" id="card-canvas">
             <div class="card-tilt" id="card-tilt">
-              <div class="card-orientation" id="card-orientation">
-                <div class="card-body" id="card-body" data-side="front">
+              <div class="card-orientation" id="card-orientation" data-orientation="portrait">
+                <div class="card-body" id="card-body" data-side="front" tabindex="0" aria-label="名刺ビューアー">
                   <div class="card-face card-front">
                     <img src="/card-front.webp" alt="名刺 表面" draggable="false" />
                   </div>

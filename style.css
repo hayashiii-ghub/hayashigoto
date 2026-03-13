@@ -348,6 +348,18 @@ body {
   color: var(--accent-light);
 }
 
+.cli-path-link {
+  color: inherit;
+  text-decoration: none;
+  transition: text-decoration-color 0.2s;
+}
+
+.cli-path-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-accent);
+}
+
 /* ---- Directory Tree ---- */
 .dir-tree {
   padding-left: 0.5rem;
@@ -668,20 +680,7 @@ body {
   perspective: 1000px;
   background: transparent;
   margin-bottom: 2rem;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: none;
   overflow: hidden;
-}
-
-.card-canvas:focus-visible {
-  outline: 1px solid var(--accent-light);
-  outline-offset: 4px;
-}
-
-.card-canvas.is-dragging {
-  cursor: grabbing;
 }
 
 .card-tilt {
@@ -693,7 +692,7 @@ body {
   will-change: transform;
 }
 
-.card-canvas.is-dragging .card-tilt {
+.card-tilt.is-dragging {
   transition: none;
 }
 
@@ -702,8 +701,15 @@ body {
   height: 100%;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+}
+
+.card-orientation[data-orientation="portrait"] {
+  transform: rotateZ(90deg);
+}
+
+.card-orientation.is-ready {
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* NOTE: no filter here — filter breaks preserve-3d chain */
@@ -715,6 +721,19 @@ body {
   -webkit-transform-style: preserve-3d;
   will-change: transform;
   transform-origin: center center;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.card-body:focus-visible {
+  outline: 1px solid var(--accent-light);
+  outline-offset: 4px;
+}
+
+.card-body.is-dragging {
+  cursor: grabbing;
 }
 
 .card-face {
@@ -900,7 +919,7 @@ body {
   }
 
   .card-tilt {
-    width: clamp(200px, 52vw, 280px);
+    width: 100%;
   }
 
   .card-controls {
