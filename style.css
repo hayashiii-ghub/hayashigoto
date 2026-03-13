@@ -684,7 +684,7 @@ body {
 }
 
 .card-tilt {
-  width: clamp(300px, 46vw, 500px);
+  width: clamp(300px, 52vw, 500px);
   aspect-ratio: 1075 / 650;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
@@ -756,7 +756,7 @@ body {
 
 .card-body.is-switching {
   animation-duration: 560ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-timing-function: ease-in-out;
   animation-fill-mode: both;
 }
 
@@ -770,15 +770,15 @@ body {
 
 @keyframes card-side-swap-forward {
   0%   { transform: rotateY(0deg) scale(1); }
-  45%  { transform: rotateY(-90deg) scale(0.96); }
-  55%  { transform: rotateY(90deg) scale(0.96); }
+  50%  { transform: rotateY(-90deg) scale(0.97); }
+  50.1%{ transform: rotateY(90deg) scale(0.97); }
   100% { transform: rotateY(0deg) scale(1); }
 }
 
 @keyframes card-side-swap-reverse {
   0%   { transform: rotateY(0deg) scale(1); }
-  45%  { transform: rotateY(90deg) scale(0.96); }
-  55%  { transform: rotateY(-90deg) scale(0.96); }
+  50%  { transform: rotateY(90deg) scale(0.97); }
+  50.1%{ transform: rotateY(-90deg) scale(0.97); }
   100% { transform: rotateY(0deg) scale(1); }
 }
 
@@ -851,6 +851,16 @@ body {
 }
 
 /* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .card-tilt {
+    width: clamp(300px, 68vw, 500px);
+  }
+
+  .card-canvas {
+    height: clamp(440px, 68vh, 620px);
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: 0.85rem 1rem;
@@ -919,7 +929,7 @@ body {
   }
 
   .card-tilt {
-    width: 100%;
+    width: clamp(280px, 88vw, 460px);
   }
 
   .card-controls {
