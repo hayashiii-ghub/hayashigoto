@@ -14,7 +14,7 @@ export default defineConfig({
         card: resolve(__dirname, 'card.html'),
         'works-index': resolve(__dirname, 'works/index.html'),
         'corporate-renewal': resolve(__dirname, 'works/corporate-renewal.html'),
-        'ec-spa': resolve(__dirname, 'works/ec-spa.html'),
+        'toban-maker': resolve(__dirname, 'works/toban-maker.html'),
         'brand-site': resolve(__dirname, 'works/brand-site.html'),
         'dashboard': resolve(__dirname, 'works/dashboard.html'),
       },
