@@ -16,6 +16,7 @@ inject();
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
+  initHeroLogoFallback();
   initMarquee();
   initSmoothScroll();
   initScrollReveal();
@@ -24,6 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initTooltip();
 });
+
+// Hero ロゴ画像のフォールバック（CSP対応のため JS で処理）
+function initHeroLogoFallback() {
+  const img = document.querySelector('.hero-logo-img');
+  if (!img) return;
+  img.addEventListener('error', () => {
+    img.parentElement.style.display = 'none';
+    img.parentElement.nextElementSibling.style.display = 'block';
+  });
+}
 
 // ローディング画面（実際の読み込み完了で消す）
 function initLoader() {
