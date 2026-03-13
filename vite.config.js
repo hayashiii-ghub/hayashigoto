@@ -11,6 +11,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        card: resolve(__dirname, 'card.html'),
         'works-index': resolve(__dirname, 'works/index.html'),
         'corporate-renewal': resolve(__dirname, 'works/corporate-renewal.html'),
         'ec-spa': resolve(__dirname, 'works/ec-spa.html'),
