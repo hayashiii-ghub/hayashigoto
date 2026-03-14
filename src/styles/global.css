@@ -632,7 +632,6 @@ body {
   background: transparent;
   margin-bottom: 2rem;
   overflow: hidden;
-  touch-action: none;
 }
 
 .card-tilt {

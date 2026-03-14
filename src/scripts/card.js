@@ -1,10 +1,11 @@
 // 名刺ビューアー — 表裏・縦横・チルトを分離して操作性を安定化
 
 document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('card-canvas');
   const tilt = document.getElementById('card-tilt');
   const orientation = document.getElementById('card-orientation');
   const card = document.getElementById('card-body');
-  if (!tilt || !orientation || !card) return;
+  if (!canvas || !tilt || !orientation || !card) return;
 
   const state = {
     side: 'front',
@@ -34,6 +35,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  // orientation の回転を考慮した視覚上のカード矩形を取得
+  function getCardRect() {
+    const rect = tilt.getBoundingClientRect();
+    if (state.orientation !== 'portrait') return rect;
+
+    // portrait: rotateZ(90deg) で幅と高さが入れ替わる
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    return {
+      left: cx - rect.height / 2,
+      right: cx + rect.height / 2,
+      top: cy - rect.width / 2,
+      bottom: cy + rect.width / 2,
+      width: rect.height,
+      height: rect.width,
+    };
+  }
+
+  // カードの視覚的な矩形内かどうかを判定
+  function isInCard(clientX, clientY) {
+    const rect = getCardRect();
+    return clientX >= rect.left && clientX <= rect.right &&
+           clientY >= rect.top && clientY <= rect.bottom;
   }
 
   function renderTilt() {
@@ -86,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetFrame = requestAnimationFrame(step);
   }
 
-  function updateTiltFromDrag(clientX, clientY, rect = card.getBoundingClientRect()) {
+  function updateTiltFromDrag(clientX, clientY, rect = getCardRect()) {
     const deltaX = clientX - state.startX;
     const deltaY = clientY - state.startY;
     const normalizedX = rect.width ? (deltaX / rect.width) * DRAG_SENSITIVITY : 0;
@@ -152,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function endDrag(event) {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
 
-    card.releasePointerCapture(event.pointerId);
+    canvas.releasePointerCapture(event.pointerId);
     const wasTap = !state.moved;
     finishDrag();
 
@@ -163,8 +189,18 @@ document.addEventListener('DOMContentLoaded', () => {
     animateTiltToRest();
   }
 
-  card.addEventListener('pointerdown', (event) => {
+  // モバイル: カード上のタッチ時のみスクロールを抑制
+  canvas.addEventListener('touchstart', (event) => {
+    const touch = event.touches[0];
+    if (touch && isInCard(touch.clientX, touch.clientY)) {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  // ポインターイベントを canvas で受け取り、カード領域のみ処理
+  canvas.addEventListener('pointerdown', (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (!isInCard(event.clientX, event.clientY)) return;
 
     cancelReset();
     state.dragging = true;
@@ -173,15 +209,15 @@ document.addEventListener('DOMContentLoaded', () => {
     state.startY = event.clientY;
     state.startTiltX = state.tiltX;
     state.startTiltY = state.tiltY;
-    state.dragRect = card.getBoundingClientRect();
+    state.dragRect = getCardRect();
     state.moved = false;
 
-    card.setPointerCapture(event.pointerId);
+    canvas.setPointerCapture(event.pointerId);
     card.classList.add('is-dragging');
     tilt.classList.add('is-dragging');
   });
 
-  card.addEventListener('pointermove', (event) => {
+  canvas.addEventListener('pointermove', (event) => {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
 
     const movedX = Math.abs(event.clientX - state.startX);
@@ -191,14 +227,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTiltFromDrag(event.clientX, event.clientY, state.dragRect || undefined);
   });
 
-  card.addEventListener('pointerup', endDrag);
-  card.addEventListener('pointercancel', endDrag);
-  card.addEventListener('lostpointercapture', (event) => {
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+  canvas.addEventListener('lostpointercapture', (event) => {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
     finishDrag();
     animateTiltToRest();
   });
 
+  // キーボード操作（card-body にフォーカスがある場合）
   card.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase();
 
