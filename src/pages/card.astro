@@ -21,7 +21,7 @@ const nav = [
       <div class="card-canvas" id="card-canvas">
         <div class="card-tilt" id="card-tilt">
           <div class="card-orientation" id="card-orientation" data-orientation="portrait">
-            <div class="card-body" id="card-body" data-side="front" tabindex="0" aria-label="名刺ビューアー">
+            <div class="card-body" id="card-body" data-side="front">
               <div class="card-face card-front">
                 <img src="/card-front.webp" alt="名刺 表面" draggable="false" />
               </div>
@@ -31,6 +31,7 @@ const nav = [
             </div>
           </div>
         </div>
+        <div class="card-overlay" id="card-overlay" data-orientation="portrait" tabindex="0" aria-label="名刺ビューアー — タップで裏返し、ドラッグで傾き"></div>
       </div>
 
       <div class="dir-file work-back">

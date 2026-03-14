@@ -672,18 +672,34 @@ body {
   -webkit-transform-style: preserve-3d;
   will-change: transform;
   transform-origin: center center;
+}
+
+/* 透明オーバーレイ: 3Dチェーン外でタッチ/ポインターを確実に受ける */
+.card-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 52vw, 500px);
+  aspect-ratio: 1075 / 650;
+  z-index: 10;
+  touch-action: none;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  -webkit-touch-callout: none;
 }
 
-.card-body:focus-visible {
+.card-overlay[data-orientation="portrait"] {
+  transform: translate(-50%, -50%) rotateZ(90deg);
+}
+
+.card-overlay:focus-visible {
   outline: 1px solid var(--accent-light);
   outline-offset: 4px;
 }
 
-.card-body.is-dragging {
+.card-overlay.is-dragging {
   cursor: grabbing;
 }
 
@@ -809,7 +825,8 @@ body {
 
 /* ---- Responsive ---- */
 @media (max-width: 1024px) {
-  .card-tilt {
+  .card-tilt,
+  .card-overlay {
     width: clamp(300px, 68vw, 500px);
   }
 
@@ -885,16 +902,8 @@ body {
     height: clamp(400px, 65vh, 560px);
   }
 
-  .card-tilt {
+  .card-tilt,
+  .card-overlay {
     width: clamp(280px, 88vw, 460px);
-  }
-
-  .card-controls {
-    gap: 0.5rem;
-  }
-
-  .card-btn {
-    font-size: 0.72rem;
-    padding: 0.5rem 0.75rem;
   }
 }
