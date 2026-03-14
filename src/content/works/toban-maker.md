@@ -3,7 +3,7 @@ title: "当番表メーカー"
 dirName: "toban-maker"
 year: 2025
 role: "Design / Full Stack"
-stack: ["Next.js", "Supabase", "Vercel"]
+stack: ["Cloudflare", "Hono", "Supabase"]
 description: "当番表・ローテーション表を簡単に作成できるWebアプリ。印刷前提のデザインと直感操作のUI。"
 order: 3
 ---
