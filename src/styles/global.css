@@ -632,6 +632,7 @@ body {
   background: transparent;
   margin-bottom: 2rem;
   overflow: hidden;
+  touch-action: none;
 }
 
 .card-tilt {
@@ -697,6 +698,11 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 180ms ease, visibility 180ms ease;
+  pointer-events: none;
+}
+
+.card-face img {
+  -webkit-touch-callout: none;
 }
 
 .card-body[data-side="front"] .card-front,
