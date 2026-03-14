@@ -382,7 +382,10 @@ function initContactForm() {
         }),
       });
 
-      if (!res.ok) throw new Error('送信失敗');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || '送信失敗');
+      }
 
       btn.innerHTML = 'sent <span class="status-ok">&#10003;</span>';
       setTimeout(() => {
@@ -390,10 +393,13 @@ function initContactForm() {
         btn.innerHTML = original;
         btn.disabled = false;
       }, 2000);
-    } catch {
-      btn.innerHTML = 'error <span class="status-error">&#10007;</span>';
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '送信失敗';
+      btn.innerHTML = `error <span class="status-error">&#10007;</span>`;
+      btn.title = message;
       setTimeout(() => {
         btn.innerHTML = original;
+        btn.removeAttribute('title');
         btn.disabled = false;
       }, 2000);
     }

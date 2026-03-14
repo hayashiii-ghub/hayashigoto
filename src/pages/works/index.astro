@@ -1,8 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
-const works = (await getCollection('works')).sort((a, b) => a.data.order - b.data.order);
+const works: CollectionEntry<'works'>[] = (await getCollection('works')).sort(
+  (a: CollectionEntry<'works'>, b: CollectionEntry<'works'>) => a.data.order - b.data.order
+);
+const workEntries = works.map((work: CollectionEntry<'works'>, i: number) => ({
+  work,
+  isLast: i === works.length - 1,
+}));
 
 const nav = [
   { href: '/', label: '/home' },
@@ -18,20 +25,17 @@ const nav = [
       </h1>
 
       <div class="dir-tree">
-        {works.map((work, i) => {
-          const isLast = i === works.length - 1;
-          return (
-            <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
-              <span class="dir-branch">{isLast ? '└──' : '├──'}</span>
-              <span class="dir-name">{work.data.dirName}/</span>
-              <div class="dir-expand">
-                <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-value dir-desc">{work.data.description}</span></div>
-                <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map(s => <span class="tag">{s}</span>)}</span></div>
-                <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
-              </div>
+        {workEntries.map(({ work, isLast }) => (
+          <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
+            <span class="dir-branch">{isLast ? '└──' : '├──'}</span>
+            <span class="dir-name">{work.data.dirName}/</span>
+            <div class="dir-expand">
+              <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-value dir-desc">{work.data.description}</span></div>
+              <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
+              <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
             </div>
-          );
-        })}
+          </div>
+        ))}
 
         <div class="dir-file work-back">
           <a href="/#works" class="file-more">← cd /works</a>

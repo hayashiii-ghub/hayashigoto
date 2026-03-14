@@ -1,6 +1,49 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const SITE_URL = process.env.SITE_URL || 'https://shigoto.dev';
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const rateLimitStore = new Map();
+
+function getClientIp(req) {
+  const forwardedFor = req.headers['x-forwarded-for'];
+
+  if (typeof forwardedFor === 'string') {
+    return forwardedFor.split(',')[0].trim();
+  }
+
+  return req.socket?.remoteAddress || 'unknown';
+}
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const entry = rateLimitStore.get(ip);
+
+  if (!entry || now - entry.startedAt > RATE_LIMIT_WINDOW_MS) {
+    rateLimitStore.set(ip, { count: 1, startedAt: now });
+    return false;
+  }
+
+  entry.count += 1;
+  return entry.count > RATE_LIMIT_MAX_REQUESTS;
+}
+
+function sanitizeLine(value) {
+  return String(value || '').replace(/[\r\n]+/g, ' ').trim();
+}
+
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+
+  try {
+    const requestUrl = new URL(origin);
+    const siteHost = new URL(SITE_URL).host;
+    return requestUrl.host === siteHost || requestUrl.host.endsWith('.vercel.app');
+  } catch {
+    return false;
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,7 +51,30 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message, website } = req.body;
+  const origin = req.headers.origin;
+  if (!isAllowedOrigin(origin)) {
+    return res.status(403).json({ error: '許可されていない送信元です' });
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    return res.status(500).json({ error: 'メール設定が未構成です' });
+  }
+
+  const contentType = req.headers['content-type'] || '';
+  if (!contentType.includes('application/json')) {
+    return res.status(415).json({ error: 'JSON形式で送信してください' });
+  }
+
+  const clientIp = getClientIp(req);
+  if (isRateLimited(clientIp)) {
+    return res.status(429).json({ error: '送信回数が多すぎます。時間をおいて再度お試しください' });
+  }
+
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const name = sanitizeLine(body.name);
+  const email = sanitizeLine(body.email).toLowerCase();
+  const message = String(body.message || '').trim();
+  const website = sanitizeLine(body.website);
 
   // Honeypot check
   if (website) {

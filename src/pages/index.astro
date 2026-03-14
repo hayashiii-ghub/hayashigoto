@@ -2,8 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import SnsLinks from '../components/SnsLinks.astro';
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
-const works = (await getCollection('works')).sort((a, b) => a.data.order - b.data.order);
+const works: CollectionEntry<'works'>[] = (await getCollection('works')).sort(
+  (a: CollectionEntry<'works'>, b: CollectionEntry<'works'>) => a.data.order - b.data.order
+);
 
 const nav = [
   { href: '#about', label: '/about' },
@@ -14,21 +17,6 @@ const nav = [
 <Layout title="はやしごと" canonical="https://shigoto.dev/" nav={nav} showFooterSns={true}>
   <Fragment slot="head">
     <link rel="preload" as="image" type="image/webp" href="/logo.webp" />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "林 祐太",
-      "alternateName": "はやしごと",
-      "url": "https://shigoto.dev",
-      "email": "hay@shigoto.dev",
-      "jobTitle": "Web Developer & Designer",
-      "sameAs": [
-        "https://github.com/hayashiii-ghub",
-        "https://x.com/hayashiii_X",
-        "https://instagram.com/hayashiii_inst",
-        "https://note.com/hayashiii_note"
-      ]
-    })} />
   </Fragment>
 
   <div class="loader" id="loader" slot="before-header">
@@ -125,13 +113,13 @@ const nav = [
       </h2>
 
       <div class="dir-tree">
-        {works.map((work, i) => (
+        {works.map((work: CollectionEntry<'works'>, i: number) => (
           <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${i + 1}`} role="button" aria-expanded="false" tabindex="0">
             <span class="dir-branch">├──</span>
             <span class="dir-name">{work.data.dirName}/</span>
             <div class="dir-expand">
               <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">{work.data.description}</span></div>
-              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map(s => <span class="tag">{s}</span>)}</span></div>
+              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
               <div class="dir-file"><span class="dir-pipe">│</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
             </div>
           </div>

@@ -12,9 +12,8 @@
 | フロント | HTML / CSS / JavaScript | フレームワークランタイム不要。Astroが静的HTMLに変換 |
 | デプロイ | Vercel | Git連携で自動デプロイ・エッジネットワーク・Serverless Functions一体型 |
 | メール送信 | Resend | モダンなAPI設計・独自ドメイン送信対応・無料枠で十分 |
-| スパム対策 | ハニーポット + 入力バリデーション | 外部サービス不要でボットを低コストに排除 |
-| アナリティクス | Vercel Analytics | Vercelネイティブ統合・追加設定不要・プライバシー配慮 |
-| フォント | Fontsource (IBM Plex Mono, Noto Sans JP) | Google Fonts依存を排除しCLS改善・CSP制御を簡素化 |
+| スパム対策 | ハニーポット + 入力バリデーション + 簡易レート制限 | 外部サービス不要で最低限の不正送信対策を維持 |
+| フォント | Fontsource (IBM Plex Mono) + システム日本語フォント | 欧文だけを配信して日本語はOS標準に寄せ、転送量を抑制 |
 | セキュリティ | vercel.json ヘッダー (CSP, Permissions-Policy等) | 外部依存最小限の構成でCSPを厳格に設定可能 |
 | パッケージマネージャ | npm | Node.js標準・追加ツール不要 |
 
@@ -36,7 +35,7 @@
 │   └── styles/global.css   # グローバルスタイル
 ├── api/
 │   └── send.js             # お問い合わせ送信 (Vercel Serverless Function)
-├── public/                 # 静的アセット（画像・robots.txt・sitemap.xml）
+├── public/                 # 静的アセット（画像・robots.txt）
 ├── astro.config.mjs
 └── vercel.json             # デプロイ設定・セキュリティヘッダー
 ```
@@ -47,11 +46,13 @@
 npm run dev       # 開発サーバー起動
 npm run build     # 本番ビルド
 npm run preview   # ビルド後プレビュー
+npm run check     # Astroの型・コンテンツ検証
 ```
 
 ## 環境変数（Vercel側で設定）
 
 - `RESEND_API_KEY` — Resend APIキー
+- `SITE_URL` — 送信元検証に使う本番URL（省略時は `https://shigoto.dev`）
 
 ## ライセンス
 

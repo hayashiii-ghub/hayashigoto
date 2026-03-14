@@ -1,16 +1,21 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  work: CollectionEntry<'works'>;
+}
 
 export async function getStaticPaths() {
   const works = await getCollection('works');
-  return works.map(work => ({
+  return works.map((work: CollectionEntry<'works'>) => ({
     params: { id: work.id },
     props: { work },
   }));
 }
 
-const { work } = Astro.props;
+const { work } = Astro.props as Props;
 const { Content } = await render(work);
 
 const nav = [
@@ -30,7 +35,7 @@ const nav = [
         <div class="dir-file"><span class="file-label">title:</span><span class="file-value">{work.data.title}</span></div>
         <div class="dir-file"><span class="file-label">year:</span><span class="file-value">{work.data.year}</span></div>
         <div class="dir-file"><span class="file-label">role:</span><span class="file-value">{work.data.role}</span></div>
-        <div class="dir-file"><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map(s => <span class="tag">{s}</span>)}</span></div>
+        <div class="dir-file"><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
 
         <div class="work-detail-body">
           <Content />
