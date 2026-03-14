@@ -28,9 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const TAP_THRESHOLD = 8;
   const RESET_DURATION = 220;
   const SIDE_SWITCH_DURATION = 560;
+  const supportsPointerEvents = 'PointerEvent' in window;
+  const supportsPointerCapture =
+    typeof overlay.setPointerCapture === 'function' &&
+    typeof overlay.releasePointerCapture === 'function';
   let resetFrame = 0;
   let sideSwapTimer = 0;
   let sideCleanupTimer = 0;
+  let legacyMouseListenersAttached = false;
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -149,53 +154,182 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.classList.remove('is-dragging');
   }
 
-  function endDrag(event) {
-    if (!state.dragging || event.pointerId !== state.pointerId) return;
+  function beginDrag(pointerId, clientX, clientY) {
+    cancelReset();
+    state.dragging = true;
+    state.pointerId = pointerId;
+    state.startX = clientX;
+    state.startY = clientY;
+    state.startTiltX = state.tiltX;
+    state.startTiltY = state.tiltY;
+    state.moved = false;
+    overlay.classList.add('is-dragging');
+  }
 
-    overlay.releasePointerCapture(event.pointerId);
+  function moveDrag(pointerId, clientX, clientY) {
+    if (!state.dragging || pointerId !== state.pointerId) return false;
+
+    const movedX = Math.abs(clientX - state.startX);
+    const movedY = Math.abs(clientY - state.startY);
+    state.moved = state.moved || movedX > TAP_THRESHOLD || movedY > TAP_THRESHOLD;
+
+    updateTiltFromDrag(clientX, clientY);
+    return true;
+  }
+
+  function endDrag(pointerId, { toggleTap = true } = {}) {
+    if (!state.dragging || pointerId !== state.pointerId) return false;
+
     const wasTap = !state.moved;
     finishDrag();
 
-    if (wasTap) {
+    if (toggleTap && wasTap) {
       toggleSide();
     }
 
     animateTiltToRest();
+    return true;
   }
 
-  // すべてのポインターイベントをオーバーレイで受け取る
-  overlay.addEventListener('pointerdown', (event) => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
+  function cancelDrag(pointerId) {
+    if (!state.dragging || pointerId !== state.pointerId) return false;
 
-    cancelReset();
-    state.dragging = true;
-    state.pointerId = event.pointerId;
-    state.startX = event.clientX;
-    state.startY = event.clientY;
-    state.startTiltX = state.tiltX;
-    state.startTiltY = state.tiltY;
-    state.moved = false;
-
-    overlay.setPointerCapture(event.pointerId);
-    overlay.classList.add('is-dragging');
-  });
-
-  overlay.addEventListener('pointermove', (event) => {
-    if (!state.dragging || event.pointerId !== state.pointerId) return;
-
-    const movedX = Math.abs(event.clientX - state.startX);
-    const movedY = Math.abs(event.clientY - state.startY);
-    state.moved = state.moved || movedX > TAP_THRESHOLD || movedY > TAP_THRESHOLD;
-
-    updateTiltFromDrag(event.clientX, event.clientY);
-  });
-
-  overlay.addEventListener('pointerup', endDrag);
-  overlay.addEventListener('pointercancel', endDrag);
-  overlay.addEventListener('lostpointercapture', (event) => {
-    if (!state.dragging || event.pointerId !== state.pointerId) return;
     finishDrag();
     animateTiltToRest();
+    return true;
+  }
+
+  function safeSetPointerCapture(pointerId) {
+    if (!supportsPointerCapture) return;
+
+    try {
+      overlay.setPointerCapture(pointerId);
+    } catch {
+      // Safari can expose the API but reject capture depending on pointer state.
+    }
+  }
+
+  function safeReleasePointerCapture(pointerId) {
+    if (!supportsPointerCapture) return;
+
+    if (typeof overlay.hasPointerCapture === 'function' && !overlay.hasPointerCapture(pointerId)) {
+      return;
+    }
+
+    try {
+      overlay.releasePointerCapture(pointerId);
+    } catch {
+      // Some browsers implicitly release capture before pointerup.
+    }
+  }
+
+  function findTouchById(touchList, identifier) {
+    for (const touch of touchList) {
+      if (touch.identifier === identifier) return touch;
+    }
+
+    return null;
+  }
+
+  function detachLegacyMouseListeners() {
+    if (!legacyMouseListenersAttached) return;
+
+    window.removeEventListener('mousemove', onLegacyMouseMove);
+    window.removeEventListener('mouseup', onLegacyMouseUp);
+    legacyMouseListenersAttached = false;
+  }
+
+  function handleInterruptedInteraction() {
+    if (!state.dragging || state.pointerId == null) return;
+
+    cancelDrag(state.pointerId);
+    detachLegacyMouseListeners();
+  }
+
+  function onLegacyMouseMove(event) {
+    moveDrag('mouse', event.clientX, event.clientY);
+  }
+
+  function onLegacyMouseUp() {
+    if (endDrag('mouse')) {
+      detachLegacyMouseListeners();
+      return;
+    }
+
+    cancelDrag('mouse');
+    detachLegacyMouseListeners();
+  }
+
+  if (supportsPointerEvents) {
+    overlay.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+      beginDrag(event.pointerId, event.clientX, event.clientY);
+      safeSetPointerCapture(event.pointerId);
+    });
+
+    overlay.addEventListener('pointermove', (event) => {
+      moveDrag(event.pointerId, event.clientX, event.clientY);
+    });
+
+    overlay.addEventListener('pointerup', (event) => {
+      endDrag(event.pointerId);
+      safeReleasePointerCapture(event.pointerId);
+    });
+
+    overlay.addEventListener('pointercancel', (event) => {
+      cancelDrag(event.pointerId);
+      safeReleasePointerCapture(event.pointerId);
+    });
+  } else {
+    overlay.addEventListener('mousedown', (event) => {
+      if (event.button !== 0) return;
+
+      beginDrag('mouse', event.clientX, event.clientY);
+
+      if (!legacyMouseListenersAttached) {
+        window.addEventListener('mousemove', onLegacyMouseMove);
+        window.addEventListener('mouseup', onLegacyMouseUp);
+        legacyMouseListenersAttached = true;
+      }
+    });
+
+    overlay.addEventListener('touchstart', (event) => {
+      const [touch] = event.changedTouches;
+      if (!touch) return;
+
+      event.preventDefault();
+      beginDrag(touch.identifier, touch.clientX, touch.clientY);
+    }, { passive: false });
+
+    overlay.addEventListener('touchmove', (event) => {
+      const touch = findTouchById(event.changedTouches, state.pointerId);
+      if (!touch) return;
+
+      event.preventDefault();
+      moveDrag(touch.identifier, touch.clientX, touch.clientY);
+    }, { passive: false });
+
+    overlay.addEventListener('touchend', (event) => {
+      const touch = findTouchById(event.changedTouches, state.pointerId);
+      if (!touch) return;
+
+      event.preventDefault();
+      endDrag(touch.identifier);
+    }, { passive: false });
+
+    overlay.addEventListener('touchcancel', (event) => {
+      const touch = findTouchById(event.changedTouches, state.pointerId);
+      if (!touch) return;
+
+      cancelDrag(touch.identifier);
+    }, { passive: false });
+  }
+
+  window.addEventListener('blur', handleInterruptedInteraction);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) return;
+    handleInterruptedInteraction();
   });
 
   // キーボード操作（オーバーレイにフォーカスがある場合）
