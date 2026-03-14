@@ -1,6 +1,6 @@
 ---
 title: "コーポレートサイト フルリニューアル"
-dirName: "corporate-renewal"
+dirName: "corporate-redesign"
 year: 2025
 role: "Design / Frontend"
 stack: ["Next.js", "TypeScript", "Tailwind CSS"]
