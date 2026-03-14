@@ -701,7 +701,7 @@ body {
 
 .card-tilt {
   width: clamp(300px, 52vw, 500px);
-  aspect-ratio: 1075 / 650;
+  aspect-ratio: 1075 / 650; /* 名刺実寸比 (91mm × 55mm) */
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   transition: transform 260ms ease-out;

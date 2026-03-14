@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>meishi/ | はやしごと</title>
+    <meta name="description" content="林 祐太の名刺ビューアー — インタラクティブに名刺を閲覧できます" />
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
@@ -22,13 +23,7 @@
             <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <span class="cli-path"><a href="/#about" class="cli-path-link">/about</a>/meishi/</span>
           </h1>
 
-          <div class="card-controls" aria-label="名刺ビューアー操作">
-            <button type="button" class="card-btn" data-card-action="flip" aria-pressed="false">show back</button>
-            <button type="button" class="card-btn" data-card-action="orientation" aria-pressed="false">landscape</button>
-            <button type="button" class="card-btn" data-card-action="reset">reset</button>
-          </div>
-
-          <div class="card-canvas" id="card-canvas">
+<div class="card-canvas" id="card-canvas">
             <div class="card-tilt" id="card-tilt">
               <div class="card-orientation" id="card-orientation" data-orientation="portrait">
                 <div class="card-body" id="card-body" data-side="front" tabindex="0" aria-label="名刺ビューアー">

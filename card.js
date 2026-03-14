@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const MAX_TILT_X = 14;
   const MAX_TILT_Y = 18;
+  const DRAG_SENSITIVITY = 2.1;
   const TAP_THRESHOLD = 8;
   const RESET_DURATION = 220;
   const SIDE_SWITCH_DURATION = 560;
@@ -104,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateTiltFromDrag(clientX, clientY, rect = card.getBoundingClientRect()) {
     const deltaX = clientX - state.startX;
     const deltaY = clientY - state.startY;
-    const normalizedX = rect.width ? (deltaX / rect.width) * 2.1 : 0;
-    const normalizedY = rect.height ? (deltaY / rect.height) * 2.1 : 0;
+    const normalizedX = rect.width ? (deltaX / rect.width) * DRAG_SENSITIVITY : 0;
+    const normalizedY = rect.height ? (deltaY / rect.height) * DRAG_SENSITIVITY : 0;
 
     state.tiltY = clamp(state.startTiltY + normalizedX * MAX_TILT_Y, -MAX_TILT_Y, MAX_TILT_Y);
     state.tiltX = clamp(state.startTiltX - normalizedY * MAX_TILT_X, -MAX_TILT_X, MAX_TILT_X);
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const directionClass = nextSide === 'back' ? 'is-switching-forward' : 'is-switching-reverse';
 
     card.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
-    void card.offsetWidth;
+    void card.offsetWidth; // force reflow to restart animation
     card.classList.add('is-switching', directionClass);
 
     clearTimeout(sideSwapTimer);
@@ -154,9 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animateTiltToRest();
   }
 
-  function endDrag(event) {
-    if (!state.dragging || event.pointerId !== state.pointerId) return;
-
+  function finishDrag() {
     state.dragging = false;
     state.pointerId = null;
     state.dragRect = null;
@@ -164,8 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
     state.startTiltY = state.tiltY;
     card.classList.remove('is-dragging');
     tilt.classList.remove('is-dragging');
+  }
 
-    if (!state.moved) {
+  function endDrag(event) {
+    if (!state.dragging || event.pointerId !== state.pointerId) return;
+
+    card.releasePointerCapture(event.pointerId);
+    const wasTap = !state.moved;
+    finishDrag();
+
+    if (wasTap) {
       toggleSide();
     }
 
@@ -204,13 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
   card.addEventListener('pointercancel', endDrag);
   card.addEventListener('lostpointercapture', (event) => {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
-    state.dragging = false;
-    state.pointerId = null;
-    state.dragRect = null;
-    state.startTiltX = state.tiltX;
-    state.startTiltY = state.tiltY;
-    card.classList.remove('is-dragging');
-    tilt.classList.remove('is-dragging');
+    finishDrag();
     animateTiltToRest();
   });
 
