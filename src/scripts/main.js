@@ -1,19 +1,5 @@
 // はやしごと - メインの JavaScript
 
-// Fontsource (self-hosted fonts)
-import '@fontsource/ibm-plex-mono/300.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
-import '@fontsource/ibm-plex-mono/600.css';
-import '@fontsource/noto-sans-jp/300.css';
-import '@fontsource/noto-sans-jp/400.css';
-import '@fontsource/noto-sans-jp/500.css';
-import '@fontsource/noto-sans-jp/600.css';
-
-// Vercel Analytics
-import { inject } from '@vercel/analytics';
-inject();
-
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initHeroLogoFallback();

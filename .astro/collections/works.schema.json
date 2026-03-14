@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "dirName": {
+      "type": "string"
+    },
+    "year": {
+      "type": "number"
+    },
+    "role": {
+      "type": "string"
+    },
+    "stack": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number"
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "dirName",
+    "year",
+    "role",
+    "stack",
+    "description",
+    "order"
+  ],
+  "additionalProperties": false
+}

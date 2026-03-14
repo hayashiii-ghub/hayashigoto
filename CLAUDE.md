@@ -26,9 +26,13 @@
 
 ## 構成
 
-- `index.html` / `main.js` / `style.css` — メインのフロントエンド
+- `src/pages/` — ページ（Astro）
+- `src/layouts/` — 共通レイアウト
+- `src/components/` — 再利用可能コンポーネント
+- `src/content/works/` — 制作実績データ（Markdown + Content Collections）
+- `src/scripts/` — クライアントサイド JavaScript
+- `src/styles/global.css` — グローバルスタイル
 - `api/send.js` — お問い合わせ送信 (Vercel Serverless Function)
-- `works/` — 制作実績の個別ページ
 - `public/` — 静的アセット（画像・robots.txt・sitemap.xml）
 - `vercel.json` — Vercelデプロイ設定・セキュリティヘッダー
 

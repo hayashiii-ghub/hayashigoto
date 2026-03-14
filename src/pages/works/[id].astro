@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const works = await getCollection('works');
+  return works.map(work => ({
+    params: { id: work.id },
+    props: { work },
+  }));
+}
+
+const { work } = Astro.props;
+const { Content } = await render(work);
+
+const nav = [
+  { href: '/', label: '/home' },
+  { href: '/#works', label: '/works' },
+  { href: '/#contact', label: '/contact' },
+];
+---
+<Layout title={`${work.data.dirName}/`} description={work.data.description} nav={nav}>
+  <section class="dir-section work-detail">
+    <div class="dir-section-inner">
+      <h1 class="cli-line">
+        <span class="cli-prompt">></span> <span class="cli-cmd">cat</span> <span class="cli-path">/works/{work.data.dirName}/README.md</span>
+      </h1>
+
+      <div class="dir-tree">
+        <div class="dir-file"><span class="file-label">title:</span><span class="file-value">{work.data.title}</span></div>
+        <div class="dir-file"><span class="file-label">year:</span><span class="file-value">{work.data.year}</span></div>
+        <div class="dir-file"><span class="file-label">role:</span><span class="file-value">{work.data.role}</span></div>
+        <div class="dir-file"><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map(s => <span class="tag">{s}</span>)}</span></div>
+
+        <div class="work-detail-body">
+          <Content />
+        </div>
+
+        <div class="dir-file work-back">
+          <a href="/#works" class="file-more">← cd /works</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

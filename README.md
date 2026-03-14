@@ -8,8 +8,8 @@
 
 | カテゴリ | ツール | 選定理由 |
 |---------|--------|---------|
-| ビルド | Vite 6 | 高速HMR・ゼロコンフィグでバニラJS構成に最適 |
-| フロント | HTML / CSS / JavaScript | 静的サイトにフレームワークは不要。軽量さを維持 |
+| フレームワーク | Astro 6 | 静的HTML出力でJSゼロ配信・コンポーネント共通化でメンテナンス性向上 |
+| フロント | HTML / CSS / JavaScript | フレームワークランタイム不要。Astroが静的HTMLに変換 |
 | デプロイ | Vercel | Git連携で自動デプロイ・エッジネットワーク・Serverless Functions一体型 |
 | メール送信 | Resend | モダンなAPI設計・独自ドメイン送信対応・無料枠で十分 |
 | スパム対策 | ハニーポット + 入力バリデーション | 外部サービス不要でボットを低コストに排除 |
@@ -21,22 +21,24 @@
 ## 構成
 
 ```
-├── index.html          # トップページ
-├── card.html           # 名刺ビューアー
-├── card.js             # 名刺ビューアーのインタラクション
-├── main.js             # 共通スクリプト
-├── style.css           # 共通スタイル
+├── src/
+│   ├── pages/              # ページ（Astro）
+│   │   ├── index.astro     # トップページ
+│   │   ├── card.astro      # 名刺ビューアー
+│   │   └── works/
+│   │       ├── index.astro # 制作実績一覧
+│   │       └── [id].astro  # 制作実績詳細（動的ルート）
+│   ├── layouts/
+│   │   └── Layout.astro    # 共通レイアウト（ヘッダー・フッター・OGP）
+│   ├── components/         # 再利用コンポーネント
+│   ├── content/works/      # 制作実績データ（Markdown）
+│   ├── scripts/            # クライアントサイド JavaScript
+│   └── styles/global.css   # グローバルスタイル
 ├── api/
-│   └── send.js         # お問い合わせ送信 (Vercel Serverless Function)
-├── works/
-│   ├── index.html      # 制作実績一覧
-│   ├── brand-site.html # 一気通貫ブランディング
-│   ├── corporate-renewal.html
-│   ├── toban-maker.html
-│   └── dashboard.html  # 図面記号検出システム
-├── public/             # 静的アセット（画像・robots.txt・sitemap.xml）
-├── vite.config.js
-└── vercel.json         # デプロイ設定・セキュリティヘッダー
+│   └── send.js             # お問い合わせ送信 (Vercel Serverless Function)
+├── public/                 # 静的アセット（画像・robots.txt・sitemap.xml）
+├── astro.config.mjs
+└── vercel.json             # デプロイ設定・セキュリティヘッダー
 ```
 
 ## コマンド

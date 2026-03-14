@@ -1,0 +1,14 @@
+---
+interface Props {
+  nav: { href: string; label: string }[];
+}
+
+const { nav } = Astro.props;
+---
+<header class="header">
+  <nav class="header-nav">
+    {nav.map(item => (
+      <a href={item.href}>{item.label}</a>
+    ))}
+  </nav>
+</header>

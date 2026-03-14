@@ -1,0 +1,19 @@
+---
+import SnsLinks from './SnsLinks.astro';
+
+interface Props {
+  showSns?: boolean;
+}
+
+const { showSns = false } = Astro.props;
+---
+<footer class="footer">
+  <div class="footer-inner">
+    {showSns && (
+      <div class="footer-sns">
+        <SnsLinks />
+      </div>
+    )}
+    <p class="footer-copy">&copy; はやしごと &mdash; hay@shigoto.dev</p>
+  </div>
+</footer>

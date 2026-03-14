@@ -1,0 +1,207 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SnsLinks from '../components/SnsLinks.astro';
+import { getCollection } from 'astro:content';
+
+const works = (await getCollection('works')).sort((a, b) => a.data.order - b.data.order);
+
+const nav = [
+  { href: '#about', label: '/about' },
+  { href: '#works', label: '/works' },
+  { href: '#contact', label: '/contact' },
+];
+---
+<Layout title="はやしごと" canonical="https://shigoto.dev/" nav={nav} showFooterSns={true}>
+  <Fragment slot="head">
+    <link rel="preload" as="image" type="image/webp" href="/logo.webp" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "林 祐太",
+      "alternateName": "はやしごと",
+      "url": "https://shigoto.dev",
+      "email": "hay@shigoto.dev",
+      "jobTitle": "Web Developer & Designer",
+      "sameAs": [
+        "https://github.com/hayashiii-ghub",
+        "https://x.com/hayashiii_X",
+        "https://instagram.com/hayashiii_inst",
+        "https://note.com/hayashiii_note"
+      ]
+    })} />
+  </Fragment>
+
+  <div class="loader" id="loader" slot="before-header">
+    <div class="loader-text">> loading<span class="loader-dots"></span></div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="sr-only">はやしごと - 林 祐太 | Dev & Design</h1>
+      <div class="hero-logo">
+        <picture>
+          <source srcset="/logo.webp" type="image/webp" />
+          <img src="/logo.png" alt="はやしごと" class="hero-logo-img" />
+        </picture>
+        <div class="hero-logo-fallback">はやしごと</div>
+      </div>
+      <p class="hero-tagline">Web開発 & デザイン</p>
+      <p class="hero-sub">hay@shigoto.dev</p>
+      <div class="hero-sns">
+        <SnsLinks />
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true">
+      <span>scroll</span>
+      <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v12M3 12l5 5 5-5"/></svg>
+    </div>
+  </section>
+
+  <!-- Tech Stack Marquee -->
+  <section class="tech-stack">
+    <div class="marquee-wrapper">
+      <div class="marquee marquee--forward">
+        <div class="marquee-track">
+          <div class="marquee-content">
+            <span data-tip="フルスタックReactフレームワーク">Next.js</span><span data-tip="UIコンポーネントライブラリ">React</span><span data-tip="認証・DB・ストレージの統合BaaS">Supabase</span><span data-tip="Webサイトのデプロイ基盤">Vercel</span><span data-tip="CDN・DNS・セキュリティ">Cloudflare</span><span data-tip="自律性の高いコーディングエージェント">Claude Code</span><span data-tip="トランザクションメール送信">Resend</span><span data-tip="サーバーレスPostgreSQL">Neon</span><span data-tip="素材・コンテキスト作成">Canva</span><span data-tip="OCRと画像生成">Gemini API</span>
+          </div>
+        </div>
+      </div>
+      <div class="marquee marquee--reverse">
+        <div class="marquee-track">
+          <div class="marquee-content">
+            <span data-tip="型安全なJavaScript">TypeScript</span><span data-tip="高速なフロントエンドビルドツール">Vite</span><span data-tip="ユーティリティファーストCSS">Tailwind CSS</span><span data-tip="軽量エッジ対応Webフレームワーク">Hono</span><span data-tip="コンポーネント単位のデザイン">Figma</span><span data-tip="AI統合コードエディタ">Cursor</span><span data-tip="複雑なロジックの整理・レビュー">Codex</span><span data-tip="Google Workspace 導入援助">GWS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="dir-section" id="about">
+    <div class="dir-section-inner">
+      <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
+        <span class="cli-prompt">></span> <span class="cli-path">/about</span>
+      </h2>
+
+      <div class="dir-tree">
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1" role="button" aria-expanded="false" tabindex="0">
+          <span class="dir-branch">├──</span>
+          <span class="dir-name">profile.yml</span>
+          <div class="dir-expand">
+            <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/profile.webp" alt="はやしごと" class="profile-logo" /></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">name:</span><span class="file-value">林 祐太 / yuta hayashi</span></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">brand:</span><span class="file-value">はやしごと</span></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">email:</span><span class="file-value">hay@shigoto.dev</span></div>
+          </div>
+        </div>
+
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2" role="button" aria-expanded="false" tabindex="0">
+          <span class="dir-branch">├──</span>
+          <span class="dir-name">philosophy.md</span>
+          <div class="dir-expand">
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">「引き算」の哲学で、本質だけを残す。</span></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value">無駄な複雑さを退け、最新のテクノロジーで省けるコストを徹底的に削ぎ落とす。そうして生まれた余白のすべてを、お客様の本質的な課題解決に注ぎ込む。</span></div>
+          </div>
+        </div>
+
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3" role="button" aria-expanded="false" tabindex="0">
+          <span class="dir-branch">└──</span>
+          <span class="dir-name">meishi/</span>
+          <div class="dir-expand">
+            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><a href="/card" class="file-more">./view →</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Works Section -->
+  <section class="dir-section" id="works">
+    <div class="dir-section-inner">
+      <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
+        <span class="cli-prompt">></span> <span class="cli-path">/works</span>
+      </h2>
+
+      <div class="dir-tree">
+        {works.map((work, i) => (
+          <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${i + 1}`} role="button" aria-expanded="false" tabindex="0">
+            <span class="dir-branch">├──</span>
+            <span class="dir-name">{work.data.dirName}/</span>
+            <div class="dir-expand">
+              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">{work.data.description}</span></div>
+              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map(s => <span class="tag">{s}</span>)}</span></div>
+              <div class="dir-file"><span class="dir-pipe">│</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
+            </div>
+          </div>
+        ))}
+
+        <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${works.length + 1}`} role="button" aria-expanded="false" tabindex="0">
+          <span class="dir-branch">└──</span>
+          <span class="dir-name">more/</span>
+          <div class="dir-expand">
+            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc">その他の制作実績はこちらからご覧いただけます。</span></div>
+            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><a href="/works" class="file-more">./index.html →</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="dir-section" id="contact">
+    <div class="dir-section-inner">
+      <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
+        <span class="cli-prompt">></span> <span class="cli-path">/contact</span>
+      </h2>
+
+      <form class="dir-tree contact-form" id="contact-form">
+        <div class="hp-field" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1">
+          <span class="dir-branch">├──</span>
+          <span class="dir-name">name.txt</span>
+          <div class="dir-expand">
+            <div class="dir-file">
+              <span class="dir-pipe">│</span>
+              <input type="text" id="name" name="name" required placeholder="your name" autocomplete="name" />
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2">
+          <span class="dir-branch">├──</span>
+          <span class="dir-name">email.txt</span>
+          <div class="dir-expand">
+            <div class="dir-file">
+              <span class="dir-pipe">│</span>
+              <input type="email" id="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3">
+          <span class="dir-branch">├──</span>
+          <span class="dir-name">message.md</span>
+          <div class="dir-expand">
+            <div class="dir-file">
+              <span class="dir-pipe">│</span>
+              <textarea id="message" name="message" rows="5" required placeholder="your message..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-entry cli-reveal" style="--reveal-delay: 4">
+          <span class="dir-branch">└──</span>
+          <button type="submit" class="dir-submit">./send.sh<span class="cursor-blink">_</span></button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div class="tooltip" id="tooltip" aria-hidden="true" slot="after-footer"></div>
+</Layout>

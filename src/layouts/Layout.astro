@@ -1,0 +1,80 @@
+---
+import '@fontsource/ibm-plex-mono/300.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '@fontsource/noto-sans-jp/300.css';
+import '@fontsource/noto-sans-jp/400.css';
+import '@fontsource/noto-sans-jp/500.css';
+import '@fontsource/noto-sans-jp/600.css';
+import '../styles/global.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  nav: { href: string; label: string }[];
+  showFooterSns?: boolean;
+}
+
+const {
+  title,
+  description = 'はやしごと - 林 祐太の個人事業。Web開発 & デザイン。',
+  canonical,
+  nav,
+  showFooterSns = false,
+} = Astro.props;
+
+const siteUrl = 'https://shigoto.dev';
+const ogImage = `${siteUrl}/logo.png`;
+const fullTitle = title === 'はやしごと'
+  ? 'はやしごと | hay@shigoto.dev'
+  : `${title} | はやしごと`;
+---
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical || siteUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/logo.webp" type="image/webp" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <slot name="before-header" />
+    <Header nav={nav} />
+    <main>
+      <slot />
+    </main>
+    <Footer showSns={showFooterSns} />
+    <slot name="after-footer" />
+
+    <script>
+      import { inject } from '@vercel/analytics';
+      inject();
+    </script>
+    <script>
+      import '../scripts/main.js';
+    </script>
+  </body>
+</html>

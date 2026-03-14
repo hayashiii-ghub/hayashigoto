@@ -6,12 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const card = document.getElementById('card-body');
   if (!tilt || !orientation || !card) return;
 
-  const buttons = {
-    flip: document.querySelector('[data-card-action="flip"]'),
-    orientation: document.querySelector('[data-card-action="orientation"]'),
-    reset: document.querySelector('[data-card-action="reset"]'),
-  };
-
   const state = {
     side: 'front',
     orientation: 'portrait',
@@ -49,16 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCard() {
     card.dataset.side = state.side;
     orientation.dataset.orientation = state.orientation;
-
-    if (buttons.flip) {
-      buttons.flip.textContent = state.side === 'front' ? 'show back' : 'show front';
-      buttons.flip.setAttribute('aria-pressed', String(state.side === 'back'));
-    }
-
-    if (buttons.orientation) {
-      buttons.orientation.textContent = state.orientation === 'landscape' ? 'portrait' : 'landscape';
-      buttons.orientation.setAttribute('aria-pressed', String(state.orientation === 'landscape'));
-    }
   }
 
   function render() {
@@ -234,17 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
       resetCard();
     }
-  });
-
-  Object.entries(buttons).forEach(([action, button]) => {
-    if (!button) return;
-
-    button.addEventListener('click', () => {
-      if (action === 'flip') toggleSide();
-      if (action === 'orientation') toggleOrientation();
-      if (action === 'reset') resetCard();
-      card.focus();
-    });
   });
 
   render();

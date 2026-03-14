@@ -4,17 +4,15 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview --host"
-  },
-  "devDependencies": {
-    "vite": "^6.0.0"
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview --host"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/noto-sans-jp": "^5.2.9",
     "@vercel/analytics": "^2.0.1",
+    "astro": "^6.0.4",
     "resend": "^6.9.3"
   }
 }
