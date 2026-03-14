@@ -160,7 +160,7 @@ body {
 
 .hero-sub {
   color: var(--text-dim);
-  font-size: clamp(0.8rem, 1.3vw, 0.9rem);
+  font-size: 15px;
   letter-spacing: 0.1em;
   margin-bottom: 2.5rem;
 }
