@@ -37,6 +37,20 @@ const nav = [
         <div class="dir-file"><span class="file-label">role:</span><span class="file-value">{work.data.role}</span></div>
         <div class="dir-file"><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
 
+        {work.data.url && (
+          <div class="dir-file work-detail-url">
+            <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={work.data.url} target="_blank" rel="noopener noreferrer">{work.data.url}</a>
+          </div>
+        )}
+
+        {work.data.images && work.data.images.length > 0 && (
+          <div class="work-detail-thumbnails">
+            {work.data.images.map((img: string, i: number) => (
+              <img src={img} alt={`${work.data.title} のプレビュー ${i + 1}`} loading="lazy" />
+            ))}
+          </div>
+        )}
+
         <div class="work-detail-body">
           <Content />
         </div>

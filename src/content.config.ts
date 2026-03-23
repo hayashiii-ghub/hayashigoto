@@ -10,6 +10,8 @@ const works = defineCollection({
     role: z.string(),
     stack: z.array(z.string()),
     description: z.string(),
+    url: z.string().optional(),
+    images: z.array(z.string()).optional(),
     order: z.number(),
   }),
 });

@@ -612,6 +612,34 @@ body {
   padding-top: calc(var(--section-gap) + 3rem);
 }
 
+.work-detail-url {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+}
+
+.work-detail-url a {
+  color: var(--accent-light);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.work-detail-url a:hover {
+  border-bottom-color: var(--accent-light);
+}
+
+.work-detail-thumbnails {
+  margin: 1.5rem 0;
+}
+
+.work-detail-thumbnails img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
 .work-detail-body {
   margin: 2rem 0;
   padding-left: 0.5rem;
@@ -628,6 +656,75 @@ body {
 
 .work-detail-body p:last-child {
   margin-bottom: 0;
+}
+
+.work-detail-body h2 {
+  color: var(--accent-light);
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+}
+
+.work-detail-body h3 {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.work-detail-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  margin: 1rem 0 1.5rem;
+}
+
+.work-detail-body th,
+.work-detail-body td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  color: var(--text);
+  opacity: 0.85;
+}
+
+.work-detail-body th {
+  background: #1a1a1a;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  opacity: 1;
+  white-space: nowrap;
+}
+
+.work-detail-body pre {
+  background: #111;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0 1.5rem;
+  overflow-x: auto;
+}
+
+.work-detail-body code {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  color: var(--text);
+  opacity: 0.85;
+}
+
+.work-detail-body ul,
+.work-detail-body ol {
+  margin: 0.75rem 0 1.25rem 1.25rem;
+  color: var(--text);
+  opacity: 0.85;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  line-height: 2;
+}
+
+.work-detail-body li {
+  margin-bottom: 0.25rem;
 }
 
 .work-back {

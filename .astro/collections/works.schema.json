@@ -23,6 +23,15 @@
     "description": {
       "type": "string"
     },
+    "url": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "order": {
       "type": "number"
     },
