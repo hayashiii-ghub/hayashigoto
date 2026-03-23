@@ -2,12 +2,12 @@
 title: "図面記号検出システム"
 dirName: "drawing-detector"
 year: 2025
-role: "Full Stack"
-stack: ["Claude Code", "Neon", "Gemini API"]
-description: "Claude Code上でGemini APIを活用したAIエージェントのハーネスを制作。図面から特定記号を自動検出する社内システム。"
+role: "System Design / AI Direction"
+stack: ["Claude Code", "Python", "Gemini API", "Neon"]
+description: "Claude Codeをエージェントとしてワークフローに組み込み、図面画像から特定記号を自動検出・抽出する社内システム。"
 order: 4
 ---
 
-Claude Code上でAIエージェントのハーネスを制作し、Gemini 3 Thinking APIを活用して図面画像から特定の記号を自動検出・抽出する社内システムを開発しました。
+Claude Codeをエージェントとして実行ワークフローに組み込んだ、図面画像からの記号自動検出・抽出システムです。
 
-Claude Codeをエージェント開発の基盤として活用し、プロンプト設計からAPI連携、データベース設計までを一貫して構築。図面をアップロードするとAIが記号の位置と種類を解析し、結果をNeonのデータベースに蓄積します。
+図面画像のアップロードをトリガーに、Claude Codeが画像の分割処理、Gemini APIのvision機能による記号検出、結果のNeonデータベースへの蓄積までを一連のワークフローとしてエージェント的に実行します。
