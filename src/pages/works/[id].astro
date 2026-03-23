@@ -1,21 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
-
-interface Props {
-  work: CollectionEntry<'works'>;
-}
 
 export async function getStaticPaths() {
   const works = await getCollection('works');
-  return works.map((work: CollectionEntry<'works'>) => ({
+  return works.map((work) => ({
     params: { id: work.id },
     props: { work },
   }));
 }
 
-const { work } = Astro.props as Props;
+const { work } = Astro.props;
 const { Content } = await render(work);
 
 const nav = [

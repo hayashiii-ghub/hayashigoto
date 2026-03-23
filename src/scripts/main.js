@@ -39,6 +39,8 @@ function initLoader() {
 // マーキー（画面幅に応じて動的に複製・アニメーション設定）
 function initMarquee() {
   const MARQUEE_SPEED = 50; // px per second（全行共通）
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (prefersReducedMotion.matches) return;
 
   document.querySelectorAll('.marquee').forEach(marquee => {
     const track = marquee.querySelector('.marquee-track');
@@ -149,7 +151,7 @@ function initSmoothScroll() {
       e.preventDefault();
       const target = document.querySelector(link.getAttribute('href'));
       if (target) {
-        const headerHeight = document.querySelector('.header').offsetHeight;
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
         const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
         window.scrollTo({ top, behavior: 'smooth' });
       }
@@ -240,11 +242,20 @@ function initDirToggle() {
     const name = entry.querySelector(':scope > .dir-name');
     if (!name) return;
 
-    name.addEventListener('click', (e) => {
+    function toggle(e) {
       e.stopPropagation();
       const opening = !entry.classList.contains('is-open');
       entry.classList.toggle('is-open');
       entry.setAttribute('aria-expanded', String(opening));
+    }
+
+    name.addEventListener('click', toggle);
+
+    entry.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle(e);
+      }
     });
   });
 }

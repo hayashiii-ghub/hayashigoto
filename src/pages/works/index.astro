@@ -1,12 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 
-const works: CollectionEntry<'works'>[] = (await getCollection('works')).sort(
-  (a: CollectionEntry<'works'>, b: CollectionEntry<'works'>) => a.data.order - b.data.order
+const works = (await getCollection('works')).sort(
+  (a, b) => a.data.order - b.data.order
 );
-const workEntries = works.map((work: CollectionEntry<'works'>, i: number) => ({
+const workEntries = works.map((work, i) => ({
   work,
   isLast: i === works.length - 1,
 }));

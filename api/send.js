@@ -4,7 +4,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const SITE_URL = process.env.SITE_URL || 'https://shigoto.dev';
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
+const RATE_LIMIT_CLEANUP_INTERVAL = 60 * 1000;
 const rateLimitStore = new Map();
+let lastCleanup = Date.now();
 
 function getClientIp(req) {
   const forwardedFor = req.headers['x-forwarded-for'];
@@ -16,7 +18,19 @@ function getClientIp(req) {
   return req.socket?.remoteAddress || 'unknown';
 }
 
+function cleanupRateLimitStore() {
+  const now = Date.now();
+  if (now - lastCleanup < RATE_LIMIT_CLEANUP_INTERVAL) return;
+  lastCleanup = now;
+  for (const [ip, entry] of rateLimitStore) {
+    if (now - entry.startedAt > RATE_LIMIT_WINDOW_MS) {
+      rateLimitStore.delete(ip);
+    }
+  }
+}
+
 function isRateLimited(ip) {
+  cleanupRateLimitStore();
   const now = Date.now();
   const entry = rateLimitStore.get(ip);
 
@@ -39,7 +53,10 @@ function isAllowedOrigin(origin) {
   try {
     const requestUrl = new URL(origin);
     const siteHost = new URL(SITE_URL).host;
-    return requestUrl.host === siteHost || requestUrl.host.endsWith('.vercel.app') || requestUrl.hostname === 'localhost';
+    if (requestUrl.host === siteHost || requestUrl.hostname === 'localhost') return true;
+    const vercelUrl = process.env.VERCEL_URL;
+    if (vercelUrl && requestUrl.host === vercelUrl) return true;
+    return false;
   } catch {
     return false;
   }

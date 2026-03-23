@@ -2,10 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import SnsLinks from '../components/SnsLinks.astro';
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
-
-const works: CollectionEntry<'works'>[] = (await getCollection('works')).sort(
-  (a: CollectionEntry<'works'>, b: CollectionEntry<'works'>) => a.data.order - b.data.order
+const works = (await getCollection('works')).sort(
+  (a, b) => a.data.order - b.data.order
 );
 
 const nav = [
@@ -113,7 +111,7 @@ const nav = [
       </h2>
 
       <div class="dir-tree">
-        {works.map((work: CollectionEntry<'works'>, i: number) => (
+        {works.map((work, i) => (
           <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${i + 1}`} role="button" aria-expanded="false" tabindex="0">
             <span class="dir-branch">├──</span>
             <span class="dir-name">{work.data.dirName}/</span>
