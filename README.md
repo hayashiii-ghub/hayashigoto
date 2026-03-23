@@ -24,18 +24,25 @@
 │   ├── pages/              # ページ（Astro）
 │   │   ├── index.astro     # トップページ
 │   │   ├── card.astro      # 名刺ビューアー
+│   │   ├── sitemap.xml.ts  # 動的サイトマップ生成
 │   │   └── works/
 │   │       ├── index.astro # 制作実績一覧
 │   │       └── [id].astro  # 制作実績詳細（動的ルート）
 │   ├── layouts/
 │   │   └── Layout.astro    # 共通レイアウト（ヘッダー・フッター・OGP）
-│   ├── components/         # 再利用コンポーネント
-│   ├── content/works/      # 制作実績データ（Markdown）
-│   ├── scripts/            # クライアントサイド JavaScript
+│   ├── components/
+│   │   ├── Header.astro    # ヘッダーナビゲーション
+│   │   ├── Footer.astro    # フッター
+│   │   └── SnsLinks.astro  # SNSリンク（Hero・Footer共通）
+│   ├── content/works/      # 制作実績データ（Markdown + Content Collections）
+│   ├── content.config.ts   # Content Collections スキーマ定義
+│   ├── scripts/
+│   │   ├── main.js         # メインページ用 JavaScript
+│   │   └── card.js         # 名刺ビューアー用 JavaScript
 │   └── styles/global.css   # グローバルスタイル
 ├── api/
 │   └── send.js             # お問い合わせ送信 (Vercel Serverless Function)
-├── public/                 # 静的アセット（画像・robots.txt）
+├── public/                 # 静的アセット（画像・robots.txt・sitemap.xml）
 ├── astro.config.mjs
 └── vercel.json             # デプロイ設定・セキュリティヘッダー
 ```
