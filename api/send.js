@@ -39,7 +39,7 @@ function isAllowedOrigin(origin) {
   try {
     const requestUrl = new URL(origin);
     const siteHost = new URL(SITE_URL).host;
-    return requestUrl.host === siteHost || requestUrl.host.endsWith('.vercel.app');
+    return requestUrl.host === siteHost || requestUrl.host.endsWith('.vercel.app') || requestUrl.hostname === 'localhost';
   } catch {
     return false;
   }
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
 
   try {
     await resend.emails.send({
-      from: 'はやしごと <noreply@shigoto.dev>',
+      from: 'はやしごと <noreply@send.shigoto.dev>',
       to: 'hay@shigoto.dev',
       replyTo: email,
       subject: `【お問い合わせ】${name} さんより`,
