@@ -162,6 +162,21 @@ function initSmoothScroll() {
 // 各要素を個別に監視し、スクロール位置に合わせて1つずつ展開
 function initScrollReveal() {
   const items = Array.from(document.querySelectorAll('.cli-reveal'));
+  if (items.length === 0) return;
+
+  // セッション中2回目以降はアニメーションをスキップして即表示
+  if (sessionStorage.getItem('revealed')) {
+    items.forEach(el => {
+      el.classList.add('is-visible');
+      if (el.classList.contains('dir-entry')) {
+        el.classList.add('is-open');
+        el.setAttribute('aria-expanded', 'true');
+      }
+    });
+    return;
+  }
+
+  sessionStorage.setItem('revealed', '1');
 
   // セクションごとに要素リストを事前構築（DOM順）
   const sectionItems = new Map();

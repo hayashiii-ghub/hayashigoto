@@ -2,9 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import SnsLinks from '../components/SnsLinks.astro';
 import { getCollection } from 'astro:content';
-const works = (await getCollection('works')).sort(
-  (a, b) => a.data.order - b.data.order
-);
+const works = (await getCollection('works'))
+  .filter((w) => w.data.featured !== false)
+  .sort((a, b) => a.data.order - b.data.order);
 
 const nav = [
   { href: '#about', label: '/about' },

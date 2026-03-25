@@ -373,6 +373,17 @@ body {
   color: var(--accent-light);
 }
 
+.cli-path a {
+  color: var(--accent-light);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.cli-path a:hover {
+  border-bottom-color: var(--accent-light);
+}
+
 /* ---- Directory Tree ---- */
 .dir-tree {
   padding-left: 0.5rem;
@@ -616,6 +627,10 @@ body {
   margin-top: 0.75rem;
   font-family: var(--font-mono);
   font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  flex-wrap: wrap;
 }
 
 .work-detail-url a {

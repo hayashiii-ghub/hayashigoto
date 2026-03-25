@@ -35,6 +35,10 @@
     "order": {
       "type": "number"
     },
+    "featured": {
+      "default": true,
+      "type": "boolean"
+    },
     "$schema": {
       "type": "string"
     }
@@ -46,7 +50,8 @@
     "role",
     "stack",
     "description",
-    "order"
+    "order",
+    "featured"
   ],
   "additionalProperties": false
 }
