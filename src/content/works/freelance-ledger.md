@@ -7,6 +7,7 @@ stack: ["Cloudflare", "Hono", "React", "D3.js"]
 description: "売上と経費を自動計算し、カレンダーやグラフで労働と収支を視覚的に把握できるWebアプリ。"
 order: 4
 featured: false
+status: "リニューアル中"
 ---
 
 個人事業主が日々の売上と経費をサッと記録し、収支を自動で計算・可視化できるWebアプリを開発しました。

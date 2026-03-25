@@ -14,6 +14,7 @@ const works = defineCollection({
     images: z.array(z.string()).optional(),
     order: z.number(),
     featured: z.boolean().default(true),
+    status: z.string().optional(),
   }),
 });
 

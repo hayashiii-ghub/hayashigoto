@@ -114,7 +114,7 @@ const nav = [
         {works.map((work, i) => (
           <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${i + 1}`} role="button" aria-expanded="false" tabindex="0">
             <span class="dir-branch">├──</span>
-            <span class="dir-name">{work.data.dirName}/</span>
+            <span class="dir-name">{work.data.dirName}/</span>{work.data.status && <span class="status-tag">{work.data.status}</span>}
             <div class="dir-expand">
               <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">{work.data.description}</span></div>
               <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>

@@ -3,11 +3,46 @@ title: "図面記号検出システム"
 dirName: "drawing-detector"
 year: 2025
 role: "System Design / AI Direction"
-stack: ["Claude Code", "Python", "Gemini API", "Neon"]
+stack: ["Claude Code", "Python", "Gemini 3 Flash", "Neon"]
 description: "Claude Codeをエージェントとしてワークフローに組み込み、図面画像から特定記号を自動検出・抽出する社内システム。"
 order: 4
 ---
 
-Claude Codeをエージェントとして実行ワークフローに組み込んだ、図面画像からの記号自動検出・抽出システムです。
+建設現場で使われる図面PDFから、特定の記号を自動検出・抽出するシステムを構築しました。ANDPADで共有された図面を起点に、Claude Codeがエージェントとして変換・分割・検出・蓄積の一連の処理を実行します。
 
-図面画像のアップロードをトリガーに、Claude Codeが画像の分割処理、Gemini APIのvision機能による記号検出、結果のNeonデータベースへの蓄積までを一連のワークフローとしてエージェント的に実行します。
+## ワークフロー
+
+| # | ステップ | 処理内容 |
+|---|----------|----------|
+| 1 | 図面の取得 | ANDPADで共有されたPDFを手動でダウンロード |
+| 2 | PNG変換 | Claude CodeがPDFを各ページごとにPNG画像へ変換 |
+| 3 | 画像分割 | 各ページを四分割し、記号検出の精度を確保 |
+| 4 | 記号検出 | Gemini 3 Flash（Thinking）のvision機能で各画像から対象記号を検出 |
+| 5 | データ蓄積 | 検出結果をNeon（サーバーレスPostgreSQL）に保存 |
+| 6 | 結果出力 | Claude CodeがNeonからデータを取得し、JSON形式で出力 |
+
+図面画像をそのまま1枚でvision APIに渡すと、記号が小さすぎて検出精度が落ちます。四分割することで各領域の解像度を維持し、検出の正確性を高めています。
+
+記号検出にGemini 3 FlashのThinkingモードを採用したのは、推論つきのvision性能に対するAPIコストの効率が高いためです。
+
+## APIコスト概算（20ページの図面セット）
+
+| 処理 | 内訳 | コスト |
+|------|------|--------|
+| PDF → PNG変換 | ローカル処理 | ¥0 |
+| 画像分割 | ローカル処理 | ¥0 |
+| Gemini 3 Flash (Thinking) | 80画像 × ~1,120 tokens ≒ 98K input / 24K output / 40〜80K thinking | ~¥40〜60 |
+| Neon | 無料枠内（0.5GB / 190h） | ¥0 |
+| Claude Code | JSON整形（サブスクリプション内） | — |
+| **合計** | | **~¥40〜60 / 案件** |
+
+人件費を除くAPI実費は1案件あたり約40〜60円。図面のページ数に比例しますが、数百ページ規模でも数千円程度に収まります。
+
+## 技術スタック
+
+| カテゴリ | ツール | 選定理由 |
+|----------|--------|----------|
+| エージェント | Claude Code | シェル操作・API呼び出し・DB操作を一連のワークフローとして自律実行 |
+| 画像処理 | Python (Pillow) | PDF変換・画像分割をスクリプトで自動化 |
+| 記号検出 | Gemini 3 Flash (Thinking) | Thinkingモードの推論つきvisionで高精度な検出とコスト効率を両立 |
+| データベース | Neon | サーバーレスPostgreSQLで無料枠が広く、個人運用に最適 |

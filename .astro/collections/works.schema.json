@@ -39,6 +39,9 @@
       "default": true,
       "type": "boolean"
     },
+    "status": {
+      "type": "string"
+    },
     "$schema": {
       "type": "string"
     }
