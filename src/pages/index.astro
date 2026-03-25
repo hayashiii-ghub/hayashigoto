@@ -6,6 +6,41 @@ const works = (await getCollection('works'))
   .filter((w) => w.data.featured !== false)
   .sort((a, b) => a.data.order - b.data.order);
 
+/* ---------- Tech Stack: worksから自動収集 + 追加ツール ---------- */
+const allWorks = await getCollection('works');
+const hiddenTech = ['D3.js'];
+const worksStacks = [...new Set(allWorks.flatMap((w) => w.data.stack))].filter((t) => !hiddenTech.includes(t));
+const extraTools = ['Astro', 'Vercel', 'Vite', 'Figma', 'Codex'];
+const allTech = [...new Set([...worksStacks, ...extraTools])];
+
+const techTips: Record<string, string> = {
+  'Next.js': 'フルスタックReactフレームワーク',
+  'React': 'UIコンポーネントライブラリ',
+  'TypeScript': '型安全なJavaScript',
+  'Tailwind CSS': 'ユーティリティファーストCSS',
+  'Zod': 'TypeScript向けバリデーション',
+  'Resend': 'トランザクションメール送信',
+  'GWS': 'Google Workspace 導入支援',
+  'Canva': '素材・コンテキスト作成',
+  'Cursor': 'AI統合コードエディタ',
+  'Claude Code': '自律性の高いコーディングエージェント',
+  'Python': '汎用スクリプト言語',
+  'Gemini 3 Flash': 'OCRと画像認識',
+  'Neon': 'サーバーレスPostgreSQL',
+  'Cloudflare': 'CDN・DNS・エッジコンピューティング',
+  'Hono': '軽量エッジ対応Webフレームワーク',
+  'Drizzle ORM': '型安全なTypeScript ORM',
+  'Astro': '静的HTML出力のWebフレームワーク',
+  'Vercel': 'Webサイトのデプロイ基盤',
+  'Vite': '高速なフロントエンドビルドツール',
+  'Figma': 'コンポーネント単位のデザイン',
+  'Codex': '複雑なロジックの整理・レビュー',
+};
+
+const mid = Math.ceil(allTech.length / 2);
+const track1 = allTech.slice(0, mid);
+const track2 = allTech.slice(mid);
+
 const nav = [
   { href: '#about', label: '/about' },
   { href: '#works', label: '/works' },
@@ -50,14 +85,14 @@ const nav = [
       <div class="marquee marquee--forward">
         <div class="marquee-track">
           <div class="marquee-content">
-            <span data-tip="フルスタックReactフレームワーク">Next.js</span><span data-tip="UIコンポーネントライブラリ">React</span><span data-tip="認証・DB・ストレージの統合BaaS">Supabase</span><span data-tip="Webサイトのデプロイ基盤">Vercel</span><span data-tip="CDN・DNS・セキュリティ">Cloudflare</span><span data-tip="自律性の高いコーディングエージェント">Claude Code</span><span data-tip="トランザクションメール送信">Resend</span><span data-tip="サーバーレスPostgreSQL">Neon</span><span data-tip="素材・コンテキスト作成">Canva</span><span data-tip="OCRと画像生成">Gemini API</span>
+            {track1.map((t) => <span data-tip={techTips[t] || t}>{t}</span>)}
           </div>
         </div>
       </div>
       <div class="marquee marquee--reverse">
         <div class="marquee-track">
           <div class="marquee-content">
-            <span data-tip="型安全なJavaScript">TypeScript</span><span data-tip="高速なフロントエンドビルドツール">Vite</span><span data-tip="ユーティリティファーストCSS">Tailwind CSS</span><span data-tip="軽量エッジ対応Webフレームワーク">Hono</span><span data-tip="コンポーネント単位のデザイン">Figma</span><span data-tip="AI統合コードエディタ">Cursor</span><span data-tip="複雑なロジックの整理・レビュー">Codex</span><span data-tip="Google Workspace 導入援助">GWS</span><span data-tip="静的HTML出力のWebフレームワーク">Astro</span>
+            {track2.map((t) => <span data-tip={techTips[t] || t}>{t}</span>)}
           </div>
         </div>
       </div>
