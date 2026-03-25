@@ -41,7 +41,7 @@ const nav = [
         {work.data.images && work.data.images.length > 0 && (
           <div class="work-detail-thumbnails">
             {work.data.images.map((img: string, i: number) => (
-              <img src={img} alt={`${work.data.title} のプレビュー ${i + 1}`} loading="lazy" />
+              <img src={img} alt={`${work.data.title} のプレビュー ${i + 1}`} loading="lazy" decoding="async" />
             ))}
           </div>
         )}

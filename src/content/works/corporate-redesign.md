@@ -6,7 +6,7 @@ role: "Design / Frontend"
 stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Zod", "Resend"]
 description: "リノベーション事業のコーポレートサイトをNext.js 16 (App Router)でフルリニューアル。"
 url: "https://tsukurikae.vercel.app"
-images: ["/works/corporate-redesign.jpg"]
+images: ["/works/corporate-redesign.webp"]
 order: 2
 ---
 

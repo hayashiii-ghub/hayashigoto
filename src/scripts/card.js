@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.startTiltX = state.tiltX;
     state.startTiltY = state.tiltY;
     overlay.classList.remove('is-dragging');
+    tilt.classList.remove('is-dragging');
   }
 
   function beginDrag(pointerId, clientX, clientY) {
@@ -164,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.startTiltY = state.tiltY;
     state.moved = false;
     overlay.classList.add('is-dragging');
+    tilt.classList.add('is-dragging');
   }
 
   function moveDrag(pointerId, clientX, clientY) {

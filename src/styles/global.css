@@ -783,11 +783,11 @@ body {
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   transition: transform 260ms ease-out;
-  will-change: transform;
 }
 
 .card-tilt.is-dragging {
   transition: none;
+  will-change: transform;
 }
 
 .card-orientation {
@@ -795,7 +795,6 @@ body {
   height: 100%;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
-  will-change: transform;
 }
 
 .card-orientation[data-orientation="portrait"] {
@@ -813,7 +812,6 @@ body {
   height: 100%;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
-  will-change: transform;
   transform-origin: center center;
 }
 
