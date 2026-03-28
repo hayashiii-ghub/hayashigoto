@@ -23,7 +23,7 @@ const {
   showFooterSns = false,
 } = Astro.props;
 
-const siteUrl = 'https://shigoto.dev';
+const siteUrl = Astro.site?.origin || 'https://shigoto.dev';
 const ogImage = `${siteUrl}/og-image.jpg`;
 const fullTitle = title === 'はやしごと'
   ? 'はやしごと | hay@shigoto.dev'

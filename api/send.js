@@ -84,6 +84,7 @@ export default async function handler(req, res) {
 
   const clientIp = getClientIp(req);
   if (isRateLimited(clientIp)) {
+    console.warn(`Rate limit exceeded: ${clientIp}`);
     return res.status(429).json({ error: '送信回数が多すぎます。時間をおいて再度お試しください' });
   }
 

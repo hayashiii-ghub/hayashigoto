@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const nav = [
+  { href: '/', label: '/home' },
+  { href: '/#works', label: '/works' },
+  { href: '/#contact', label: '/contact' },
+];
+---
+<Layout title="404" description="ページが見つかりません" nav={nav}>
+  <section class="dir-section work-detail">
+    <div class="dir-section-inner">
+      <h1 class="cli-line">
+        <span class="cli-prompt">></span> <span class="cli-cmd">cat</span> <span class="cli-path">???</span>
+      </h1>
+
+      <div class="dir-tree">
+        <div class="dir-file">
+          <span class="dir-pipe">│</span>
+          <span class="file-value">404 — ページが見つかりません</span>
+        </div>
+        <div class="dir-file">
+          <span class="dir-pipe">│</span>
+          <span class="file-value" style="opacity: 0.5">お探しのページは存在しないか、移動した可能性があります。</span>
+        </div>
+        <div class="dir-file work-back">
+          <a href="/" class="file-more">← cd /home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

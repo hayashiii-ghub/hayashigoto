@@ -47,7 +47,7 @@ const nav = [
   { href: '#contact', label: '/contact' },
 ];
 ---
-<Layout title="はやしごと" canonical="https://shigoto.dev/" nav={nav} showFooterSns={true}>
+<Layout title="はやしごと" canonical={`${Astro.site?.origin || 'https://shigoto.dev'}/`} nav={nav} showFooterSns={true}>
   <Fragment slot="head">
     <link rel="preload" as="image" type="image/webp" href="/logo.webp" />
   </Fragment>
