@@ -171,7 +171,21 @@ body {
   color: var(--text-dim);
   font-size: 15px;
   letter-spacing: 0.1em;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-sub:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.hero-sub a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.hero-sub a:hover {
+  color: var(--accent-light);
 }
 
 .hero-sns {
@@ -967,6 +981,16 @@ body {
   font-size: 0.75rem;
   color: var(--text-dim);
   letter-spacing: 0.08em;
+}
+
+.footer-link {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: var(--accent-light);
 }
 
 /* ---- Reduced Motion ---- */

@@ -3,6 +3,7 @@ dist
 output
 .DS_Store
 *.local
+.astro
 .claude
 .env
 .env.*
