@@ -26,6 +26,9 @@
     "url": {
       "type": "string"
     },
+    "github": {
+      "type": "string"
+    },
     "images": {
       "type": "array",
       "items": {
