@@ -14,6 +14,12 @@ const { showSns = false } = Astro.props;
         <SnsLinks />
       </div>
     )}
-    <p class="footer-copy">&copy; はやしごと &mdash; <a href="mailto:hay@shigoto.dev" class="footer-link">hay@shigoto.dev</a> &mdash; <a href="https://shigoto.website" target="_blank" rel="noopener noreferrer" class="footer-link">shigoto.website</a></p>
+    <p class="footer-copy">
+      <span class="footer-copy-item">&copy; はやしごと</span>
+      <span class="footer-copy-sep" aria-hidden="true">&mdash;</span>
+      <span class="footer-copy-item"><a href="mailto:hay@shigoto.dev" class="footer-link">hay@shigoto.dev</a></span>
+      <span class="footer-copy-sep" aria-hidden="true">&mdash;</span>
+      <span class="footer-copy-item"><a href="https://shigoto.website" target="_blank" rel="noopener noreferrer" class="footer-link">shigoto.website</a></span>
+    </p>
   </div>
 </footer>

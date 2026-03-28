@@ -23,6 +23,7 @@
 ├── src/
 │   ├── pages/              # ページ（Astro）
 │   │   ├── index.astro     # トップページ
+│   │   ├── 404.astro       # カスタム404ページ
 │   │   ├── card.astro      # 名刺ビューアー
 │   │   ├── sitemap.xml.ts  # 動的サイトマップ生成
 │   │   └── works/

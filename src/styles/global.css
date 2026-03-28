@@ -981,6 +981,19 @@ body {
   font-size: 0.75rem;
   color: var(--text-dim);
   letter-spacing: 0.08em;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .footer-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .footer-copy-sep {
+    display: none;
+  }
 }
 
 .footer-link {
