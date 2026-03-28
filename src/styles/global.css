@@ -12,7 +12,10 @@
   --border-accent: #3a5332;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
   --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
-  --section-gap: clamp(6rem, 12vh, 10rem);
+  --header-h: 80px;
+  --content-h: calc(100dvh - var(--header-h));
+  --scroll-h: calc(100svh - var(--header-h));
+  --section-gap: clamp(6rem, 12dvh, 10rem);
 }
 
 * {
@@ -121,7 +124,7 @@ body {
 
 /* ---- Hero ---- */
 .hero {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
