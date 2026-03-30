@@ -89,6 +89,7 @@ export default async function handler(req, res) {
   }
 
   const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const category = sanitizeLine(body.category);
   const name = sanitizeLine(body.name);
   const email = sanitizeLine(body.email).toLowerCase();
   const message = String(body.message || '').trim();
@@ -97,6 +98,11 @@ export default async function handler(req, res) {
   // Honeypot check
   if (website) {
     return res.status(200).json({ success: true });
+  }
+
+  const validCategories = ['work', 'other'];
+  if (!validCategories.includes(category)) {
+    return res.status(400).json({ error: 'カテゴリを選択してください' });
   }
 
   if (!name || !email || !message) {
@@ -120,8 +126,8 @@ export default async function handler(req, res) {
       from: 'はやしごと <noreply@send.shigoto.dev>',
       to: 'hay@shigoto.dev',
       replyTo: email,
-      subject: `【お問い合わせ】${name} さんより`,
-      text: `名前: ${name}\nメール: ${email}\n\n${message}`,
+      subject: category === 'work' ? `【お仕事の相談】${name} さんより` : `【お問い合わせ】${name} さんより`,
+      text: `カテゴリ: ${category === 'work' ? 'お仕事の相談' : 'その他'}\n名前: ${name}\nメール: ${email}\n\n${message}`,
     });
 
     return res.status(200).json({ success: true });

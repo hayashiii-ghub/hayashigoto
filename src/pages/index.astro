@@ -208,6 +208,21 @@ const nav = [
 
         <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3">
           <span class="dir-branch">├──</span>
+          <span class="dir-name">category.sh</span>
+          <div class="dir-expand">
+            <div class="dir-file">
+              <span class="dir-pipe">│</span>
+              <select id="category" name="category" required>
+                <option value="" disabled selected>select category</option>
+                <option value="work">お仕事の相談</option>
+                <option value="other">その他</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 4">
+          <span class="dir-branch">├──</span>
           <span class="dir-name">message.md</span>
           <div class="dir-expand">
             <div class="dir-file">
@@ -217,7 +232,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" style="--reveal-delay: 4">
+        <div class="dir-entry cli-reveal" style="--reveal-delay: 5">
           <span class="dir-branch">└──</span>
           <button type="submit" class="dir-submit">./send.sh<span class="cursor-blink">_</span></button>
         </div>

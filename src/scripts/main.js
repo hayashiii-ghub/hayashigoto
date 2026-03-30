@@ -401,6 +401,7 @@ function initContactForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          category: form.category.value,
           name: form.name.value,
           email: form.email.value,
           message: form.message.value,
