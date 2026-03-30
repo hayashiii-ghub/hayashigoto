@@ -6,6 +6,8 @@ role: "Branding / DX / Web"
 stack: ["GWS", "Canva", "Cursor"]
 description: "GWS導入・AIエージェント活用・ロゴ / 名刺 / Web制作・事業立ち上げまで一気通貫ブランディング。"
 order: 1
+featured: false
+status: "進行中"
 ---
 
 Google Workspaceの導入によるDX化から、AIエージェントの業務活用、ブランドロゴ・名刺の制作、Webサイトの構築、さらにWeb事業の立ち上げまでを一気通貫で支援したブランディングプロジェクトです。

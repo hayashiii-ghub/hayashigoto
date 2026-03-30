@@ -2,15 +2,17 @@
 title: "コーポレートサイト フルリニューアル"
 dirName: "corporate-redesign"
 year: 2026
-role: "Design / Frontend"
+role: "Direction / Design / Frontend"
 stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Zod", "Resend"]
-description: "リノベーション事業のコーポレートサイトをNext.js 16 (App Router)でフルリニューアル。"
+description: "WordPressで構築されていたコーポレートサイトを、ヒアリングからドメイン・DNS移管、運用保守まで一気通貫でフルリニューアル。"
 url: "https://tsukurikae.vercel.app"
 images: ["/works/corporate-redesign.webp"]
 order: 2
 ---
 
-リノベーション事業を展開する企業のコーポレートサイトをフルリニューアルしたプロジェクトです。Next.js 16のApp Routerを採用し、施工事例の動的ルーティング、Resendによるお問い合わせフォーム、Zodによるサーバー/クライアント共用バリデーションを実装しました。
+リノベーション事業を展開する企業のコーポレートサイトを、現在の事業内容に合わせてフルリニューアルしたプロジェクトです。もともとWordPressで構築・運用されていたサイトを、ヒアリングによる課題整理から情報設計・デザイン・実装、さらにドメイン移管・DNS切り替え・運用保守まで一気通貫で担当しました。
+
+技術面ではNext.js 16のApp Routerを採用し、施工事例の動的ルーティングやResendによるお問い合わせフォーム、Zodによるバリデーションを実装。それに加えて、ユーザー導線の設計やレスポンシブ対応、アクセシビリティの改善など、コーディングの枠を超えたサイト全体の体験設計にも深く関わりました。
 
 ## 技術スタック
 
