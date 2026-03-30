@@ -684,6 +684,13 @@ body {
   border-radius: 4px;
 }
 
+.work-detail-thumbnails img[src*="toban-app"] {
+  border: none;
+  border-radius: 0;
+  max-width: 110%;
+  margin-left: -5%;
+}
+
 .work-detail-body {
   margin: 2rem 0;
   padding-left: 0.5rem;
