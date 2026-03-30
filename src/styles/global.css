@@ -946,6 +946,50 @@ body {
   -webkit-touch-callout: none;
 }
 
+/* ---- Card Viewer (inline in about section) ---- */
+.card-wrapper--inline {
+  --card-w: clamp(260px, 40vw, 380px);
+  height: clamp(340px, 48vh, 460px);
+  margin: 1rem 0 0.5rem;
+  overflow: visible;
+}
+
+.card-wrapper--inline .card-canvas {
+  justify-content: flex-start;
+  perspective-origin: calc(var(--card-w) * 0.302) 50%;
+}
+
+.card-wrapper--inline .card-tilt {
+  width: var(--card-w);
+  margin-left: calc(var(--card-w) * -0.198);
+}
+
+.card-wrapper--inline .card-overlay {
+  width: var(--card-w);
+  left: calc(var(--card-w) * 0.302);
+}
+
+.card-wrapper--inline .card-overlay[data-orientation="portrait"] {
+  left: calc(var(--card-w) * 0.302);
+  transform: translate(-50%, -50%) rotateZ(90deg);
+}
+
+.dir-entry--meishi > .dir-expand {
+  max-height: 0;
+  padding-left: 3.5ch;
+  overflow: visible;
+  clip-path: inset(0 -200px 100% -200px);
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease,
+              clip-path 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dir-entry--meishi.is-open > .dir-expand {
+  max-height: 800px;
+  opacity: 1;
+  clip-path: inset(0 -200px 0% -200px);
+}
+
 /* ---- Footer ---- */
 .footer {
   border-top: 1px solid var(--border);
@@ -1060,6 +1104,11 @@ body {
   .card-wrapper {
     height: clamp(440px, 68vh, 620px);
   }
+
+  .card-wrapper--inline {
+    --card-w: clamp(240px, 52vw, 360px);
+    height: clamp(320px, 46vh, 420px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -1133,4 +1182,10 @@ body {
   .card-overlay {
     width: clamp(280px, 88vw, 460px);
   }
+
+  .card-wrapper--inline {
+    --card-w: clamp(220px, 72vw, 340px);
+    height: clamp(280px, 52vh, 380px);
+  }
+
 }

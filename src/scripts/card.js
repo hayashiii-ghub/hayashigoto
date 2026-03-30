@@ -340,18 +340,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (key === 'enter' || key === ' ') {
       event.preventDefault();
+      event.stopPropagation();
       toggleSide();
       return;
     }
 
     if (key === 'o') {
       event.preventDefault();
+      event.stopPropagation();
       toggleOrientation();
       return;
     }
 
     if (key === 'r') {
       event.preventDefault();
+      event.stopPropagation();
       resetCard();
     }
   });
