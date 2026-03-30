@@ -5,7 +5,7 @@ year: 2026
 role: "Design / Full Stack"
 stack: ["Cloudflare", "Hono", "React", "Drizzle ORM", "Vitest"]
 url: "https://toban.app"
-github: "https://github.com/hayashiii-ghub/toban"
+github: "https://github.com/hayashiii-ghub/toban-app"
 description: "掃除当番・給食当番・日直などのローテーション表を作成・印刷・共有できる無料Webアプリ。"
 images: ["/works/toban-app.webp"]
 order: 3
