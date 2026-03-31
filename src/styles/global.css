@@ -441,6 +441,19 @@ body {
   vertical-align: middle;
 }
 
+.category-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.1em 0.5em;
+  border-radius: 2px;
+  margin-left: 0.75ch;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
 /* Toggleable entries */
 .dir-entry[data-toggle] > .dir-name {
   cursor: pointer;

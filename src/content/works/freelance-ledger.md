@@ -8,6 +8,7 @@ description: "売上と経費を自動計算し、カレンダーやグラフで
 order: 4
 featured: false
 status: "製作中"
+category: "個人開発"
 ---
 
 個人事業主が日々の売上と経費をサッと記録し、収支を自動で計算・可視化できるWebアプリを開発しました。

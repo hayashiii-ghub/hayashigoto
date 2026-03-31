@@ -45,6 +45,13 @@
     "status": {
       "type": "string"
     },
+    "category": {
+      "type": "string",
+      "enum": [
+        "個人開発",
+        "受託開発"
+      ]
+    },
     "$schema": {
       "type": "string"
     }

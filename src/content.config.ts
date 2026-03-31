@@ -16,6 +16,7 @@ const works = defineCollection({
     order: z.number(),
     featured: z.boolean().default(true),
     status: z.string().optional(),
+    category: z.enum(['個人開発', '受託開発']).optional(),
   }),
 });
 

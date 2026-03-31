@@ -8,6 +8,7 @@ description: "WordPressで構築されていたコーポレートサイトを、
 url: "https://tsukurikae.vercel.app"
 images: ["/works/corporate-redesign.webp"]
 order: 2
+category: "受託開発"
 ---
 
 リノベーション事業を展開する企業のコーポレートサイトを、現在の事業内容に合わせてフルリニューアルしたプロジェクトです。もともとWordPressで構築・運用されていたサイトを、ヒアリングによる課題整理から情報設計・デザイン・実装、さらにドメイン移管・DNS切り替え・運用保守まで一気通貫で担当しました。

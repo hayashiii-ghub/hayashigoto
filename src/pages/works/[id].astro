@@ -31,6 +31,9 @@ const nav = [
         <div class="dir-file"><span class="file-label">title:</span><span class="file-value">{work.data.title}</span></div>
         <div class="dir-file"><span class="file-label">year:</span><span class="file-value">{work.data.year}</span></div>
         <div class="dir-file"><span class="file-label">role:</span><span class="file-value">{work.data.role}</span></div>
+        {work.data.category && (
+          <div class="dir-file"><span class="file-label">category:</span><span class="file-value"><span class="category-tag">{work.data.category}</span></span></div>
+        )}
         <div class="dir-file"><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
 
         {work.data.url && (

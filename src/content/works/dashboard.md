@@ -6,6 +6,7 @@ role: "System Design / AI Direction"
 stack: ["Claude Code", "Python", "Gemini 3 Flash", "Neon"]
 description: "Claude Codeをエージェントとしてワークフローに組み込み、図面画像から特定記号を自動検出・抽出する社内システム。"
 order: 4
+category: "受託開発"
 ---
 
 建設現場で使われる図面PDFから、特定の記号を自動検出・抽出するシステムを構築しました。共有された図面を起点に、Claude Codeがエージェントとして変換・分割・検出・蓄積の一連の処理を実行します。

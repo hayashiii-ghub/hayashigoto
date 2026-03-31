@@ -27,7 +27,7 @@ const nav = [
         {workEntries.map(({ work, isLast }) => (
           <div class="dir-entry" data-toggle role="button" aria-expanded="false" tabindex="0">
             <span class="dir-branch">{isLast ? '└──' : '├──'}</span>
-            <span class="dir-name">{work.data.dirName}/</span>{work.data.status && <span class="status-tag">{work.data.status}</span>}
+            <span class="dir-name">{work.data.dirName}/</span>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
             <div class="dir-expand">
               <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-value dir-desc">{work.data.description}</span></div>
               <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
