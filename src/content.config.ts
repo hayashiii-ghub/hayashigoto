@@ -12,6 +12,7 @@ const works = defineCollection({
     description: z.string(),
     url: z.string().optional(),
     github: z.string().optional(),
+    note: z.string().optional(),
     images: z.array(z.string()).optional(),
     order: z.number(),
     featured: z.boolean().default(true),

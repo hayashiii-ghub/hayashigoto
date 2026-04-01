@@ -29,6 +29,9 @@
     "github": {
       "type": "string"
     },
+    "note": {
+      "type": "string"
+    },
     "images": {
       "type": "array",
       "items": {

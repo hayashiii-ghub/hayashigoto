@@ -42,6 +42,12 @@ const nav = [
           </div>
         )}
 
+        {work.data.note && (
+          <div class="dir-file work-detail-url">
+            <span class="cli-prompt">></span> <span class="cli-cmd">note</span> <a href={work.data.note} target="_blank" rel="noopener noreferrer">{work.data.note}</a>
+          </div>
+        )}
+
         {work.data.github && (
           <div class="dir-file work-detail-url">
             <span class="cli-prompt">></span> <span class="cli-cmd">git remote</span> <a href={work.data.github} target="_blank" rel="noopener noreferrer">{work.data.github}</a>
