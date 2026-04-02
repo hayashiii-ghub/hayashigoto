@@ -65,6 +65,10 @@ const fullTitle = title === 'はやしごと'
     <Footer showSns={showFooterSns} />
     <slot name="after-footer" />
 
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <img id="lightbox-img" src="" alt="" />
+    </div>
+
     <script>
       import '../scripts/main.js';
     </script>

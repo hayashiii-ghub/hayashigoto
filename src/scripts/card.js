@@ -7,9 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const card = document.getElementById('card-body');
   if (!overlay || !tilt || !orientation || !card) return;
 
+  const initialOrientation = orientation.dataset.orientation || 'portrait';
+
   const state = {
     side: 'front',
-    orientation: 'portrait',
+    orientation: initialOrientation,
     tiltX: 0,
     tiltY: 0,
     dragging: false,
@@ -141,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.switching = false;
     card.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
     state.side = 'front';
-    state.orientation = 'portrait';
+    state.orientation = initialOrientation;
     renderCard();
     animateTiltToRest();
   }

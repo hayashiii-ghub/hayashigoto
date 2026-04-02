@@ -14,6 +14,11 @@ const works = defineCollection({
     github: z.string().optional(),
     note: z.string().optional(),
     images: z.array(z.string()).optional(),
+    card: z.object({
+      front: z.string(),
+      back: z.string(),
+      orientation: z.enum(['landscape', 'portrait']).default('portrait'),
+    }).optional(),
     order: z.number(),
     featured: z.boolean().default(true),
     status: z.string().optional(),

@@ -38,6 +38,31 @@
         "type": "string"
       }
     },
+    "card": {
+      "type": "object",
+      "properties": {
+        "front": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        },
+        "orientation": {
+          "default": "portrait",
+          "type": "string",
+          "enum": [
+            "landscape",
+            "portrait"
+          ]
+        }
+      },
+      "required": [
+        "front",
+        "back",
+        "orientation"
+      ],
+      "additionalProperties": false
+    },
     "order": {
       "type": "number"
     },

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initToggleAll();
   initContactForm();
   initTooltip();
+  initLightbox();
 });
 
 // Hero ロゴ画像のフォールバック（CSP対応のため JS で処理）
@@ -380,6 +381,32 @@ function initTooltip() {
 
   // Hide on scroll
   window.addEventListener('scroll', hide, { passive: true });
+}
+
+// ライトボックス（画像オーバーレイ）
+function initLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  if (!lightbox || !img) return;
+
+  document.querySelectorAll('a[data-lightbox]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      img.src = link.href;
+      img.alt = link.textContent || '';
+      lightbox.setAttribute('aria-hidden', 'false');
+    });
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.setAttribute('aria-hidden', 'true');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.getAttribute('aria-hidden') === 'false') {
+      lightbox.setAttribute('aria-hidden', 'true');
+    }
+  });
 }
 
 // コンタクトフォーム
