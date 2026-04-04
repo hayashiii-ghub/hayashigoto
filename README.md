@@ -14,6 +14,7 @@
 | メール送信 | Resend | モダンなAPI設計・独自ドメイン送信対応・無料枠で十分 |
 | スパム対策 | ハニーポット + 入力バリデーション + 簡易レート制限 | 外部サービス不要で最低限の不正送信対策を維持 |
 | フォント | Fontsource (IBM Plex Mono) + システム日本語フォント | 欧文だけを配信して日本語はOS標準に寄せ、転送量を抑制 |
+| ブランド画像 | sharp + to-ico（`prebuild`） | `assets/brand/logo-master.png` から軽量ロゴと各種ファビコンを同じ再現性で生成 |
 | セキュリティ | vercel.json ヘッダー (CSP, Permissions-Policy等) | 外部依存最小限の構成でCSPを厳格に設定可能 |
 | パッケージマネージャ | npm | Node.js標準・追加ツール不要 |
 
@@ -24,7 +25,6 @@
 │   ├── pages/              # ページ（Astro）
 │   │   ├── index.astro     # トップページ
 │   │   ├── 404.astro       # カスタム404ページ
-│   │   ├── card.astro      # 名刺ビューアー
 │   │   ├── sitemap.xml.ts  # 動的サイトマップ生成
 │   │   └── works/
 │   │       ├── index.astro # 制作実績一覧
@@ -41,6 +41,9 @@
 │   │   ├── main.js         # メインページ用 JavaScript
 │   │   └── card.js         # 名刺ビューアー用 JavaScript
 │   └── styles/global.css   # グローバルスタイル
+├── assets/
+│   ├── brand/              # ロゴの原本（非公開）
+│   └── meishi-source/      # 名刺画像の原本（非公開）
 ├── api/
 │   └── send.js             # お問い合わせ送信 (Vercel Serverless Function)
 ├── public/                 # 静的アセット（画像・robots.txt・sitemap.xml）

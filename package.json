@@ -4,6 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "optimize:assets": "node scripts/optimize-brand-assets.mjs",
+    "prebuild": "npm run optimize:assets",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -16,6 +18,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.7",
+    "sharp": "^0.34.5",
+    "to-ico": "^1.1.5",
     "typescript": "^5.9.3"
   }
 }

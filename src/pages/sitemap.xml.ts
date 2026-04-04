@@ -8,7 +8,7 @@ function createUrl(path) {
 
 export async function GET() {
   const works = await getCollection('works');
-  const staticPages = ['/', '/card/', '/works/'];
+  const staticPages = ['/', '/works/'];
   const workPages = works.map((work) => `/works/${work.id}/`);
   const urls = [...staticPages, ...workPages];
   const lastmod = new Date().toISOString().split('T')[0];
