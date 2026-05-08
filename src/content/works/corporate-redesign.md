@@ -5,7 +5,7 @@ year: 2026
 role: "Direction / Design / Frontend"
 stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Zod", "Resend"]
 description: "WordPressで構築されていたコーポレートサイトを、ヒアリングからドメイン・DNS移管、運用保守まで一気通貫でフルリニューアル。"
-url: "https://tsukurikae.jp/"
+url: "https://tsukurikae.jp"
 images: ["/works/corporate-redesign.webp"]
 order: 2
 category: "受託開発"
