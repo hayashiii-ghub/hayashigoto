@@ -14,6 +14,7 @@ const works = defineCollection({
     github: z.string().optional(),
     note: z.string().optional(),
     images: z.array(z.string()).optional(),
+    imageDisplay: z.enum(['thumbnail', 'cli-link']).optional(),
     card: z.object({
       front: z.string(),
       back: z.string(),

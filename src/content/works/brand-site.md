@@ -11,6 +11,7 @@ featured: false
 status: "進行中"
 category: "受託開発"
 images: ["/works/brand-logo.png"]
+imageDisplay: cli-link
 card:
   front: "/works/anc-card-front.png"
   back: "/works/anc-card-back.png"
