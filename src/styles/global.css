@@ -131,6 +131,7 @@ body {
   justify-content: center;
   padding: clamp(1.5rem, 4vw, 3rem);
   padding-top: 5rem;
+  padding-bottom: 5rem;
   position: relative;
 }
 
