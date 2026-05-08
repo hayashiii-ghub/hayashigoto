@@ -54,6 +54,24 @@ const nav = [
           </div>
         )}
 
+        {work.data.tools && work.data.tools.map((tool: { name: string; url?: string; github?: string }) => (
+          <>
+            <div class="dir-file work-detail-url">
+              <span class="cli-prompt">></span> <span class="cli-cmd">cd</span> <span>{tool.name}</span>
+            </div>
+            {tool.url && (
+              <div class="dir-file work-detail-url">
+                <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={tool.url} target="_blank" rel="noopener noreferrer">{tool.url}</a>
+              </div>
+            )}
+            {tool.github && (
+              <div class="dir-file work-detail-url">
+                <span class="cli-prompt">></span> <span class="cli-cmd">git remote</span> <a href={tool.github} target="_blank" rel="noopener noreferrer">{tool.github}</a>
+              </div>
+            )}
+          </>
+        ))}
+
         {work.data.images && work.data.images.map((img: string) => (
           <div class="dir-file work-detail-url">
             <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={img} data-lightbox>{img.split('/').pop()}</a>

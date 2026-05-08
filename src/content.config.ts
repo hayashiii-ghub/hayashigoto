@@ -19,6 +19,11 @@ const works = defineCollection({
       back: z.string(),
       orientation: z.enum(['landscape', 'portrait']).default('portrait'),
     }).optional(),
+    tools: z.array(z.object({
+      name: z.string(),
+      url: z.string().optional(),
+      github: z.string().optional(),
+    })).optional(),
     order: z.number(),
     featured: z.boolean().default(true),
     status: z.string().optional(),
