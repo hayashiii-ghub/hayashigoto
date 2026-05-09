@@ -19,7 +19,7 @@
 | スパム対策 | ハニーポット + 入力バリデーション + 簡易レート制限 | 外部サービス不要で最低限の不正送信対策を維持 |
 | フォント | Fontsource (IBM Plex Mono, latin サブセット) + システム日本語フォント | 欧文だけを配信して日本語はOS標準に寄せ、転送量を抑制 |
 | ブランド画像 | sharp + to-ico（`prebuild`） | `assets/brand/logo-master.png` から軽量ロゴと各種ファビコンを同じ再現性で生成 |
-| セキュリティ | vercel.json ヘッダー (CSP, HSTS, Permissions-Policy 等) | 外部依存最小限の構成で CSP/HSTS を厳格に設定 |
+| セキュリティ | vercel.json ヘッダー (CSP, HSTS, Permissions-Policy 等) | 外部依存最小限の構成で CSP/HSTS/Permissions-Policy を厳格に設定 |
 | パッケージマネージャ | npm | Node.js標準・追加ツール不要 |
 
 ## 構成
