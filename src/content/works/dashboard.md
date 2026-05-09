@@ -3,7 +3,7 @@ title: "図面記号検出システム"
 dirName: "drawing-detection"
 year: 2025
 role: "System Design / AI Direction"
-stack: ["Claude Code", "Python", "Gemini 3 Flash", "Neon"]
+stack: ["Claude Code", "Python", "Gemini API", "Neon"]
 description: "Claude Codeをエージェントとしてワークフローに組み込み、図面画像から特定記号を自動検出・抽出する社内システム。"
 order: 4
 category: "受託案件"
