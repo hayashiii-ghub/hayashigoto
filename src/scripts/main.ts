@@ -331,6 +331,12 @@ function initLightbox(): void {
   });
 }
 
+// フォームフィールド取得（null-safe）
+function getField<T extends HTMLElement>(form: HTMLFormElement, name: string): T | null {
+  const el = form.elements.namedItem(name);
+  return el instanceof HTMLElement ? (el as T) : null;
+}
+
 // コンタクトフォーム
 function initContactForm(): void {
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
@@ -347,12 +353,25 @@ function initContactForm(): void {
     btn.disabled = true;
 
     try {
+      const category = getField<HTMLSelectElement>(form, 'category');
+      const name = getField<HTMLInputElement>(form, 'name');
+      const email = getField<HTMLInputElement>(form, 'email');
+      const message = getField<HTMLTextAreaElement>(form, 'message');
+      const website = getField<HTMLInputElement>(form, 'website');
+
+      // 必須フィールドが見つからない (HTML 壊れている)
+      if (!category || !name || !email || !message) {
+        btn.innerHTML = original;
+        btn.disabled = false;
+        throw new Error('フォーム要素が見つかりません');
+      }
+
       const formData = {
-        category: (form.elements.namedItem('category') as HTMLSelectElement).value,
-        name: (form.elements.namedItem('name') as HTMLInputElement).value,
-        email: (form.elements.namedItem('email') as HTMLInputElement).value,
-        message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
-        website: (form.elements.namedItem('website') as HTMLInputElement | null)?.value || '',
+        category: category.value,
+        name: name.value,
+        email: email.value,
+        message: message.value,
+        website: website?.value ?? '',
       };
 
       const res = await fetch('/api/send', {
