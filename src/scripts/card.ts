@@ -186,7 +186,7 @@ function initCard(): void {
     tilt!.classList.remove('is-dragging');
   }
 
-  function beginDrag(pointerId: PointerIdentifier, clientX: number, clientY: number): void {
+  function beginDrag(pointerId: number | string, clientX: number, clientY: number): void {
     cancelReset();
     state.dragging = true;
     state.pointerId = pointerId;
@@ -199,7 +199,7 @@ function initCard(): void {
     tilt!.classList.add('is-dragging');
   }
 
-  function moveDrag(pointerId: PointerIdentifier, clientX: number, clientY: number): boolean {
+  function moveDrag(pointerId: number | string, clientX: number, clientY: number): boolean {
     if (!state.dragging || pointerId !== state.pointerId) return false;
 
     const movedX = Math.abs(clientX - state.startX);
@@ -210,7 +210,7 @@ function initCard(): void {
     return true;
   }
 
-  function endDrag(pointerId: PointerIdentifier, { toggleTap = true }: { toggleTap?: boolean } = {}): boolean {
+  function endDrag(pointerId: number | string, { toggleTap = true }: { toggleTap?: boolean } = {}): boolean {
     if (!state.dragging || pointerId !== state.pointerId) return false;
 
     const wasTap = !state.moved;
@@ -224,7 +224,7 @@ function initCard(): void {
     return true;
   }
 
-  function cancelDrag(pointerId: PointerIdentifier): boolean {
+  function cancelDrag(pointerId: number | string): boolean {
     if (!state.dragging || pointerId !== state.pointerId) return false;
 
     finishDrag();
@@ -327,41 +327,37 @@ function initCard(): void {
       }
     });
 
-    overlay.addEventListener('touchstart', (event: Event) => {
-      const e = event as TouchEvent;
-      const [touch] = e.changedTouches;
+    overlay.addEventListener('touchstart', (event: TouchEvent) => {
+      const [touch] = event.changedTouches;
       if (!touch) return;
 
-      e.preventDefault();
+      event.preventDefault();
       beginDrag(touch.identifier, touch.clientX, touch.clientY);
     }, { passive: false });
 
-    overlay.addEventListener('touchmove', (event: Event) => {
-      const e = event as TouchEvent;
+    overlay.addEventListener('touchmove', (event: TouchEvent) => {
       if (state.pointerId !== null && typeof state.pointerId === 'number') {
-        const touch = findTouchById(e.changedTouches, state.pointerId);
+        const touch = findTouchById(event.changedTouches, state.pointerId);
         if (!touch) return;
 
-        e.preventDefault();
+        event.preventDefault();
         moveDrag(touch.identifier, touch.clientX, touch.clientY);
       }
     }, { passive: false });
 
-    overlay.addEventListener('touchend', (event: Event) => {
-      const e = event as TouchEvent;
+    overlay.addEventListener('touchend', (event: TouchEvent) => {
       if (state.pointerId !== null && typeof state.pointerId === 'number') {
-        const touch = findTouchById(e.changedTouches, state.pointerId);
+        const touch = findTouchById(event.changedTouches, state.pointerId);
         if (!touch) return;
 
-        e.preventDefault();
+        event.preventDefault();
         endDrag(touch.identifier);
       }
     }, { passive: false });
 
-    overlay.addEventListener('touchcancel', (event: Event) => {
-      const e = event as TouchEvent;
+    overlay.addEventListener('touchcancel', (event: TouchEvent) => {
       if (state.pointerId !== null && typeof state.pointerId === 'number') {
-        const touch = findTouchById(e.changedTouches, state.pointerId);
+        const touch = findTouchById(event.changedTouches, state.pointerId);
         if (!touch) return;
 
         cancelDrag(touch.identifier);
@@ -376,27 +372,26 @@ function initCard(): void {
   }, { signal });
 
   // キーボード操作（オーバーレイにフォーカスがある場合）
-  overlay.addEventListener('keydown', (event: Event) => {
-    const e = event as KeyboardEvent;
-    const key = e.key.toLowerCase();
+  overlay.addEventListener('keydown', (event: KeyboardEvent) => {
+    const key = event.key.toLowerCase();
 
     if (key === 'enter' || key === ' ') {
-      e.preventDefault();
-      e.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
       toggleSide();
       return;
     }
 
     if (key === 'o') {
-      e.preventDefault();
-      e.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
       toggleOrientation();
       return;
     }
 
     if (key === 'r') {
-      e.preventDefault();
-      e.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
       resetCard();
     }
   });
