@@ -2,14 +2,14 @@ import { getCollection } from 'astro:content';
 
 const siteUrl = import.meta.env.SITE || 'https://shigoto.dev';
 
-function createUrl(path) {
+function createUrl(path: string) {
   return new URL(path, siteUrl).toString();
 }
 
 export async function GET() {
   const works = await getCollection('works');
-  const staticPages = ['/', '/works/'];
-  const workPages = works.map((work) => `/works/${work.id}/`);
+  const staticPages = ['/', '/works'];
+  const workPages = works.map((work) => `/works/${work.id}`);
   const urls = [...staticPages, ...workPages];
   const lastmod = new Date().toISOString().split('T')[0];
 

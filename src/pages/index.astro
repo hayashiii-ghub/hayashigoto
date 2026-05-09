@@ -47,7 +47,7 @@ const nav = [
   { href: '#contact', label: '/contact' },
 ];
 ---
-<Layout title="はやしごと" canonical={`${Astro.site?.origin || 'https://shigoto.dev'}/`} nav={nav} showFooterSns={true}>
+<Layout title="はやしごと" canonical={`${Astro.site!.origin}/`} nav={nav} showFooterSns={true}>
   <Fragment slot="head">
     <link rel="preload" as="image" type="image/webp" href="/logo.webp" />
   </Fragment>
@@ -103,16 +103,18 @@ const nav = [
   <!-- About Section -->
   <section class="dir-section" id="about">
     <div class="dir-section-inner">
-      <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
-        <span class="cli-prompt">></span> <span class="cli-path">/about</span>
+      <h2 class="cli-line cli-reveal">
+        <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls="about">
+          <span class="cli-prompt">></span> <span class="cli-path">/about</span>
+        </button>
       </h2>
 
       <div class="dir-tree">
-        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1" role="button" aria-expanded="false" tabindex="0">
+        <div class="dir-entry cli-reveal" data-toggle role="button" aria-expanded="false" tabindex="0">
           <span class="dir-branch">├──</span>
           <span class="dir-name">profile.yml</span>
           <div class="dir-expand">
-            <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/profile.webp" alt="はやしごと" class="profile-logo" width="240" height="240" loading="lazy" decoding="async" /></div>
+            <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/profile.webp" alt="林 祐太" class="profile-logo" width="240" height="240" loading="lazy" decoding="async" /></div>
             <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">name:</span><span class="file-value">林 祐太 / yuta hayashi</span></div>
             <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">brand:</span><span class="file-value">はやしごと</span></div>
             <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">email:</span><span class="file-value">hay@shigoto.dev</span></div>
@@ -120,7 +122,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2" role="button" aria-expanded="false" tabindex="0">
+        <div class="dir-entry cli-reveal" data-toggle role="button" aria-expanded="false" tabindex="0">
           <span class="dir-branch">├──</span>
           <span class="dir-name">philosophy.md</span>
           <div class="dir-expand">
@@ -129,7 +131,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry dir-entry--meishi cli-reveal" data-toggle style="--reveal-delay: 3" role="button" aria-expanded="false" tabindex="0">
+        <div class="dir-entry dir-entry--meishi cli-reveal" data-toggle role="button" aria-expanded="false" tabindex="0">
           <span class="dir-branch">└──</span>
           <span class="dir-name">meishi/</span>
           <div class="dir-expand">
@@ -159,13 +161,15 @@ const nav = [
   <!-- Works Section -->
   <section class="dir-section" id="works">
     <div class="dir-section-inner">
-      <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
-        <span class="cli-prompt">></span> <span class="cli-path">/works</span>
+      <h2 class="cli-line cli-reveal">
+        <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls="works">
+          <span class="cli-prompt">></span> <span class="cli-path">/works</span>
+        </button>
       </h2>
 
       <div class="dir-tree">
-        {works.map((work, i) => (
-          <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${i + 1}`} role="button" aria-expanded="false" tabindex="0">
+        {works.map((work) => (
+          <div class="dir-entry cli-reveal" data-toggle role="button" aria-expanded="false" tabindex="0">
             <span class="dir-branch">├──</span>
             <span class="dir-name">{work.data.dirName}/</span>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
             <div class="dir-expand">
@@ -176,7 +180,7 @@ const nav = [
           </div>
         ))}
 
-        <div class="dir-entry cli-reveal" data-toggle style={`--reveal-delay: ${works.length + 1}`} role="button" aria-expanded="false" tabindex="0">
+        <div class="dir-entry cli-reveal" data-toggle role="button" aria-expanded="false" tabindex="0">
           <span class="dir-branch">└──</span>
           <span class="dir-name">more/</span>
           <div class="dir-expand">
@@ -191,8 +195,10 @@ const nav = [
   <!-- Contact Section -->
   <section class="dir-section" id="contact">
     <div class="dir-section-inner">
-      <h2 class="cli-line cli-reveal" data-toggle-all role="button" aria-expanded="true" tabindex="0">
-        <span class="cli-prompt">></span> <span class="cli-path">/contact</span>
+      <h2 class="cli-line cli-reveal">
+        <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls="contact">
+          <span class="cli-prompt">></span> <span class="cli-path">/contact</span>
+        </button>
       </h2>
 
       <form class="dir-tree contact-form" id="contact-form">
@@ -201,7 +207,7 @@ const nav = [
           <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
         </div>
 
-        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 1">
+        <div class="dir-entry cli-reveal" data-toggle>
           <span class="dir-branch">├──</span>
           <span class="dir-name">name.txt</span>
           <div class="dir-expand">
@@ -212,7 +218,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 2">
+        <div class="dir-entry cli-reveal" data-toggle>
           <span class="dir-branch">├──</span>
           <span class="dir-name">email.txt</span>
           <div class="dir-expand">
@@ -223,7 +229,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 3">
+        <div class="dir-entry cli-reveal" data-toggle>
           <span class="dir-branch">├──</span>
           <span class="dir-name">category.sh</span>
           <div class="dir-expand">
@@ -238,7 +244,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" data-toggle style="--reveal-delay: 4">
+        <div class="dir-entry cli-reveal" data-toggle>
           <span class="dir-branch">├──</span>
           <span class="dir-name">message.md</span>
           <div class="dir-expand">
@@ -249,7 +255,7 @@ const nav = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" style="--reveal-delay: 5">
+        <div class="dir-entry cli-reveal">
           <span class="dir-branch">└──</span>
           <button type="submit" class="dir-submit">./send.sh<span class="cursor-blink">_</span></button>
         </div>

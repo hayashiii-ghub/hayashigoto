@@ -1,6 +1,12 @@
 // はやしごと - メインの JavaScript
 
-document.addEventListener('DOMContentLoaded', () => {
+// ViewTransitions で DOM が差し替わっても document/window の listener は残るため、
+// 多重登録を防ぐためのモジュールレベルフラグ。
+let _marqueeResizeAttached = false;
+let _tooltipDocClickHandler = null;
+let _tooltipScrollHandler = null;
+
+function init() {
   initLoader();
   initHeroLogoFallback();
   initMarquee();
@@ -11,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initTooltip();
   initLightbox();
-});
+}
+
+// astro:page-load fires on initial load AND every view transition.
+document.addEventListener('astro:page-load', init);
 
 // Hero ロゴ画像のフォールバック（CSP対応のため JS で処理）
 function initHeroLogoFallback() {
@@ -132,7 +141,10 @@ function initMarquee() {
       observer.observe(marquee);
       observer.observe(original);
     } else {
-      window.addEventListener('resize', debounce(queueSetup, 300));
+      if (!_marqueeResizeAttached) {
+        window.addEventListener('resize', debounce(queueSetup, 300));
+        _marqueeResizeAttached = true;
+      }
     }
   });
 }
@@ -278,9 +290,9 @@ function initDirToggle() {
 
 // コマンド行クリックでセクション内全エントリを一括開閉
 function initToggleAll() {
-  document.querySelectorAll('[data-toggle-all]').forEach(cliLine => {
-    cliLine.addEventListener('click', () => {
-      const section = cliLine.closest('.dir-section');
+  document.querySelectorAll('[data-toggle-all]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.dir-section');
       if (!section) return;
 
       const entries = section.querySelectorAll('.dir-entry[data-toggle]');
@@ -298,15 +310,7 @@ function initToggleAll() {
         }, i * 80);
       });
 
-      cliLine.setAttribute('aria-expanded', String(!allOpen));
-    });
-
-    // キーボード対応
-    cliLine.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        cliLine.click();
-      }
+      btn.setAttribute('aria-expanded', String(!allOpen));
     });
   });
 }
@@ -374,38 +378,42 @@ function initTooltip() {
   });
 
   // Close on outside tap (mobile)
-  document.addEventListener('click', (e) => {
+  // ViewTransitions で再 init される度に古いハンドラを除去してから付け直す。
+  if (_tooltipDocClickHandler) document.removeEventListener('click', _tooltipDocClickHandler);
+  _tooltipDocClickHandler = (e) => {
     if (!activeSpan) return;
     if (!wrapper.contains(e.target)) hide();
-  });
+  };
+  document.addEventListener('click', _tooltipDocClickHandler);
 
   // Hide on scroll
-  window.addEventListener('scroll', hide, { passive: true });
+  if (_tooltipScrollHandler) window.removeEventListener('scroll', _tooltipScrollHandler);
+  _tooltipScrollHandler = hide;
+  window.addEventListener('scroll', _tooltipScrollHandler, { passive: true });
 }
 
 // ライトボックス（画像オーバーレイ）
 function initLightbox() {
-  const lightbox = document.getElementById('lightbox');
+  const dialog = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
-  if (!lightbox || !img) return;
+  if (!dialog || !img) return;
 
   document.querySelectorAll('a[data-lightbox]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       img.src = link.href;
       img.alt = link.textContent || '';
-      lightbox.setAttribute('aria-hidden', 'false');
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
     });
   });
 
-  lightbox.addEventListener('click', () => {
-    lightbox.setAttribute('aria-hidden', 'true');
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox.getAttribute('aria-hidden') === 'false') {
-      lightbox.setAttribute('aria-hidden', 'true');
-    }
+  // Click on backdrop (dialog itself, not the image) closes it.
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
   });
 }
 

@@ -16,7 +16,7 @@ const nav = [
   { href: '/#contact', label: '/contact' },
 ];
 ---
-<Layout title="works/" nav={nav}>
+<Layout title="works/" canonical={`${Astro.site!.origin}/works`} nav={nav}>
   <section class="dir-section work-detail">
     <div class="dir-section-inner">
       <h1 class="cli-line">
