@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
 import { createHash } from 'node:crypto';
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 const SITE_URL = process.env.SITE_URL || 'https://shigoto.dev';
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
@@ -21,18 +20,18 @@ let lastCleanup: number = Date.now();
 
 type HeaderValue = string | string[] | undefined;
 
-function pickHeader(value: HeaderValue): string | null {
+function pickHeader(value: HeaderValue): string | undefined {
   const v = Array.isArray(value) ? value[0] : value;
-  if (typeof v !== 'string' || !v) return null;
+  if (typeof v !== 'string' || !v) return undefined;
   return v.split(',')[0].trim();
 }
 
 function getClientIp(req: VercelRequest): string {
   return (
-    pickHeader(req.headers['x-vercel-forwarded-for']) ||
-    pickHeader(req.headers['x-real-ip']) ||
-    pickHeader(req.headers['x-forwarded-for']) ||
-    req.socket?.remoteAddress ||
+    pickHeader(req.headers['x-vercel-forwarded-for']) ??
+    pickHeader(req.headers['x-real-ip']) ??
+    pickHeader(req.headers['x-forwarded-for']) ??
+    req.socket?.remoteAddress ??
     'unknown'
   );
 }
@@ -98,7 +97,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return res.status(403).json({ error: '許可されていない送信元です' });
   }
 
-  if (!process.env.RESEND_API_KEY) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
     return res.status(500).json({ error: 'メール設定が未構成です' });
   }
 
@@ -148,6 +148,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
 
   try {
+    const resend = new Resend(apiKey);
     const textBody = `カテゴリ: ${category === 'work' ? 'お仕事の相談' : 'その他'}\n名前: ${name}\nメール: ${email}\n\n${message}`;
     await resend.emails.send({
       from: 'はやしごと <noreply@send.shigoto.dev>',
