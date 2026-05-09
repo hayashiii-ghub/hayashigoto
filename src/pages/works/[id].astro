@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   const works = await getCollection('works');
@@ -20,7 +21,7 @@ const nav = [
   { href: '/#contact', label: '/contact' },
 ];
 ---
-<Layout title={`${work.data.dirName}/`} description={work.data.description} nav={nav}>
+<Layout title={`${work.data.dirName}/`} description={work.data.description} canonical={`${Astro.site!.origin}/works/${work.id}`} nav={nav}>
   <section class="dir-section work-detail">
     <div class="dir-section-inner">
       <h1 class="cli-line">
@@ -74,15 +75,15 @@ const nav = [
 
         {work.data.images && work.data.images.length > 0 && (
           work.data.imageDisplay === 'cli-link' ? (
-            work.data.images.map((img: string) => (
+            work.data.images.map((img) => (
               <div class="dir-file work-detail-url">
-                <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={img} data-lightbox>{img.split('/').pop()}</a>
+                <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={img.src} data-lightbox>{img.src.split('/').pop()}</a>
               </div>
             ))
           ) : (
             <div class="work-detail-thumbnails">
-              {work.data.images.map((img: string, i: number) => (
-                <img src={img} alt={`${work.data.title} のプレビュー ${i + 1}`} loading="lazy" decoding="async" />
+              {work.data.images.map((img, i: number) => (
+                <Image src={img} alt={`${work.data.title} のプレビュー ${i + 1}`} widths={[400, 800, 1200]} sizes="(max-width: 768px) 100vw, 800px" loading="lazy" decoding="async" />
               ))}
             </div>
           )
@@ -95,10 +96,10 @@ const nav = [
                 <div class="card-orientation" id="card-orientation" data-orientation={work.data.card.orientation}>
                   <div class="card-body" id="card-body" data-side="front">
                     <div class="card-face card-front">
-                      <img src={work.data.card.front} alt={`${work.data.title} 名刺 表面`} width="1075" height="650" decoding="async" draggable="false" />
+                      <Image src={work.data.card.front} alt={`${work.data.title} 名刺 表面`} widths={[400, 800, 1200]} sizes="(max-width: 768px) 88vw, (max-width: 1024px) 68vw, 500px" decoding="async" draggable="false" />
                     </div>
                     <div class="card-face card-back">
-                      <img src={work.data.card.back} alt={`${work.data.title} 名刺 裏面`} width="1075" height="650" decoding="async" draggable="false" />
+                      <Image src={work.data.card.back} alt={`${work.data.title} 名刺 裏面`} widths={[400, 800, 1200]} sizes="(max-width: 768px) 88vw, (max-width: 1024px) 68vw, 500px" decoding="async" draggable="false" />
                     </div>
                   </div>
                 </div>

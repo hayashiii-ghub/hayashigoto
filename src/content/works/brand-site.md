@@ -10,8 +10,8 @@ order: 1
 featured: false
 category: "受託案件"
 card:
-  front: "/works/anc-card-front.png"
-  back: "/works/anc-card-back.png"
+  front: "../../assets/works/anc-card-front.png"
+  back: "../../assets/works/anc-card-back.png"
   orientation: "landscape"
 ---
 

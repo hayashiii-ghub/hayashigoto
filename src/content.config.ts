@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders';
 
 const works = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/works' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     dirName: z.string(),
     year: z.number(),
@@ -13,11 +13,11 @@ const works = defineCollection({
     url: z.string().optional(),
     github: z.string().optional(),
     note: z.string().optional(),
-    images: z.array(z.string()).optional(),
+    images: z.array(image()).optional(),
     imageDisplay: z.enum(['thumbnail', 'cli-link']).optional(),
     card: z.object({
-      front: z.string(),
-      back: z.string(),
+      front: image(),
+      back: image(),
       orientation: z.enum(['landscape', 'portrait']).default('portrait'),
     }).optional(),
     tools: z.array(z.object({

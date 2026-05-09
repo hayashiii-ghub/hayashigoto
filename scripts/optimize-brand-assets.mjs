@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -9,9 +9,13 @@ const assetsDir = join(__dirname, '..', 'assets');
 const publicDir = join(__dirname, '..', 'public');
 const masterPath = join(assetsDir, 'brand', 'logo-master.png');
 const faviconMasterPath = join(assetsDir, 'brand', 'favicon-master.png');
-const HERO_WIDTH = 1200;
+const HERO_WIDTH = 800;
 
 async function main() {
+  if (!existsSync(masterPath) || !existsSync(faviconMasterPath)) {
+    console.warn('optimize-brand-assets: brand master images missing — skipping (this is fine for fresh clones).');
+    return;
+  }
   const masterBuffer = readFileSync(masterPath);
   const pngBuffer = await sharp(masterBuffer).png().toBuffer();
   const heroPngBuffer = await sharp(pngBuffer)
