@@ -11,7 +11,7 @@ const masterPath = join(assetsDir, 'brand', 'logo-master.png');
 const faviconMasterPath = join(assetsDir, 'brand', 'favicon-master.png');
 const HERO_WIDTH = 800;
 
-async function main() {
+async function main(): Promise<void> {
   if (!existsSync(masterPath) || !existsSync(faviconMasterPath)) {
     console.warn('optimize-brand-assets: brand master images missing — skipping (this is fine for fresh clones).');
     return;
@@ -23,20 +23,20 @@ async function main() {
     .png({ compressionLevel: 9 })
     .toBuffer();
 
-  writeFileSync(join(publicDir, 'logo.png'), heroPngBuffer);
+  writeFileSync(join(publicDir, 'logo.png'), heroPngBuffer as unknown as Uint8Array);
   await sharp(heroPngBuffer).webp({ quality: 82 }).toFile(join(publicDir, 'logo.webp'));
 
   // ファビコン用マスターは透明パディングをトリムしてから contain で正方形化
   const faviconBuffer = readFileSync(faviconMasterPath);
   const trimmedFavicon = await sharp(faviconBuffer).trim().png().toBuffer();
-  const iconResize = { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } };
+  const iconResize = { fit: 'contain' as const, background: { r: 0, g: 0, b: 0, alpha: 0 } };
 
   const fav32 = await sharp(trimmedFavicon).resize(32, 32, iconResize).png().toBuffer();
-  writeFileSync(join(publicDir, 'favicon-32x32.png'), fav32);
+  writeFileSync(join(publicDir, 'favicon-32x32.png'), fav32 as unknown as Uint8Array);
 
   const fav16 = await sharp(trimmedFavicon).resize(16, 16, iconResize).png().toBuffer();
   const icoBuffer = await toIco([fav16, fav32]);
-  writeFileSync(join(publicDir, 'favicon.ico'), icoBuffer);
+  writeFileSync(join(publicDir, 'favicon.ico'), icoBuffer as unknown as Uint8Array);
 
   await sharp(trimmedFavicon)
     .resize(180, 180, iconResize)
