@@ -2,9 +2,9 @@
 
 // ViewTransitions で DOM が差し替わっても document/window の listener は残るため、
 // 多重登録を防ぐためのモジュールレベルフラグ。
-let _marqueeResizeAttached = false;
+let _marqueeResizeAttached: boolean = false;
 
-function init() {
+function init(): void {
   initLoader();
   initHeroLogoFallback();
   initMarquee();
@@ -20,21 +20,24 @@ function init() {
 document.addEventListener('astro:page-load', init);
 
 // Hero ロゴ画像のフォールバック（CSP対応のため JS で処理）
-function initHeroLogoFallback() {
-  const img = document.querySelector('.hero-logo-img');
+function initHeroLogoFallback(): void {
+  const img = document.querySelector<HTMLImageElement>('.hero-logo-img');
   if (!img) return;
   img.addEventListener('error', () => {
-    img.parentElement.style.display = 'none';
-    img.parentElement.nextElementSibling.style.display = 'block';
+    const parent = img.parentElement;
+    if (!parent) return;
+    parent.style.display = 'none';
+    const fallback = parent.nextElementSibling;
+    if (fallback instanceof HTMLElement) fallback.style.display = 'block';
   });
 }
 
 // ローディング画面（実際の読み込み完了で消す）
-function initLoader() {
+function initLoader(): void {
   const loader = document.getElementById('loader');
   if (!loader) return;
 
-  const dismiss = () => loader.classList.add('is-hidden');
+  const dismiss = (): void => loader.classList.add('is-hidden');
 
   if (document.readyState === 'complete') {
     dismiss();
@@ -44,37 +47,37 @@ function initLoader() {
 }
 
 // マーキー（画面幅に応じて動的に複製・アニメーション設定）
-function initMarquee() {
+function initMarquee(): void {
   const MARQUEE_SPEED = 50; // px per second（全行共通）
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (prefersReducedMotion.matches) return;
 
-  document.querySelectorAll('.marquee').forEach(marquee => {
-    const track = marquee.querySelector('.marquee-track');
+  document.querySelectorAll<HTMLElement>('.marquee').forEach(marquee => {
+    const track = marquee.querySelector<HTMLElement>('.marquee-track');
     if (!track) return;
-    const original = track.querySelector('.marquee-content');
+    const original = track.querySelector<HTMLElement>('.marquee-content');
     if (!original) return;
 
     const isReverse = marquee.classList.contains('marquee--reverse');
-    let animation;
+    let animation: Animation | undefined;
     let frameId = 0;
     let lastSignature = '';
 
-    function clearClones() {
-      track.querySelectorAll('.marquee-content[aria-hidden]').forEach(el => el.remove());
+    function clearClones(): void {
+      track!.querySelectorAll('.marquee-content[aria-hidden]').forEach(el => el.remove());
     }
 
-    function stopAnimation() {
+    function stopAnimation(): void {
       animation?.cancel();
       animation = undefined;
     }
 
-    function setup() {
+    function setup(): void {
       frameId = 0;
-      const trackGap = parseFloat(getComputedStyle(track).gap) || 16;
+      const trackGap = parseFloat(getComputedStyle(track!).gap) || 16;
 
       // scrollWidth / offsetWidth は整数丸めされるため、ループ境界がずれてガクつきやすい
-      const oneSetWidth = original.getBoundingClientRect().width + trackGap;
+      const oneSetWidth = original!.getBoundingClientRect().width + trackGap;
       const viewWidth = marquee.getBoundingClientRect().width;
 
       if (!oneSetWidth || !viewWidth) {
@@ -94,9 +97,9 @@ function initMarquee() {
       clearClones();
 
       for (let i = 0; i < copies; i++) {
-        const clone = original.cloneNode(true);
+        const clone = original!.cloneNode(true) as HTMLElement;
         clone.setAttribute('aria-hidden', 'true');
-        track.appendChild(clone);
+        track!.appendChild(clone);
       }
 
       // 1セット分だけ移動してループ
@@ -105,7 +108,7 @@ function initMarquee() {
 
       stopAnimation();
 
-      animation = track.animate(
+      animation = track!.animate(
         [
           { transform: `translateX(${from})` },
           { transform: `translateX(${to})` }
@@ -118,7 +121,7 @@ function initMarquee() {
       );
     }
 
-    function queueSetup() {
+    function queueSetup(): void {
       if (frameId) return;
       frameId = window.requestAnimationFrame(setup);
     }
@@ -146,8 +149,8 @@ function initMarquee() {
   });
 }
 
-function debounce(fn, ms) {
-  let timer;
+function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number): (...args: Parameters<T>) => void {
+  let timer: ReturnType<typeof setTimeout> | undefined;
   return (...args) => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), ms);
@@ -155,23 +158,25 @@ function debounce(fn, ms) {
 }
 
 // スムーズスクロール
-function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
+function initSmoothScroll(): void {
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
-        const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
+      const href = link.getAttribute('href');
+      if (!href) return;
+      const target = document.querySelector(href);
+      if (!target) return;
+      const header = document.querySelector<HTMLElement>('.header');
+      const headerHeight = header?.offsetHeight ?? 0;
+      const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({ top, behavior: 'smooth' });
     });
   });
 }
 
 // 各要素を個別に監視し、スクロール位置に合わせて1つずつ展開
-function initScrollReveal() {
-  const items = Array.from(document.querySelectorAll('.cli-reveal'));
+function initScrollReveal(): void {
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.cli-reveal'));
   if (items.length === 0) return;
 
   // セッション中2回目以降はアニメーションをスキップして即表示
@@ -189,16 +194,16 @@ function initScrollReveal() {
   sessionStorage.setItem('revealed', '1');
 
   // セクションごとに要素リストを事前構築（DOM順）
-  const sectionItems = new Map();
+  const sectionItems = new Map<Element | string, HTMLElement[]>();
   items.forEach(el => {
     const section = el.closest('.dir-section');
-    const key = section || 'global';
+    const key: Element | string = section || 'global';
     if (!sectionItems.has(key)) sectionItems.set(key, []);
-    sectionItems.get(key).push(el);
+    sectionItems.get(key)!.push(el);
   });
 
   // セクションごとの再生状態
-  const sectionState = new Map();
+  const sectionState = new Map<Element | string, { pending: HTMLElement[]; playing: boolean }>();
   sectionItems.forEach((els, key) => {
     sectionState.set(key, { pending: [...els], playing: false });
   });
@@ -213,14 +218,14 @@ function initScrollReveal() {
   }, { threshold: 0.15 });
 
   // セクション内の要素用：1つ表示したら次の1つだけを監視
-  function observeNext(section) {
+  function observeNext(section: Element | string): void {
     const state = sectionState.get(section);
     if (!state || state.pending.length === 0) {
       if (state) state.playing = false;
       return;
     }
 
-    const el = state.pending.shift();
+    const el = state.pending.shift()!;
     state.playing = true;
 
     const obs = new IntersectionObserver((entries) => {
@@ -237,7 +242,7 @@ function initScrollReveal() {
     obs.observe(el);
   }
 
-  function revealElement(el, onDone) {
+  function revealElement(el: HTMLElement, onDone: () => void): void {
     el.classList.add('is-visible');
 
     if (el.classList.contains('dir-entry')) {
@@ -262,12 +267,12 @@ function initScrollReveal() {
 }
 
 // 個別エントリのクリック開閉
-function initDirToggle() {
-  document.querySelectorAll('.dir-entry[data-toggle]').forEach(entry => {
-    const name = entry.querySelector(':scope > .dir-name');
+function initDirToggle(): void {
+  document.querySelectorAll<HTMLElement>('.dir-entry[data-toggle]').forEach(entry => {
+    const name = entry.querySelector<HTMLElement>(':scope > .dir-name');
     if (!name) return;
 
-    function toggle(e) {
+    function toggle(e: Event): void {
       e.stopPropagation();
       const opening = !entry.classList.contains('is-open');
       entry.classList.toggle('is-open');
@@ -286,8 +291,8 @@ function initDirToggle() {
 }
 
 // コマンド行クリックでセクション内全エントリを一括開閉
-function initToggleAll() {
-  document.querySelectorAll('[data-toggle-all]').forEach(btn => {
+function initToggleAll(): void {
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-all]').forEach(btn => {
     btn.addEventListener('click', () => {
       const section = btn.closest('.dir-section');
       if (!section) return;
@@ -313,12 +318,12 @@ function initToggleAll() {
 }
 
 // ライトボックス（画像オーバーレイ）
-function initLightbox() {
-  const dialog = document.getElementById('lightbox');
-  const img = document.getElementById('lightbox-img');
+function initLightbox(): void {
+  const dialog = document.getElementById('lightbox') as HTMLDialogElement | null;
+  const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
   if (!dialog || !img) return;
 
-  document.querySelectorAll('a[data-lightbox]').forEach(link => {
+  document.querySelectorAll<HTMLAnchorElement>('a[data-lightbox]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       img.src = link.href;
@@ -338,33 +343,36 @@ function initLightbox() {
 }
 
 // コンタクトフォーム
-function initContactForm() {
-  const form = document.getElementById('contact-form');
+function initContactForm(): void {
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
   if (!form) return;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const btn = form.querySelector('.dir-submit');
+    const btn = form.querySelector<HTMLButtonElement>('.dir-submit');
+    if (!btn) return;
     const original = btn.innerHTML;
 
     btn.innerHTML = './sending...<span class="cursor-blink">_</span>';
     btn.disabled = true;
 
     try {
+      const formData = {
+        category: (form.elements.namedItem('category') as HTMLSelectElement).value,
+        name: (form.elements.namedItem('name') as HTMLInputElement).value,
+        email: (form.elements.namedItem('email') as HTMLInputElement).value,
+        message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+        website: (form.elements.namedItem('website') as HTMLInputElement | null)?.value || '',
+      };
+
       const res = await fetch('/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          category: form.category.value,
-          name: form.name.value,
-          email: form.email.value,
-          message: form.message.value,
-          website: form.website?.value || '',
-        }),
+        body: JSON.stringify(formData),
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data: { error?: string; success?: boolean } = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(data.error || '送信失敗');
       }
