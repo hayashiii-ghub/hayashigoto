@@ -1,21 +1,35 @@
 import { Resend } from 'resend';
+import { createHash } from 'node:crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const SITE_URL = process.env.SITE_URL || 'https://shigoto.dev';
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
 const RATE_LIMIT_CLEANUP_INTERVAL = 60 * 1000;
+// Rate limiting is best-effort and scoped to a single Vercel Function instance.
+// State resets on cold starts and is not shared across regions or instances.
+// The honeypot field and origin/method checks are the primary spam barrier.
 const rateLimitStore = new Map();
 let lastCleanup = Date.now();
 
+function pickHeader(value) {
+  const v = Array.isArray(value) ? value[0] : value;
+  if (typeof v !== 'string' || !v) return null;
+  return v.split(',')[0].trim();
+}
+
 function getClientIp(req) {
-  const forwardedFor = req.headers['x-forwarded-for'];
+  return (
+    pickHeader(req.headers['x-vercel-forwarded-for']) ||
+    pickHeader(req.headers['x-real-ip']) ||
+    pickHeader(req.headers['x-forwarded-for']) ||
+    req.socket?.remoteAddress ||
+    'unknown'
+  );
+}
 
-  if (typeof forwardedFor === 'string') {
-    return forwardedFor.split(',')[0].trim();
-  }
-
-  return req.socket?.remoteAddress || 'unknown';
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function cleanupRateLimitStore() {
@@ -48,14 +62,16 @@ function sanitizeLine(value) {
 }
 
 function isAllowedOrigin(origin) {
-  if (!origin) return true;
+  if (!origin) return false;
 
   try {
     const requestUrl = new URL(origin);
     const siteHost = new URL(SITE_URL).host;
     if (requestUrl.host === siteHost || requestUrl.hostname === 'localhost') return true;
-    const vercelUrl = process.env.VERCEL_URL;
-    if (vercelUrl && requestUrl.host === vercelUrl) return true;
+    if (process.env.VERCEL_ENV !== 'production') {
+      const vercelUrl = process.env.VERCEL_URL;
+      if (vercelUrl && requestUrl.host === vercelUrl) return true;
+    }
     return false;
   } catch {
     return false;
@@ -84,7 +100,8 @@ export default async function handler(req, res) {
 
   const clientIp = getClientIp(req);
   if (isRateLimited(clientIp)) {
-    console.warn(`Rate limit exceeded: ${clientIp}`);
+    const ipHash = createHash('sha256').update(clientIp).digest('hex').slice(0, 12);
+    console.warn(`Rate limit exceeded: ip-${ipHash}`);
     return res.status(429).json({ error: '送信回数が多すぎます。時間をおいて再度お試しください' });
   }
 
@@ -122,12 +139,14 @@ export default async function handler(req, res) {
   }
 
   try {
+    const textBody = `カテゴリ: ${category === 'work' ? 'お仕事の相談' : 'その他'}\n名前: ${name}\nメール: ${email}\n\n${message}`;
     await resend.emails.send({
       from: 'はやしごと <noreply@send.shigoto.dev>',
       to: 'hay@shigoto.dev',
       replyTo: email,
       subject: category === 'work' ? `【お仕事の相談】${name} さんより` : `【お問い合わせ】${name} さんより`,
-      text: `カテゴリ: ${category === 'work' ? 'お仕事の相談' : 'その他'}\n名前: ${name}\nメール: ${email}\n\n${message}`,
+      text: textBody,
+      html: `<pre style="font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; font-size: 14px;">${escapeHtml(textBody)}</pre>`,
     });
 
     return res.status(200).json({ success: true });
