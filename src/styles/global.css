@@ -662,7 +662,6 @@ body {
 .footer {
   border-top: 1px solid var(--border);
   padding: 3rem clamp(1.5rem, 4vw, 3rem);
-  margin-top: var(--section-gap);
 }
 
 .footer-inner {
