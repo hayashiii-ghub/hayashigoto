@@ -54,35 +54,6 @@
   border-color: var(--accent-light);
 }
 
-/* ---- Tooltip ---- */
-.tooltip {
-  position: fixed;
-  z-index: 200;
-  padding: 0.4rem 0.75rem;
-  font-family: var(--font-jp);
-  font-size: 0.78rem;
-  color: var(--accent-light);
-  background: var(--bg-elev1);
-  border: 1px solid var(--border-accent);
-  border-radius: 2px;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  white-space: nowrap;
-  max-width: 90vw;
-}
-
-.tooltip::before {
-  content: "# ";
-  color: var(--text-dim);
-}
-
-.tooltip.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* ---- Reduced Motion ---- */
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {

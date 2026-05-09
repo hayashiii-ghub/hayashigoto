@@ -13,30 +13,6 @@ const worksStacks = [...new Set(allWorks.flatMap((w) => w.data.stack))].filter((
 const extraTools = ['Astro', 'Vercel', 'Vite', 'Figma', 'Codex'];
 const allTech = [...new Set([...worksStacks, ...extraTools])];
 
-const techTips: Record<string, string> = {
-  'Next.js': 'フルスタックReactフレームワーク',
-  'React': 'UIコンポーネントライブラリ',
-  'TypeScript': '型安全なJavaScript',
-  'Tailwind CSS': 'ユーティリティファーストCSS',
-  'Zod': 'TypeScript向けバリデーション',
-  'Resend': 'トランザクションメール送信',
-  'GWS': 'Google Workspace 導入支援',
-  'Canva': '素材・コンテキスト作成',
-  'Cursor': 'AI統合コードエディタ',
-  'Claude Code': '自律性の高いコーディングエージェント',
-  'Python': '汎用スクリプト言語',
-  'Gemini 3 Flash': 'OCRと画像認識',
-  'Neon': 'サーバーレスPostgreSQL',
-  'Cloudflare': 'CDN・DNS・エッジコンピューティング',
-  'Hono': '軽量エッジ対応Webフレームワーク',
-  'Drizzle ORM': '型安全なTypeScript ORM',
-  'Astro': '静的HTML出力のWebフレームワーク',
-  'Vercel': 'Webサイトのデプロイ基盤',
-  'Vite': '高速なフロントエンドビルドツール',
-  'Figma': 'コンポーネント単位のデザイン',
-  'Codex': '複雑なロジックの整理・レビュー',
-};
-
 const mid = Math.ceil(allTech.length / 2);
 const track1 = allTech.slice(0, mid);
 const track2 = allTech.slice(mid);
@@ -86,14 +62,14 @@ const nav = [
       <div class="marquee marquee--forward">
         <div class="marquee-track">
           <div class="marquee-content">
-            {track1.map((t) => <span data-tip={techTips[t] || t}>{t}</span>)}
+            {track1.map((t) => <span>{t}</span>)}
           </div>
         </div>
       </div>
       <div class="marquee marquee--reverse">
         <div class="marquee-track">
           <div class="marquee-content">
-            {track2.map((t) => <span data-tip={techTips[t] || t}>{t}</span>)}
+            {track2.map((t) => <span>{t}</span>)}
           </div>
         </div>
       </div>
@@ -262,8 +238,6 @@ const nav = [
       </form>
     </div>
   </section>
-
-  <div class="tooltip" id="tooltip" aria-hidden="true" slot="after-footer"></div>
 
   <script>
     import '../scripts/card.js';
