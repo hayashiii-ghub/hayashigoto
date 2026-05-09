@@ -1,6 +1,13 @@
 // 名刺ビューアー — オーバーレイ方式でモバイル対応
+// astro:page-load で毎回再 init し、古い window/document リスナは AbortController で破棄する。
 
-document.addEventListener('DOMContentLoaded', () => {
+let cardAbortController = null;
+
+function initCard() {
+  if (cardAbortController) cardAbortController.abort();
+  cardAbortController = new AbortController();
+  const { signal } = cardAbortController;
+
   const overlay = document.getElementById('card-overlay');
   const tilt = document.getElementById('card-tilt');
   const orientation = document.getElementById('card-orientation');
@@ -292,8 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
       beginDrag('mouse', event.clientX, event.clientY);
 
       if (!legacyMouseListenersAttached) {
-        window.addEventListener('mousemove', onLegacyMouseMove);
-        window.addEventListener('mouseup', onLegacyMouseUp);
+        window.addEventListener('mousemove', onLegacyMouseMove, { signal });
+        window.addEventListener('mouseup', onLegacyMouseUp, { signal });
         legacyMouseListenersAttached = true;
       }
     });
@@ -330,11 +337,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: false });
   }
 
-  window.addEventListener('blur', handleInterruptedInteraction);
+  window.addEventListener('blur', handleInterruptedInteraction, { signal });
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) return;
     handleInterruptedInteraction();
-  });
+  }, { signal });
 
   // キーボード操作（オーバーレイにフォーカスがある場合）
   overlay.addEventListener('keydown', (event) => {
@@ -365,4 +372,6 @@ document.addEventListener('DOMContentLoaded', () => {
   requestAnimationFrame(() => {
     orientation.classList.add('is-ready');
   });
-});
+}
+
+document.addEventListener('astro:page-load', initCard);
