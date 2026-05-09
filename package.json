@@ -4,11 +4,12 @@
   "type": "module",
   "private": true,
   "engines": {
+    "bun": ">=1.1.0",
     "node": ">=22.6.0"
   },
   "scripts": {
-    "optimize:assets": "node scripts/optimize-brand-assets.ts",
-    "prebuild": "npm run optimize:assets",
+    "optimize:assets": "bun scripts/optimize-brand-assets.ts",
+    "prebuild": "bun run optimize:assets",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",

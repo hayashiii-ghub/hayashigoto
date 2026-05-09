@@ -20,7 +20,7 @@
 | フォント | Fontsource (IBM Plex Mono, latin サブセット) + システム日本語フォント | 欧文だけを配信して日本語はOS標準に寄せ、転送量を抑制 |
 | ブランド画像 | sharp + to-ico（`prebuild`） | `assets/brand/logo-master.png` から軽量ロゴと各種ファビコンを同じ再現性で生成 |
 | セキュリティ | vercel.json ヘッダー (CSP, HSTS, Permissions-Policy 等) | 外部依存最小限の構成で CSP/HSTS/Permissions-Policy を厳格に設定 |
-| パッケージマネージャ | npm | Node.js標準・追加ツール不要 |
+| パッケージマネージャ / runtime | Bun | install が高速、`.ts` をネイティブ実行できるので prebuild script に runner 不要 (lock file は text 形式 `bun.lock` を採用) |
 
 ## 構成
 
@@ -51,17 +51,18 @@
 ├── api/
 │   └── send.ts             # お問い合わせ送信 (Vercel Serverless Function)
 ├── public/                 # 静的アセット（画像・robots.txt・sitemap.xml）
-├── astro.config.mjs
+├── astro.config.ts
 └── vercel.json             # デプロイ設定・セキュリティヘッダー
 ```
 
 ## コマンド
 
 ```sh
-npm run dev       # 開発サーバー起動
-npm run build     # 本番ビルド
-npm run preview   # ビルド後プレビュー
-npm run check     # Astro の型・コンテンツ検証 + tsc --noEmit
+bun install       # 依存をインストール (`bun.lock` text を尊重)
+bun dev           # 開発サーバー起動
+bun run build     # 本番ビルド (prebuild で `bun scripts/optimize-brand-assets.ts` 実行)
+bun preview       # ビルド後プレビュー
+bun run check     # Astro の型・コンテンツ検証 + tsc --noEmit
 ```
 
 ## 環境変数（Vercel側で設定）
