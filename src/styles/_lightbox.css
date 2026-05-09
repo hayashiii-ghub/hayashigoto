@@ -1,11 +1,20 @@
 /* Imported from global.css */
 
 /* ---- Lightbox ---- */
+/* 閉じている間は明示的に display:none で flow から外す。
+   UA の dialog:not([open]) { display: none } に頼ると、CSS の特異性次第では
+   うちの `.lightbox { display: grid }` に上書きされて 100vh の不可視ボックスが
+   フッター下に居座ることがあるため、defensive に書き分ける。 */
 .lightbox {
   border: 0;
   padding: 0;
   background: transparent;
   margin: 0;
+  display: none;
+  color: var(--text);
+}
+
+.lightbox[open] {
   width: 100vw;
   height: 100vh;
   max-width: 100vw;
@@ -14,7 +23,6 @@
   place-items: center;
   cursor: pointer;
   overflow: hidden;
-  color: var(--text);
 }
 
 .lightbox::backdrop {
