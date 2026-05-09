@@ -1,6 +1,6 @@
 ---
 title: "AIエージェント向けCLIツール — sitesnap / pdfmint"
-dirName: "cli-tools"
+dirName: "agent-tooling"
 year: 2026
 role: "Solo dev"
 stack: ["TypeScript", "Bun", "Playwright", "Puppeteer", "Node.js", "Skill"]

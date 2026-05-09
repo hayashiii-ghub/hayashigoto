@@ -1,25 +1,22 @@
 ---
-title: "一気通貫ブランディング"
-dirName: "full-branding"
+title: "AI/DXツール 導入・活用レクチャー"
+dirName: "dx-enablement"
 year: 2025
-role: "Branding / DX / Web"
+role: "DX Enablement / Tool Coaching"
 stack: ["GWS", "Canva", "Cursor"]
-description: "GWS導入・AIエージェント活用・ロゴ / 名刺 / Web制作まで一気通貫ブランディング。累計3件。"
+description: "Google Workspace の導入、Canva での画像編集レクチャー、Cursor を使った Web サイト制作レクチャーを通じて、中小企業の AI/DX ツール活用を伴走支援。累計3件。"
 url: "https://ancgrp.biz"
 order: 1
 featured: false
-status: "進行中"
-category: "受託開発"
-images: ["/works/brand-logo.png"]
-imageDisplay: cli-link
+category: "受託案件"
 card:
   front: "/works/anc-card-front.png"
   back: "/works/anc-card-back.png"
   orientation: "landscape"
 ---
 
-Google Workspaceの導入によるDX化から、AIエージェントの業務活用、ブランドロゴ・名刺の制作、Webサイトの構築までを一気通貫で支援したブランディングプロジェクトです。累計3件の支援実績があります。
+中小企業を対象に、Google Workspace の導入、Canva を使った画像編集のレクチャー、Cursor を使った Web サイト制作のレクチャーなどを通じて、AI/DX ツールの活用を伴走支援しています。累計3件の支援実績があります。
 
-まずGoogle Workspaceを軸に業務基盤を整備し、AIエージェントを活用した業務効率化を推進。その上でブランドの核となるロゴや名刺といったビジュアルアイデンティティを策定しました。
+ツールを入れて終わりではなく、現場で使いこなせるようになるまで継続的にサポートすることを重視。日々の業務で発生する小さなつまずきを一緒に解消しながら、自走できる状態を目指します。
 
-ブランドの世界観をそのままWebサイトに落とし込み、DX・デザイン・開発を横断する一貫したブランディングを実現しました。
+業務基盤(GWS)からデザイン(Canva)、Web 制作(Cursor)まで横断的にカバーすることで、企業ごとの実情に合わせた DX 導入を実現します。

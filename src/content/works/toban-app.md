@@ -1,6 +1,6 @@
 ---
 title: "toban — かんたん当番表"
-dirName: "toban-app"
+dirName: "rotation-table"
 year: 2026
 role: "Design / Full Stack"
 stack: ["Cloudflare", "Hono", "React", "Drizzle ORM", "Vitest", "Playwright", "Sentry"]
@@ -8,7 +8,7 @@ url: "https://toban.app"
 github: "https://github.com/hayashiii-ghub/toban-app"
 note: "https://note.com/hayashiii_note/n/naca284af9f20?sub_rt=share_sb"
 description: "掃除当番・給食当番・日直などのローテーション表を作成・印刷・共有できる無料Webアプリ。"
-images: ["/works/toban-app.webp"]
+images: ["/works/rotation-table.webp"]
 order: 3
 category: "個人開発"
 ---
