@@ -1,7 +1,8 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
 import { createHash } from 'node:crypto';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 const SITE_URL = process.env.SITE_URL || 'https://shigoto.dev';
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
@@ -9,16 +10,24 @@ const RATE_LIMIT_CLEANUP_INTERVAL = 60 * 1000;
 // Rate limiting is best-effort and scoped to a single Vercel Function instance.
 // State resets on cold starts and is not shared across regions or instances.
 // The honeypot field and origin/method checks are the primary spam barrier.
-const rateLimitStore = new Map();
-let lastCleanup = Date.now();
 
-function pickHeader(value) {
+interface RateLimitEntry {
+  count: number;
+  startedAt: number;
+}
+
+const rateLimitStore = new Map<string, RateLimitEntry>();
+let lastCleanup: number = Date.now();
+
+type HeaderValue = string | string[] | undefined;
+
+function pickHeader(value: HeaderValue): string | null {
   const v = Array.isArray(value) ? value[0] : value;
   if (typeof v !== 'string' || !v) return null;
   return v.split(',')[0].trim();
 }
 
-function getClientIp(req) {
+function getClientIp(req: VercelRequest): string {
   return (
     pickHeader(req.headers['x-vercel-forwarded-for']) ||
     pickHeader(req.headers['x-real-ip']) ||
@@ -28,11 +37,11 @@ function getClientIp(req) {
   );
 }
 
-function escapeHtml(s) {
+function escapeHtml(s: string): string {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function cleanupRateLimitStore() {
+function cleanupRateLimitStore(): void {
   const now = Date.now();
   if (now - lastCleanup < RATE_LIMIT_CLEANUP_INTERVAL) return;
   lastCleanup = now;
@@ -43,7 +52,7 @@ function cleanupRateLimitStore() {
   }
 }
 
-function isRateLimited(ip) {
+function isRateLimited(ip: string): boolean {
   cleanupRateLimitStore();
   const now = Date.now();
   const entry = rateLimitStore.get(ip);
@@ -57,11 +66,11 @@ function isRateLimited(ip) {
   return entry.count > RATE_LIMIT_MAX_REQUESTS;
 }
 
-function sanitizeLine(value) {
-  return String(value || '').replace(/[\r\n]+/g, ' ').trim();
+function sanitizeLine(value: unknown): string {
+  return String(value ?? '').replace(/[\r\n]+/g, ' ').trim();
 }
 
-function isAllowedOrigin(origin) {
+function isAllowedOrigin(origin: string | undefined): boolean {
   if (!origin) return false;
 
   try {
@@ -78,7 +87,7 @@ function isAllowedOrigin(origin) {
   }
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse): Promise<VercelResponse | void> {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed' });
@@ -105,11 +114,11 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: '送信回数が多すぎます。時間をおいて再度お試しください' });
   }
 
-  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const body: Record<string, unknown> = req.body && typeof req.body === 'object' ? req.body : {};
   const category = sanitizeLine(body.category);
   const name = sanitizeLine(body.name);
   const email = sanitizeLine(body.email).toLowerCase();
-  const message = String(body.message || '').trim();
+  const message = String(body.message ?? '').trim();
   const website = sanitizeLine(body.website);
 
   // Honeypot check
