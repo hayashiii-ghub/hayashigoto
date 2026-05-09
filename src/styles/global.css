@@ -1,3 +1,8 @@
+@import './_marquee.css';
+@import './_contact-form.css';
+@import './_card-viewer.css';
+@import './_lightbox.css';
+
 /* ========================================
    はやしごと - Terminal × Japanese Whitespace
    ======================================== */
@@ -10,6 +15,10 @@
   --accent-light: #6a9a5c;
   --border: #2a2a2a;
   --border-accent: #3a5332;
+  --accent-hover: #7aad6e;
+  --error: #c44;
+  --bg-elev1: #111;
+  --bg-elev2: #1a1a1a;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
   --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
   --header-h: 80px;
@@ -261,88 +270,7 @@ body {
   50% { opacity: 0.6; transform: translateY(4px); }
 }
 
-/* ---- Tech Stack Marquee ---- */
-.tech-stack {
-  padding: 48px 0;
-  overflow: hidden;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.marquee-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.marquee {
-  overflow: hidden;
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  gap: 1rem;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-}
-
-.marquee-content {
-  display: flex;
-  flex-shrink: 0;
-  gap: 1rem;
-}
-
-.marquee-content span {
-  font-family: var(--font-mono);
-  display: inline-block;
-  padding: 0.5rem 1.5rem;
-  font-size: clamp(0.8rem, 1.2vw, 0.95rem);
-  color: var(--text-dim);
-  border: 1px solid var(--border-accent);
-  border-radius: 2px;
-  white-space: nowrap;
-  transition: color 0.3s, border-color 0.3s;
-}
-
-.marquee-content span::before {
-  content: "$ ";
-  color: var(--accent);
-}
-
-.marquee-content span:hover {
-  color: var(--text);
-  border-color: var(--accent-light);
-}
-
-/* ---- Tooltip ---- */
-.tooltip {
-  position: fixed;
-  z-index: 200;
-  padding: 0.4rem 0.75rem;
-  font-family: var(--font-jp);
-  font-size: 0.78rem;
-  color: var(--accent-light);
-  background: #111;
-  border: 1px solid var(--border-accent);
-  border-radius: 2px;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  white-space: nowrap;
-  max-width: 90vw;
-}
-
-.tooltip::before {
-  content: "# ";
-  color: var(--text-dim);
-}
-
-.tooltip.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* Section moved to ./_marquee.css */
 
 
 /* ========================================
@@ -368,15 +296,28 @@ body {
   letter-spacing: 0.02em;
 }
 
-.cli-line[data-toggle-all] {
+.cli-toggle {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
   cursor: pointer;
+  text-align: left;
   transition: color 0.2s;
 }
 
-.cli-line[data-toggle-all]:hover .cli-path {
+.cli-toggle:hover .cli-path {
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-color: var(--border-accent);
+}
+
+.cli-toggle:focus-visible {
+  outline: 1px solid var(--accent-light);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 .cli-prompt {
@@ -445,7 +386,7 @@ body {
 .category-tag {
   font-family: var(--font-mono);
   font-size: 0.75em;
-  color: var(--fg);
+  color: var(--text);
   background: transparent;
   border: 1px solid var(--border);
   padding: 0.1em 0.5em;
@@ -466,7 +407,7 @@ body {
 }
 
 .dir-entry[data-toggle] > .dir-name:hover {
-  color: #7aad6e;
+  color: var(--accent-hover);
 }
 
 .dir-entry[data-toggle] > .dir-name::before {
@@ -578,104 +519,7 @@ body {
   transform: translateY(0);
 }
 
-/* ---- Honeypot (spam trap) ---- */
-.hp-field {
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-  opacity: 0;
-  height: 0;
-  width: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-/* ---- Contact Form inside dir-tree ---- */
-.contact-form {
-  list-style: none;
-}
-
-.contact-form input,
-.contact-form textarea,
-.contact-form select {
-  font-family: var(--font-jp);
-  font-size: 0.88rem;
-  color: var(--text);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border-accent);
-  padding: 0.5rem 0.75rem;
-  margin-left: 0.75rem;
-  outline: none;
-  width: min(100%, 400px);
-  transition: border-color 0.3s;
-}
-
-.contact-form select {
-  appearance: none;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236a9a5c' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  padding-right: 2rem;
-}
-
-.contact-form input::placeholder,
-.contact-form textarea::placeholder,
-.contact-form select:invalid {
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus,
-.contact-form select:focus {
-  border-color: var(--accent-light);
-}
-
-.contact-form textarea {
-  resize: vertical;
-  min-height: 80px;
-  display: block;
-  margin-top: 0.25rem;
-}
-
-/* Submit button */
-.dir-submit {
-  font-family: var(--font-mono);
-  font-size: inherit;
-  background: none;
-  border: 1px solid var(--border-accent);
-  color: var(--accent-light);
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0.5rem 1.25rem;
-  border-radius: 2px;
-  transition: color 0.3s, border-color 0.3s, background 0.3s;
-}
-
-.dir-submit:hover {
-  color: #7aad6e;
-  border-color: var(--accent-light);
-  background: rgba(74, 103, 65, 0.1);
-}
-
-.status-ok {
-  color: var(--accent-light);
-}
-
-.status-error {
-  color: #c44;
-}
-
-.cursor-blink {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
+/* Section moved to ./_contact-form.css */
 
 /* ---- Work Detail Page ---- */
 .work-detail {
@@ -770,7 +614,7 @@ body {
 }
 
 .work-detail-body th {
-  background: #1a1a1a;
+  background: var(--bg-elev2);
   font-family: var(--font-mono);
   font-weight: 600;
   opacity: 1;
@@ -778,7 +622,7 @@ body {
 }
 
 .work-detail-body pre {
-  background: #111;
+  background: var(--bg-elev1);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 1rem;
@@ -810,231 +654,9 @@ body {
   margin-top: 2rem;
 }
 
-/* ---- Card Viewer ---- */
-.card-wrapper {
-  position: relative;
-  width: 100%;
-  height: clamp(480px, 70vh, 680px);
-  margin-bottom: 2rem;
-  overflow: hidden;
-}
+/* Section moved to ./_card-viewer.css */
 
-.card-canvas {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  perspective: 1000px;
-  background: transparent;
-}
-
-.card-tilt {
-  width: clamp(300px, 52vw, 500px);
-  aspect-ratio: 1075 / 650; /* 名刺実寸比 (91mm × 55mm) */
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
-  transition: transform 260ms ease-out;
-}
-
-.card-tilt.is-dragging {
-  transition: none;
-  will-change: transform;
-}
-
-.card-orientation {
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
-}
-
-.card-orientation[data-orientation="portrait"] {
-  transform: rotateZ(90deg);
-}
-
-.card-orientation.is-ready {
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* NOTE: no filter here — filter breaks preserve-3d chain */
-.card-body {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
-  transform-origin: center center;
-}
-
-/* 透明オーバーレイ: 3Dチェーン外でタッチ/ポインターを確実に受ける */
-.card-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transform-style: flat;
-  -webkit-transform-style: flat;
-  width: clamp(300px, 52vw, 500px);
-  aspect-ratio: 1075 / 650;
-  z-index: 10;
-  touch-action: none;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-}
-
-.card-overlay[data-orientation="portrait"] {
-  transform: translate(-50%, -50%) rotateZ(90deg);
-  transform-style: flat;
-  -webkit-transform-style: flat;
-}
-
-.card-overlay:focus-visible {
-  outline: 1px solid var(--accent-light);
-  outline-offset: 4px;
-}
-
-.card-overlay.is-dragging {
-  cursor: grabbing;
-}
-
-.card-face {
-  position: absolute;
-  inset: 0;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid var(--border-accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 180ms ease, visibility 180ms ease;
-  pointer-events: none;
-}
-
-.card-body[data-side="front"] .card-front,
-.card-body[data-side="back"] .card-back {
-  opacity: 1;
-  visibility: visible;
-}
-
-.card-body.is-switching {
-  animation-duration: 560ms;
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-}
-
-.card-body.is-switching-forward {
-  animation-name: card-side-swap-forward;
-}
-
-.card-body.is-switching-reverse {
-  animation-name: card-side-swap-reverse;
-}
-
-@keyframes card-side-swap-forward {
-  0%   { transform: rotateY(0deg) scale(1); }
-  50%  { transform: rotateY(-90deg) scale(0.97); }
-  50.1%{ transform: rotateY(90deg) scale(0.97); }
-  100% { transform: rotateY(0deg) scale(1); }
-}
-
-@keyframes card-side-swap-reverse {
-  0%   { transform: rotateY(0deg) scale(1); }
-  50%  { transform: rotateY(90deg) scale(0.97); }
-  50.1%{ transform: rotateY(-90deg) scale(0.97); }
-  100% { transform: rotateY(0deg) scale(1); }
-}
-
-.card-body[data-side="front"] .card-back,
-.card-body[data-side="back"] .card-front {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.card-face img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 6px;
-  -webkit-touch-callout: none;
-}
-
-/* ---- Card Viewer (inline in about section) ---- */
-.card-wrapper--inline {
-  --card-w: clamp(260px, 40vw, 380px);
-  height: clamp(340px, 48vh, 460px);
-  margin: 1rem 0 0.5rem;
-  overflow: visible;
-}
-
-.card-wrapper--inline .card-canvas {
-  justify-content: flex-start;
-  perspective-origin: calc(var(--card-w) * 0.302) 50%;
-}
-
-.card-wrapper--inline .card-tilt {
-  width: var(--card-w);
-  margin-left: calc(var(--card-w) * -0.198);
-}
-
-.card-wrapper--inline .card-overlay {
-  width: var(--card-w);
-  left: calc(var(--card-w) * 0.302);
-}
-
-.card-wrapper--inline .card-overlay[data-orientation="portrait"] {
-  left: calc(var(--card-w) * 0.302);
-  transform: translate(-50%, -50%) rotateZ(90deg);
-}
-
-.dir-entry--meishi > .dir-expand {
-  max-height: 0;
-  padding-left: 3.5ch;
-  overflow: visible;
-  clip-path: inset(0 -200px 100% -200px);
-  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.25s ease,
-              clip-path 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.dir-entry--meishi.is-open > .dir-expand {
-  max-height: 800px;
-  opacity: 1;
-  clip-path: inset(0 -200px 0% -200px);
-}
-
-/* ---- Lightbox ---- */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.85);
-  cursor: pointer;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
-}
-
-.lightbox[aria-hidden="false"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-.lightbox img {
-  max-width: min(80vw, 500px);
-  max-height: 65vh;
-  object-fit: contain;
-  border-radius: 50%;
-  border: 1px solid var(--border-accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  pointer-events: none;
-}
+/* Section moved to ./_lightbox.css */
 
 /* ---- Footer ---- */
 .footer {
@@ -1117,15 +739,7 @@ body {
 
 /* ---- Reduced Motion ---- */
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none !important;
-  }
-
   .scroll-hint {
-    animation: none;
-  }
-
-  .cursor-blink {
     animation: none;
   }
 
@@ -1141,22 +755,6 @@ body {
 }
 
 /* ---- Responsive ---- */
-@media (max-width: 1024px) {
-  .card-tilt,
-  .card-overlay {
-    width: clamp(300px, 68vw, 500px);
-  }
-
-  .card-wrapper {
-    height: clamp(440px, 68vh, 620px);
-  }
-
-  .card-wrapper--inline {
-    --card-w: clamp(240px, 52vw, 360px);
-    height: clamp(320px, 46vh, 420px);
-  }
-}
-
 @media (max-width: 768px) {
   .header {
     padding: 0.85rem 1rem;
@@ -1219,19 +817,4 @@ body {
   .contact-form textarea {
     margin-left: 0;
   }
-
-  .card-wrapper {
-    height: clamp(400px, 65vh, 560px);
-  }
-
-  .card-tilt,
-  .card-overlay {
-    width: clamp(280px, 88vw, 460px);
-  }
-
-  .card-wrapper--inline {
-    --card-w: clamp(220px, 72vw, 340px);
-    height: clamp(280px, 52vh, 380px);
-  }
-
 }

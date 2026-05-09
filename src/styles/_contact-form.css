@@ -1,0 +1,107 @@
+/* Imported from global.css */
+
+/* ---- Honeypot (spam trap) ---- */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---- Contact Form inside dir-tree ---- */
+.contact-form {
+  list-style: none;
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form select {
+  font-family: var(--font-jp);
+  font-size: 0.88rem;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-accent);
+  padding: 0.5rem 0.75rem;
+  margin-left: 0.75rem;
+  outline: none;
+  width: min(100%, 400px);
+  transition: border-color 0.3s;
+}
+
+.contact-form select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236a9a5c' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder,
+.contact-form select:invalid {
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+  border-color: var(--accent-light);
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 80px;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Submit button */
+.dir-submit {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  background: none;
+  border: 1px solid var(--border-accent);
+  color: var(--accent-light);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2px;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+
+.dir-submit:hover {
+  color: var(--accent-hover);
+  border-color: var(--accent-light);
+  background: rgba(74, 103, 65, 0.1);
+}
+
+.status-ok {
+  color: var(--accent-light);
+}
+
+.status-error {
+  color: var(--error);
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ---- Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-blink {
+    animation: none;
+  }
+}
