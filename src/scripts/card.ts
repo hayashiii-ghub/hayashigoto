@@ -1,9 +1,28 @@
 // 名刺ビューアー — オーバーレイ方式でモバイル対応
 // astro:page-load で毎回再 init し、古い window/document リスナは AbortController で破棄する。
 
-let cardAbortController = null;
+type CardSide = 'front' | 'back';
+type CardOrientation = 'portrait' | 'landscape';
+type PointerIdentifier = number | string | null;
 
-function initCard() {
+interface CardState {
+  side: CardSide;
+  orientation: CardOrientation;
+  tiltX: number;
+  tiltY: number;
+  dragging: boolean;
+  pointerId: PointerIdentifier;
+  startX: number;
+  startY: number;
+  startTiltX: number;
+  startTiltY: number;
+  moved: boolean;
+  switching: boolean;
+}
+
+let cardAbortController: AbortController | null = null;
+
+function initCard(): void {
   if (cardAbortController) cardAbortController.abort();
   cardAbortController = new AbortController();
   const { signal } = cardAbortController;
@@ -12,11 +31,14 @@ function initCard() {
   const tilt = document.getElementById('card-tilt');
   const orientation = document.getElementById('card-orientation');
   const card = document.getElementById('card-body');
-  if (!overlay || !tilt || !orientation || !card) return;
+  if (!overlay || !tilt || !orientation || !card) {
+    cardAbortController = null;
+    return;
+  }
 
-  const initialOrientation = orientation.dataset.orientation || 'portrait';
+  const initialOrientation: CardOrientation = ((orientation.dataset.orientation as CardOrientation | undefined) ?? 'portrait');
 
-  const state = {
+  const state: CardState = {
     side: 'front',
     orientation: initialOrientation,
     tiltX: 0,
@@ -46,32 +68,32 @@ function initCard() {
   let sideCleanupTimer = 0;
   let legacyMouseListenersAttached = false;
 
-  function clamp(value, min, max) {
+  function clamp(value: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, value));
   }
 
-  function renderTilt() {
-    tilt.style.transform = `rotateX(${state.tiltX.toFixed(2)}deg) rotateY(${state.tiltY.toFixed(2)}deg)`;
+  function renderTilt(): void {
+    tilt!.style.transform = `rotateX(${state.tiltX.toFixed(2)}deg) rotateY(${state.tiltY.toFixed(2)}deg)`;
   }
 
-  function renderCard() {
-    card.dataset.side = state.side;
-    orientation.dataset.orientation = state.orientation;
-    overlay.dataset.orientation = state.orientation;
+  function renderCard(): void {
+    card!.dataset.side = state.side;
+    orientation!.dataset.orientation = state.orientation;
+    overlay!.dataset.orientation = state.orientation;
   }
 
-  function render() {
+  function render(): void {
     renderTilt();
     renderCard();
   }
 
-  function cancelReset() {
+  function cancelReset(): void {
     if (!resetFrame) return;
     cancelAnimationFrame(resetFrame);
     resetFrame = 0;
   }
 
-  function animateTiltToRest() {
+  function animateTiltToRest(): void {
     cancelReset();
 
     const startX = state.tiltX;
@@ -80,7 +102,7 @@ function initCard() {
 
     const startedAt = performance.now();
 
-    function step(now) {
+    function step(now: number): void {
       const progress = Math.min(1, (now - startedAt) / RESET_DURATION);
       const eased = 1 - Math.pow(1 - progress, 3);
 
@@ -101,8 +123,8 @@ function initCard() {
     resetFrame = requestAnimationFrame(step);
   }
 
-  function updateTiltFromDrag(clientX, clientY) {
-    const rect = overlay.getBoundingClientRect();
+  function updateTiltFromDrag(clientX: number, clientY: number): void {
+    const rect = overlay!.getBoundingClientRect();
     const deltaX = clientX - state.startX;
     const deltaY = clientY - state.startY;
     const normalizedX = rect.width ? (deltaX / rect.width) * DRAG_SENSITIVITY : 0;
@@ -113,16 +135,16 @@ function initCard() {
     renderTilt();
   }
 
-  function toggleSide() {
+  function toggleSide(): void {
     if (state.switching) return;
 
     state.switching = true;
-    const nextSide = state.side === 'front' ? 'back' : 'front';
+    const nextSide: CardSide = state.side === 'front' ? 'back' : 'front';
     const directionClass = nextSide === 'back' ? 'is-switching-forward' : 'is-switching-reverse';
 
-    card.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
-    void card.offsetWidth; // force reflow to restart animation
-    card.classList.add('is-switching', directionClass);
+    card!.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
+    void card!.offsetWidth; // force reflow to restart animation
+    card!.classList.add('is-switching', directionClass);
 
     clearTimeout(sideSwapTimer);
     clearTimeout(sideCleanupTimer);
@@ -133,38 +155,38 @@ function initCard() {
     }, SIDE_SWITCH_DURATION / 2);
 
     sideCleanupTimer = window.setTimeout(() => {
-      card.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
+      card!.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
       state.switching = false;
     }, SIDE_SWITCH_DURATION);
   }
 
-  function toggleOrientation() {
+  function toggleOrientation(): void {
     if (state.switching) return;
     state.orientation = state.orientation === 'landscape' ? 'portrait' : 'landscape';
     renderCard();
   }
 
-  function resetCard() {
+  function resetCard(): void {
     clearTimeout(sideSwapTimer);
     clearTimeout(sideCleanupTimer);
     state.switching = false;
-    card.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
+    card!.classList.remove('is-switching', 'is-switching-forward', 'is-switching-reverse');
     state.side = 'front';
     state.orientation = initialOrientation;
     renderCard();
     animateTiltToRest();
   }
 
-  function finishDrag() {
+  function finishDrag(): void {
     state.dragging = false;
     state.pointerId = null;
     state.startTiltX = state.tiltX;
     state.startTiltY = state.tiltY;
-    overlay.classList.remove('is-dragging');
-    tilt.classList.remove('is-dragging');
+    overlay!.classList.remove('is-dragging');
+    tilt!.classList.remove('is-dragging');
   }
 
-  function beginDrag(pointerId, clientX, clientY) {
+  function beginDrag(pointerId: PointerIdentifier, clientX: number, clientY: number): void {
     cancelReset();
     state.dragging = true;
     state.pointerId = pointerId;
@@ -173,11 +195,11 @@ function initCard() {
     state.startTiltX = state.tiltX;
     state.startTiltY = state.tiltY;
     state.moved = false;
-    overlay.classList.add('is-dragging');
-    tilt.classList.add('is-dragging');
+    overlay!.classList.add('is-dragging');
+    tilt!.classList.add('is-dragging');
   }
 
-  function moveDrag(pointerId, clientX, clientY) {
+  function moveDrag(pointerId: PointerIdentifier, clientX: number, clientY: number): boolean {
     if (!state.dragging || pointerId !== state.pointerId) return false;
 
     const movedX = Math.abs(clientX - state.startX);
@@ -188,7 +210,7 @@ function initCard() {
     return true;
   }
 
-  function endDrag(pointerId, { toggleTap = true } = {}) {
+  function endDrag(pointerId: PointerIdentifier, { toggleTap = true }: { toggleTap?: boolean } = {}): boolean {
     if (!state.dragging || pointerId !== state.pointerId) return false;
 
     const wasTap = !state.moved;
@@ -202,7 +224,7 @@ function initCard() {
     return true;
   }
 
-  function cancelDrag(pointerId) {
+  function cancelDrag(pointerId: PointerIdentifier): boolean {
     if (!state.dragging || pointerId !== state.pointerId) return false;
 
     finishDrag();
@@ -210,31 +232,31 @@ function initCard() {
     return true;
   }
 
-  function safeSetPointerCapture(pointerId) {
+  function safeSetPointerCapture(pointerId: number): void {
     if (!supportsPointerCapture) return;
 
     try {
-      overlay.setPointerCapture(pointerId);
+      overlay!.setPointerCapture(pointerId);
     } catch {
       // Safari can expose the API but reject capture depending on pointer state.
     }
   }
 
-  function safeReleasePointerCapture(pointerId) {
+  function safeReleasePointerCapture(pointerId: number): void {
     if (!supportsPointerCapture) return;
 
-    if (typeof overlay.hasPointerCapture === 'function' && !overlay.hasPointerCapture(pointerId)) {
+    if (typeof overlay!.hasPointerCapture === 'function' && !overlay!.hasPointerCapture(pointerId)) {
       return;
     }
 
     try {
-      overlay.releasePointerCapture(pointerId);
+      overlay!.releasePointerCapture(pointerId);
     } catch {
       // Some browsers implicitly release capture before pointerup.
     }
   }
 
-  function findTouchById(touchList, identifier) {
+  function findTouchById(touchList: TouchList, identifier: number): Touch | null {
     for (const touch of touchList) {
       if (touch.identifier === identifier) return touch;
     }
@@ -242,7 +264,7 @@ function initCard() {
     return null;
   }
 
-  function detachLegacyMouseListeners() {
+  function detachLegacyMouseListeners(): void {
     if (!legacyMouseListenersAttached) return;
 
     window.removeEventListener('mousemove', onLegacyMouseMove);
@@ -250,18 +272,18 @@ function initCard() {
     legacyMouseListenersAttached = false;
   }
 
-  function handleInterruptedInteraction() {
+  function handleInterruptedInteraction(): void {
     if (!state.dragging || state.pointerId == null) return;
 
     cancelDrag(state.pointerId);
     detachLegacyMouseListeners();
   }
 
-  function onLegacyMouseMove(event) {
+  function onLegacyMouseMove(event: MouseEvent): void {
     moveDrag('mouse', event.clientX, event.clientY);
   }
 
-  function onLegacyMouseUp() {
+  function onLegacyMouseUp(): void {
     if (endDrag('mouse')) {
       detachLegacyMouseListeners();
       return;
@@ -272,28 +294,28 @@ function initCard() {
   }
 
   if (supportsPointerEvents) {
-    overlay.addEventListener('pointerdown', (event) => {
+    overlay.addEventListener('pointerdown', (event: PointerEvent) => {
       if (event.pointerType === 'mouse' && event.button !== 0) return;
 
       beginDrag(event.pointerId, event.clientX, event.clientY);
       safeSetPointerCapture(event.pointerId);
     });
 
-    overlay.addEventListener('pointermove', (event) => {
+    overlay.addEventListener('pointermove', (event: PointerEvent) => {
       moveDrag(event.pointerId, event.clientX, event.clientY);
     });
 
-    overlay.addEventListener('pointerup', (event) => {
+    overlay.addEventListener('pointerup', (event: PointerEvent) => {
       endDrag(event.pointerId);
       safeReleasePointerCapture(event.pointerId);
     });
 
-    overlay.addEventListener('pointercancel', (event) => {
+    overlay.addEventListener('pointercancel', (event: PointerEvent) => {
       cancelDrag(event.pointerId);
       safeReleasePointerCapture(event.pointerId);
     });
   } else {
-    overlay.addEventListener('mousedown', (event) => {
+    overlay.addEventListener('mousedown', (event: MouseEvent) => {
       if (event.button !== 0) return;
 
       beginDrag('mouse', event.clientX, event.clientY);
@@ -305,35 +327,45 @@ function initCard() {
       }
     });
 
-    overlay.addEventListener('touchstart', (event) => {
-      const [touch] = event.changedTouches;
+    overlay.addEventListener('touchstart', (event: Event) => {
+      const e = event as TouchEvent;
+      const [touch] = e.changedTouches;
       if (!touch) return;
 
-      event.preventDefault();
+      e.preventDefault();
       beginDrag(touch.identifier, touch.clientX, touch.clientY);
     }, { passive: false });
 
-    overlay.addEventListener('touchmove', (event) => {
-      const touch = findTouchById(event.changedTouches, state.pointerId);
-      if (!touch) return;
+    overlay.addEventListener('touchmove', (event: Event) => {
+      const e = event as TouchEvent;
+      if (state.pointerId !== null && typeof state.pointerId === 'number') {
+        const touch = findTouchById(e.changedTouches, state.pointerId);
+        if (!touch) return;
 
-      event.preventDefault();
-      moveDrag(touch.identifier, touch.clientX, touch.clientY);
+        e.preventDefault();
+        moveDrag(touch.identifier, touch.clientX, touch.clientY);
+      }
     }, { passive: false });
 
-    overlay.addEventListener('touchend', (event) => {
-      const touch = findTouchById(event.changedTouches, state.pointerId);
-      if (!touch) return;
+    overlay.addEventListener('touchend', (event: Event) => {
+      const e = event as TouchEvent;
+      if (state.pointerId !== null && typeof state.pointerId === 'number') {
+        const touch = findTouchById(e.changedTouches, state.pointerId);
+        if (!touch) return;
 
-      event.preventDefault();
-      endDrag(touch.identifier);
+        e.preventDefault();
+        endDrag(touch.identifier);
+      }
     }, { passive: false });
 
-    overlay.addEventListener('touchcancel', (event) => {
-      const touch = findTouchById(event.changedTouches, state.pointerId);
-      if (!touch) return;
+    overlay.addEventListener('touchcancel', (event: Event) => {
+      const e = event as TouchEvent;
+      if (state.pointerId !== null && typeof state.pointerId === 'number') {
+        const touch = findTouchById(e.changedTouches, state.pointerId);
+        if (!touch) return;
 
-      cancelDrag(touch.identifier);
+        cancelDrag(touch.identifier);
+      }
     }, { passive: false });
   }
 
@@ -344,33 +376,34 @@ function initCard() {
   }, { signal });
 
   // キーボード操作（オーバーレイにフォーカスがある場合）
-  overlay.addEventListener('keydown', (event) => {
-    const key = event.key.toLowerCase();
+  overlay.addEventListener('keydown', (event: Event) => {
+    const e = event as KeyboardEvent;
+    const key = e.key.toLowerCase();
 
     if (key === 'enter' || key === ' ') {
-      event.preventDefault();
-      event.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
       toggleSide();
       return;
     }
 
     if (key === 'o') {
-      event.preventDefault();
-      event.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
       toggleOrientation();
       return;
     }
 
     if (key === 'r') {
-      event.preventDefault();
-      event.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
       resetCard();
     }
   });
 
   render();
   requestAnimationFrame(() => {
-    orientation.classList.add('is-ready');
+    orientation!.classList.add('is-ready');
   });
 }
 
