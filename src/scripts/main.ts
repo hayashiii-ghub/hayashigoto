@@ -185,7 +185,8 @@ function initScrollReveal(): void {
       el.classList.add('is-visible');
       if (el.classList.contains('dir-entry')) {
         el.classList.add('is-open');
-        el.setAttribute('aria-expanded', 'true');
+        const innerBtn = el.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
+        if (innerBtn) innerBtn.setAttribute('aria-expanded', 'true');
       }
     });
     return;
@@ -248,7 +249,8 @@ function initScrollReveal(): void {
     if (el.classList.contains('dir-entry')) {
       setTimeout(() => {
         el.classList.add('is-open');
-        el.setAttribute('aria-expanded', 'true');
+        const innerBtn = el.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
+        if (innerBtn) innerBtn.setAttribute('aria-expanded', 'true');
         setTimeout(onDone, 100);
       }, 120);
     } else {
@@ -269,23 +271,13 @@ function initScrollReveal(): void {
 // 個別エントリのクリック開閉
 function initDirToggle(): void {
   document.querySelectorAll<HTMLElement>('.dir-entry[data-toggle]').forEach(entry => {
-    const name = entry.querySelector<HTMLElement>(':scope > .dir-name');
-    if (!name) return;
-
-    function toggle(e: Event): void {
+    const btn = entry.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const opening = !entry.classList.contains('is-open');
       entry.classList.toggle('is-open');
-      entry.setAttribute('aria-expanded', String(opening));
-    }
-
-    name.addEventListener('click', toggle);
-
-    entry.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggle(e);
-      }
+      btn.setAttribute('aria-expanded', String(opening));
     });
   });
 }
@@ -302,13 +294,10 @@ function initToggleAll(): void {
 
       entries.forEach((entry, i) => {
         setTimeout(() => {
-          if (allOpen) {
-            entry.classList.remove('is-open');
-            entry.setAttribute('aria-expanded', 'false');
-          } else {
-            entry.classList.add('is-open');
-            entry.setAttribute('aria-expanded', 'true');
-          }
+          const isOpening = !allOpen;
+          entry.classList.toggle('is-open', isOpening);
+          const innerBtn = entry.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
+          if (innerBtn) innerBtn.setAttribute('aria-expanded', String(isOpening));
         }, i * 80);
       });
 

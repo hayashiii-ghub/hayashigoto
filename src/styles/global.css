@@ -400,24 +400,38 @@ body {
   margin-left: 1.5ch;
 }
 
-/* Toggleable entries */
-.dir-entry[data-toggle] > .dir-name {
+/* Toggleable entries — button-based */
+.dir-entry-toggle {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
   cursor: pointer;
+  text-align: left;
+  display: inline;
   transition: color 0.2s;
 }
 
-.dir-entry[data-toggle] > .dir-name:hover {
+.dir-entry-toggle:hover .dir-name {
   color: var(--accent-hover);
 }
 
-.dir-entry[data-toggle] > .dir-name::before {
+.dir-entry-toggle:focus-visible {
+  outline: 1px solid var(--accent-light);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.dir-entry[data-toggle] .dir-name::before {
   content: "[+] ";
   color: var(--text-dim);
   font-weight: 300;
   font-size: 0.8em;
 }
 
-.dir-entry[data-toggle].is-open > .dir-name::before {
+.dir-entry[data-toggle].is-open .dir-name::before {
   content: "[-] ";
   color: var(--accent-light);
 }
