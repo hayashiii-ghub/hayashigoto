@@ -424,14 +424,14 @@ body {
   border-radius: 2px;
 }
 
-.dir-entry[data-toggle] .dir-name::before {
+.dir-entry[data-toggle] .dir-entry-toggle .dir-name::before {
   content: "[+] ";
   color: var(--text-dim);
   font-weight: 300;
   font-size: 0.8em;
 }
 
-.dir-entry[data-toggle].is-open .dir-name::before {
+.dir-entry[data-toggle].is-open .dir-entry-toggle .dir-name::before {
   content: "[-] ";
   color: var(--accent-light);
 }
