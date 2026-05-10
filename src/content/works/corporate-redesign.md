@@ -31,7 +31,7 @@ category: "受託案件"
 | アニメーション | tw-animate-css | Tailwind CSS v4対応のアニメーションユーティリティ |
 | アイコン | Lucide React | 軽量・Tree-shakeable・アイコン数が豊富 |
 | Lint | ESLint 9 + eslint-config-next | Next.js公式推奨構成 |
-| パッケージマネージャ | npm | Node.js標準・追加ツール不要 |
+| パッケージマネージャ | pnpm | ディスク効率・厳格な依存解決・速いインストール |
 
 ## 構成
 
