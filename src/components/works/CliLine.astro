@@ -1,0 +1,17 @@
+---
+interface Props {
+  variant?: 'heading' | 'row';
+  cmd: string;
+}
+
+const { variant = 'row', cmd } = Astro.props;
+---
+{variant === 'heading' ? (
+  <h1 class="cli-line">
+    <span class="cli-prompt">&gt;</span> <span class="cli-cmd">{cmd}</span> <span class="cli-path"><slot /></span>
+  </h1>
+) : (
+  <div class="dir-file work-detail-url">
+    <span class="cli-prompt">&gt;</span> <span class="cli-cmd">{cmd}</span> <slot />
+  </div>
+)}

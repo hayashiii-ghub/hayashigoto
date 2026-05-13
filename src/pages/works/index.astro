@@ -1,6 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import CliLine from '../../components/works/CliLine.astro';
+import DirField from '../../components/works/DirField.astro';
+import WorkBackLink from '../../components/works/WorkBackLink.astro';
 
 const works = (await getCollection('works')).sort(
   (a, b) => a.data.order - b.data.order
@@ -19,28 +22,27 @@ const nav = [
 <Layout title="works/" canonical={`${Astro.site!.origin}/works`} nav={nav}>
   <section class="dir-section work-detail">
     <div class="dir-section-inner">
-      <h1 class="cli-line">
-        <span class="cli-prompt">></span> <span class="cli-cmd">ls</span> <span class="cli-path"><a href="/#works">/works</a></span>
-      </h1>
+      <CliLine variant="heading" cmd="ls"><a href="/#works">/works</a></CliLine>
 
       <div class="dir-tree">
-        {workEntries.map(({ work, isLast }) => (
-          <div class="dir-entry" data-toggle>
-            <button type="button" class="dir-entry-toggle" aria-expanded="false">
-              <span class="dir-branch">{isLast ? '└──' : '├──'}</span>
-              <span class="dir-name">{work.data.dirName}/</span>
-            </button>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
-            <div class="dir-expand">
-              <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-value dir-desc">{work.data.description}</span></div>
-              <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
-              <div class="dir-file"><span class="dir-pipe">{isLast ? '\u00a0' : '│'}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
+        {workEntries.map(({ work, isLast }) => {
+          const pipe = isLast ? '\u00a0' : '│';
+          return (
+            <div class="dir-entry" data-toggle>
+              <button type="button" class="dir-entry-toggle" aria-expanded="false">
+                <span class="dir-branch">{isLast ? '└──' : '├──'}</span>
+                <span class="dir-name">{work.data.dirName}/</span>
+              </button>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
+              <div class="dir-expand">
+                <DirField pipe={pipe} valueClass="file-value dir-desc">{work.data.description}</DirField>
+                <DirField pipe={pipe} label="stack:">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</DirField>
+                <div class="dir-file"><span class="dir-pipe">{pipe}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
-        <div class="dir-file work-back">
-          <a href="/#works" class="file-more">← cd /works</a>
-        </div>
+        <WorkBackLink />
       </div>
     </div>
   </section>

@@ -2,6 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
+import CliLine from '../../components/works/CliLine.astro';
+import DirField from '../../components/works/DirField.astro';
+import WorkBackLink from '../../components/works/WorkBackLink.astro';
 
 export async function getStaticPaths() {
   const works = await getCollection('works');
@@ -24,51 +27,37 @@ const nav = [
 <Layout title={`${work.data.dirName}/`} description={work.data.description} canonical={`${Astro.site!.origin}/works/${work.id}`} nav={nav}>
   <section class="dir-section work-detail">
     <div class="dir-section-inner">
-      <h1 class="cli-line">
-        <span class="cli-prompt">></span> <span class="cli-cmd">cat</span> <span class="cli-path"><a href="/#works">/works</a>/{work.data.dirName}/README.md</span>
-      </h1>
+      <CliLine variant="heading" cmd="cat"><a href="/#works">/works</a>/{work.data.dirName}/README.md</CliLine>
 
       <div class="dir-tree">
-        <div class="dir-file"><span class="file-label">title:</span><span class="file-value">{work.data.title}</span></div>
-        <div class="dir-file"><span class="file-label">year:</span><span class="file-value">{work.data.year}</span></div>
-        <div class="dir-file"><span class="file-label">role:</span><span class="file-value">{work.data.role}</span></div>
+        <DirField label="title:">{work.data.title}</DirField>
+        <DirField label="year:">{work.data.year}</DirField>
+        <DirField label="role:">{work.data.role}</DirField>
         {work.data.category && (
-          <div class="dir-file"><span class="file-label">category:</span><span class="file-value"><span class="category-tag">{work.data.category}</span></span></div>
+          <DirField label="category:"><span class="category-tag">{work.data.category}</span></DirField>
         )}
-        <div class="dir-file"><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
+        <DirField label="stack:">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</DirField>
 
         {work.data.url && (
-          <div class="dir-file work-detail-url">
-            <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={work.data.url} target="_blank" rel="noopener noreferrer">{work.data.url}</a>
-          </div>
+          <CliLine cmd="open"><a href={work.data.url} target="_blank" rel="noopener noreferrer">{work.data.url}</a></CliLine>
         )}
 
         {work.data.note && (
-          <div class="dir-file work-detail-url">
-            <span class="cli-prompt">></span> <span class="cli-cmd">note</span> <a href={work.data.note} target="_blank" rel="noopener noreferrer">{work.data.note}</a>
-          </div>
+          <CliLine cmd="note"><a href={work.data.note} target="_blank" rel="noopener noreferrer">{work.data.note}</a></CliLine>
         )}
 
         {work.data.github && (
-          <div class="dir-file work-detail-url">
-            <span class="cli-prompt">></span> <span class="cli-cmd">git remote</span> <a href={work.data.github} target="_blank" rel="noopener noreferrer">{work.data.github}</a>
-          </div>
+          <CliLine cmd="git remote"><a href={work.data.github} target="_blank" rel="noopener noreferrer">{work.data.github}</a></CliLine>
         )}
 
         {work.data.tools && work.data.tools.map((tool: { name: string; url?: string; github?: string }) => (
           <>
-            <div class="dir-file work-detail-url">
-              <span class="cli-prompt">></span> <span class="cli-cmd">cd</span> <span>{tool.name}</span>
-            </div>
+            <CliLine cmd="cd"><span>{tool.name}</span></CliLine>
             {tool.url && (
-              <div class="dir-file work-detail-url">
-                <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={tool.url} target="_blank" rel="noopener noreferrer">{tool.url}</a>
-              </div>
+              <CliLine cmd="open"><a href={tool.url} target="_blank" rel="noopener noreferrer">{tool.url}</a></CliLine>
             )}
             {tool.github && (
-              <div class="dir-file work-detail-url">
-                <span class="cli-prompt">></span> <span class="cli-cmd">git remote</span> <a href={tool.github} target="_blank" rel="noopener noreferrer">{tool.github}</a>
-              </div>
+              <CliLine cmd="git remote"><a href={tool.github} target="_blank" rel="noopener noreferrer">{tool.github}</a></CliLine>
             )}
           </>
         ))}
@@ -76,9 +65,7 @@ const nav = [
         {work.data.images && work.data.images.length > 0 && (
           work.data.imageDisplay === 'cli-link' ? (
             work.data.images.map((img) => (
-              <div class="dir-file work-detail-url">
-                <span class="cli-prompt">></span> <span class="cli-cmd">open</span> <a href={img.src} data-lightbox>{img.src.split('/').pop()}</a>
-              </div>
+              <CliLine cmd="open"><a href={img.src} data-lightbox>{img.src.split('/').pop()}</a></CliLine>
             ))
           ) : (
             <div class="work-detail-thumbnails">
@@ -113,9 +100,7 @@ const nav = [
           <Content />
         </div>
 
-        <div class="dir-file work-back">
-          <a href="/#works" class="file-more">← cd /works</a>
-        </div>
+        <WorkBackLink />
       </div>
     </div>
   </section>

@@ -1,0 +1,14 @@
+---
+interface Props {
+  label?: string;
+  pipe?: string;
+  valueClass?: string;
+}
+
+const { label, pipe, valueClass = 'file-value' } = Astro.props;
+---
+<div class="dir-file">
+  {pipe !== undefined && <span class="dir-pipe">{pipe}</span>}
+  {label && <span class="file-label">{label}</span>}
+  <span class={valueClass}><slot /></span>
+</div>
