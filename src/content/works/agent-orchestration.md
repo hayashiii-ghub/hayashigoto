@@ -1,6 +1,6 @@
 ---
-title: "kufuu — 日本語圏チーム開発向け Agent Skills"
-dirName: "kufuu"
+title: "kufuu — agent orchestration skill pack"
+dirName: "agent-orchestration"
 year: 2026
 role: "Solo dev"
 stack: ["Bash", "Agent Skills", "Markdown"]
