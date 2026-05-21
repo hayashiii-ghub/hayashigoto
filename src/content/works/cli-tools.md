@@ -7,7 +7,7 @@ stack: ["TypeScript", "Bun", "Playwright", "Puppeteer", "Node.js", "Skill"]
 description: "AIエージェント(Claude Code等)から自然言語で呼び出せるCLIツール群。Webサイトのスクリーンショット一括取得(sitesnap)とHTML/MarkdownのPDF化(pdfmint)。"
 note: "https://note.com/hayashiii_note/n/ne1336671f1a3"
 order: 5
-featured: true
+featured: false
 category: "個人開発"
 tools:
   - name: "sitesnap"

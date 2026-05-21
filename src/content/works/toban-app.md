@@ -9,7 +9,7 @@ github: "https://github.com/hayashiii-ghub/toban-app"
 note: "https://note.com/hayashiii_note/n/naca284af9f20?sub_rt=share_sb"
 description: "掃除当番・給食当番・日直などのローテーション表を作成・印刷・共有できる無料Webアプリ。"
 images: ["../../assets/works/rotation-table.webp"]
-order: 3
+order: 6
 category: "個人開発"
 ---
 
