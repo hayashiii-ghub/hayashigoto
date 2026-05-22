@@ -92,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const origin = req.headers.origin;
+  const origin = pickHeader(req.headers.origin);
   if (!isAllowedOrigin(origin)) {
     return res.status(403).json({ error: '許可されていない送信元です' });
   }
@@ -114,7 +114,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return res.status(429).json({ error: '送信回数が多すぎます。時間をおいて再度お試しください' });
   }
 
-  const body: Record<string, unknown> = req.body && typeof req.body === 'object' ? req.body : {};
+  const body: Record<string, unknown> =
+    req.body && typeof req.body === 'object' ? (req.body as Record<string, unknown>) : {};
   const category = sanitizeLine(body.category);
   const name = sanitizeLine(body.name);
   const email = sanitizeLine(body.email).toLowerCase();
