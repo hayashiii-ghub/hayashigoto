@@ -1,58 +1,58 @@
 ---
-title: "hikizan — agent orchestration plugin"
+title: "hikizan — agent workflow plugin"
 dirName: "agent-orchestration"
 year: 2026
 role: "Solo dev"
-stack: ["Bash", "Claude Code", "Agent Skills", "Markdown"]
+stack: ["Claude Code Plugin", "Agent Skills", "Bash", "Markdown"]
 github: "https://github.com/hayashiii-ghub/hikizan"
-description: "「査読 / 構築 / 探索 / 試験 / 提出」の動詞で責務を分けた core 5 skill、安全網となる hooks、並列開発用の git worktree CLI を同梱した日本語圏チーム開発向け Claude Code plugin。"
+description: "「査読 / 構築 / 試験 / 提出」の動詞で責務を分けた core 4 skill と、git push・gh pr create・submodule・CLAUDE.md bootstrap を補完する hooks を同梱した日本語圏チーム開発向け Claude Code plugin / Agent Skills skill pack。"
 order: 3
 category: "個人開発"
 ---
 
-`tw93/Waza` を起点に、`anthropic/superpowers` から選択的に取り込み、日本語圏のチーム開発に最適化した **core 5 skill**、安全網となる **hooks**、並列開発を支える **`wt`** (worktree manager) を同梱した Claude Code plugin です。動詞単位で責務を分けたうえで、名前のとおり「引き算」— 認知負荷の削減を全 skill に貫く設計哲学に据えました。
+AI agent が長く自走しすぎても、逐一確認を挟まれすぎても開発のテンポが落ちる。その不満から、リスクに応じて自律と確認のバランスを変える Claude Code plugin / Agent Skills 対応 skill pack として設計しました。低リスクで推測可能なことは自律で進め、計画の分岐点では確認し、不可逆・破壊的な操作では必ず止まる。固定の折衷点ではなく、場面ごとに振る舞いを切り替えるのが hikizan の役割です。
 
-## core 5 skill
+名前のとおり「引き算」— 選択肢を増やして全部を抱え込むのではなく、動詞単位で責務を切り、認知負荷を下げることを全 skill の設計原則にしています。
+
+## core 4 skill
 
 | skill | 漢字 | 動詞 | 担当 |
 |---|---|---|---|
-| `sadoku` | 査読 | 見る・書く | code review / PR 説明文 |
-| `kouchiku` | 構築 | 考える・作る | 設計判断 / 評価 / 計画策定 / 計画実行 |
-| `tansaku` | 探索 | 追う | バグ調査 / root cause investigation |
+| `sadoku` | 査読 | 見る | code review / findings の整理 |
+| `kouchiku` | 構築 | 考える・作る | 設計判断 / 評価 / 計画策定 / 計画実行 / root cause diagnosis |
 | `shiken` | 試験 | 試す | TDD discipline / PRUNE |
-| `teishutsu` | 提出 | 出す | PR 提出フロー (remote / submodule / parent commit) |
+| `teishutsu` | 提出 | 出す | PR 本文ドラフト / PR 提出フロー (remote / submodule / parent commit / cwd-aware gh) |
 
-動詞で 5 分割した役割境界が原則。`kouchiku` は controller として設計から計画実行までを持ち、原因調査は `tansaku`、TDD discipline は `shiken`、レビュー / PR 文ドラフトは `sadoku`、PR 提出プロセスは `teishutsu` に handoff block で渡します。skill 名は短い英語、本文は日本語に統一し、日本語のレビュー / PR 文を素直に書ける構造にしました。
+動詞で 4 分割した役割境界が原則。`kouchiku` は controller として設計、計画実行、原因診断を扱い、TDD discipline は `shiken`、レビューは `sadoku`、PR 本文ドラフト / 提出プロセスは `teishutsu` に handoff block で渡します。TDD が必要な層では、`kouchiku` が実装を vertical behavior slice に分解し、`shiken` が 1 slice ごとに RED → GREEN → PRUNE を実行。test level / coverage gap / PRUNE witness は return log に残す方針です。
 
 ## hooks による安全網
 
-skill 本文が正常経路での漏れを防ぐ一方、`hooks/hooks.json` 経由の hooks は「skill を経由しない経路でも止める最後の砦」を担当します。Claude Code の Bash ツール呼び出しを監視し、定義済みの条件に該当するときだけ介入する条件駆動型です。
+skill 本文が通常フローの手順を示す一方、`hooks/hooks.json` 経由の hooks は「skill を経由しない経路でも止める最後の砦」を担当します。Claude Code の Bash ツール呼び出しを監視し、定義済みの条件に該当するときだけ介入する条件駆動型です。
 
 - **SessionStart**: `templates/CLAUDE.md` の作業ルールを冪等に bootstrap
 - **pre-push**: `git push` 前に non-fast-forward を検出し、`main` / `master` / `develop` への force push を block
-- **pre-pr-create**: `gh pr create` の前提条件をチェック
-- **post-commit**: submodule pointer の未 push を warning
+- **pre-pr-create**: `gh pr create` に `--draft` も `--reviewer` も無い場合に block
+- **post-commit**: submodule pointer 変更後、submodule 側が未 push の場合に warning
 
-発火イベントは `~/.hikizan/metrics.jsonl` に 1 行 1 JSON で記録され、運用の振り返りに使えます。
+発火イベントは `~/.hikizan/metrics.jsonl` に 1 行 1 JSON で記録され、block / warn / allow の集計に使えます。PostToolUse は副作用が完了済みのため warning に留め、block 対象は PreToolUse に限定しています。
 
-## bin/wt — git worktree CLI
+## 配布と併用
 
-並列開発で worktree を扱うための bash 単体の CLI。skill とは独立して動き、`wt new <branch>` / `wt ls` / `wt rm` / `wt cleanup` などで worktree の生成・整理ができます。`kouchiku` の計画実行モードや subagent の並列起動と組み合わせる前提で設計しました。Claude Code plugin として install すると、`bin/wt` はセッション中の Bash の `PATH` に自動追加されます。
-
-## 配布
-
-Claude Code 利用者は plugin 経由が推奨経路です。
+Claude Code 利用者は plugin 経由が推奨経路です。`.git` 付き HTTPS URL を明示し、GitHub SSH key 未設定の環境でも repository として clone できるようにしています。
 
 ```bash
 /plugin marketplace add https://github.com/hayashiii-ghub/hikizan.git
 /plugin install hikizan@hikizan
 ```
 
-[Agent Skills 標準](https://agentskills.io) にも準拠しているため、`npx skills add github:hayashiii-ghub/hikizan` の 1 コマンドで Cursor / Codex などの skills 対応エージェントにも配置できます。version は固定せず git commit を version として扱い、`/plugin update` で最新の commit に追従します。
+[Agent Skills 標準](https://agentskills.io) にも沿っているため、`npx skills add github:hayashiii-ghub/hikizan -g -a codex` のように Cursor / Claude Code / Codex などの skills 対応エージェントへ配置できます。Claude Code 上で Codex に委譲したい場合は、hikizan 自体が orchestration 本体を抱え込まず、OpenAI 公式の `openai/codex-plugin-cc` を並行 install する設計です。シンボル探索が必要な言語では公式 LSP plugin を併用し、hikizan 側の skill は「シンボル系は LSP、テキスト系は grep、LSP 未設定なら grep にフォールバック」という規約で動きます。
 
 ## 設計判断
 
-- **動詞ベースの 5 分割**: 「査読 / 構築 / 探索 / 試験 / 提出」を独立 skill にしたことで、handoff block を通して役割が交差せず、判断・検証・提出を分離できる
-- **plugin と skill pack の二経路配布**: Claude Code には plugin として hooks ごと、その他のエージェントには Agent Skills 標準の skill pack として、同じ skill 本体 (SoT) を配布する
+- **動詞ベースの 4 分割**: 「査読 / 構築 / 試験 / 提出」を独立 skill にしたことで、handoff block を通して判断・検証・レビュー・提出を分離できる
+- **controller と専門 discipline の分離**: `kouchiku` が設計と計画実行を持ち、TDD は `shiken`、レビューは `sadoku`、提出は `teishutsu` に渡す
 - **skill + hooks の二層防御**: skill 本文で正常経路を、hooks で skill を経由しない経路を止め、PR 粒度や remote 操作の事故を多重に防ぐ
+- **plugin と skill pack の二経路配布**: Claude Code には plugin として hooks ごと、その他のエージェントには Agent Skills 標準の skill pack として、同じ skill 本体を配布する
+- **外部 plugin 併用の明示**: Codex 連携や LSP を hikizan 本体に取り込まず、公式 plugin と namespace を分けて併用する
+- **環境変化で完了を見る**: 検証ログは command 出力を根拠にし、「pass しました」のような自己申告を完了証跡にしない
 - **引き算の哲学**: 選択肢 + 推奨度 + 1 行根拠で提示し、儀礼的表現を削る。認知負荷の削減を全 skill で一貫させる
