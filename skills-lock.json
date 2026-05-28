@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "kouchiku": {
+      "source": "hayashiii-ghub/hikizan",
+      "sourceType": "github",
+      "skillPath": "skills/kouchiku/SKILL.md",
+      "computedHash": "ae0c1c2e64f370561afba26d919ed495a3f225bec776529c89ff5f1346958cc4"
+    },
+    "sadoku": {
+      "source": "hayashiii-ghub/hikizan",
+      "sourceType": "github",
+      "skillPath": "skills/sadoku/SKILL.md",
+      "computedHash": "689e0e9c09842292914fe285ceeffe29db0150ddb2ba7b26414e8d0a5484b6c2"
+    },
+    "shiken": {
+      "source": "hayashiii-ghub/hikizan",
+      "sourceType": "github",
+      "skillPath": "skills/shiken/SKILL.md",
+      "computedHash": "a31425c38a23a87ccbc328232351c722cb7e94f4cfdb3d096f18fa251b517cda"
+    },
+    "tansaku": {
+      "source": "hayashiii-ghub/hikizan",
+      "sourceType": "github",
+      "skillPath": "skills/tansaku/SKILL.md",
+      "computedHash": "2d1fc9ddff9cc55c29bc36dc6229508c3b82b5f5bfe961092e3cdc94ef9987c0"
+    },
+    "teishutsu": {
+      "source": "hayashiii-ghub/hikizan",
+      "sourceType": "github",
+      "skillPath": "skills/teishutsu/SKILL.md",
+      "computedHash": "00dcffa2a8a3dd4c550b5aa0c250c1c9b38cbb8f7c3fd2296d62b8776fdc0de0"
+    }
+  }
+}
