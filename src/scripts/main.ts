@@ -1,26 +1,30 @@
 // はやしごと - メインの JavaScript
 
 // ViewTransitions で DOM が差し替わっても document/window の listener は残るため、
-// 多重登録を防ぐためのモジュールレベルフラグ。
-let _marqueeResizeAttached: boolean = false;
+// ページ遷移ごとに AbortController で前回の登録を破棄する（card.ts と同様）。
+let mainAbortController: AbortController | null = null;
 
 function init(): void {
-  initLoader();
-  initHeroLogoFallback();
-  initMarquee();
-  initSmoothScroll();
-  initScrollReveal();
-  initDirToggle();
-  initToggleAll();
-  initContactForm();
-  initLightbox();
+  if (mainAbortController) mainAbortController.abort();
+  mainAbortController = new AbortController();
+  const { signal } = mainAbortController;
+
+  initLoader(signal);
+  initHeroLogoFallback(signal);
+  initMarquee(signal);
+  initSmoothScroll(signal);
+  initScrollReveal(signal);
+  initDirToggle(signal);
+  initToggleAll(signal);
+  initContactForm(signal);
+  initLightbox(signal);
 }
 
 // astro:page-load fires on initial load AND every view transition.
 document.addEventListener('astro:page-load', init);
 
 // Hero ロゴ画像のフォールバック（CSP対応のため JS で処理）
-function initHeroLogoFallback(): void {
+function initHeroLogoFallback(signal: AbortSignal): void {
   const img = document.querySelector<HTMLImageElement>('.hero-logo-img');
   if (!img) return;
   img.addEventListener('error', () => {
@@ -29,25 +33,26 @@ function initHeroLogoFallback(): void {
     parent.style.display = 'none';
     const fallback = parent.nextElementSibling;
     if (fallback instanceof HTMLElement) fallback.style.display = 'block';
-  });
+  }, { signal });
 }
 
 // ローディング画面（実際の読み込み完了で消す）
-function initLoader(): void {
+function initLoader(signal: AbortSignal): void {
   const loader = document.getElementById('loader');
-  if (!loader) return;
+  if (!loader || loader.classList.contains('is-hidden')) return;
 
   const dismiss = (): void => loader.classList.add('is-hidden');
 
   if (document.readyState === 'complete') {
     dismiss();
-  } else {
-    window.addEventListener('load', dismiss);
+    return;
   }
+
+  window.addEventListener('load', dismiss, { once: true, signal });
 }
 
 // マーキー（画面幅に応じて動的に複製・アニメーション設定）
-function initMarquee(): void {
+function initMarquee(signal: AbortSignal): void {
   const MARQUEE_SPEED = 50; // px per second（全行共通）
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (prefersReducedMotion.matches) return;
@@ -126,8 +131,8 @@ function initMarquee(): void {
       frameId = window.requestAnimationFrame(setup);
     }
 
-    marquee.addEventListener('mouseenter', () => animation?.pause());
-    marquee.addEventListener('mouseleave', () => animation?.play());
+    marquee.addEventListener('mouseenter', () => animation?.pause(), { signal });
+    marquee.addEventListener('mouseleave', () => animation?.play(), { signal });
 
     queueSetup();
 
@@ -140,12 +145,16 @@ function initMarquee(): void {
       const observer = new ResizeObserver(queueSetup);
       observer.observe(marquee);
       observer.observe(original);
+      signal.addEventListener('abort', () => observer.disconnect(), { once: true });
     } else {
-      if (!_marqueeResizeAttached) {
-        window.addEventListener('resize', debounce(queueSetup, 300));
-        _marqueeResizeAttached = true;
-      }
+      window.addEventListener('resize', debounce(queueSetup, 300), { signal });
     }
+
+    signal.addEventListener('abort', () => {
+      if (frameId) cancelAnimationFrame(frameId);
+      stopAnimation();
+      clearClones();
+    }, { once: true });
   });
 }
 
@@ -158,7 +167,7 @@ function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number): (.
 }
 
 // スムーズスクロール
-function initSmoothScroll(): void {
+function initSmoothScroll(signal: AbortSignal): void {
   document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -170,14 +179,22 @@ function initSmoothScroll(): void {
       const headerHeight = header?.offsetHeight ?? 0;
       const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
       window.scrollTo({ top, behavior: 'smooth' });
-    });
+    }, { signal });
   });
 }
 
 // 各要素を個別に監視し、スクロール位置に合わせて1つずつ展開
-function initScrollReveal(): void {
+function initScrollReveal(signal: AbortSignal): void {
   const items = Array.from(document.querySelectorAll<HTMLElement>('.cli-reveal'));
   if (items.length === 0) return;
+
+  const timeouts: ReturnType<typeof setTimeout>[] = [];
+  const observers: IntersectionObserver[] = [];
+
+  signal.addEventListener('abort', () => {
+    timeouts.forEach(clearTimeout);
+    observers.forEach((obs) => obs.disconnect());
+  }, { once: true });
 
   // セッション中2回目以降はアニメーションをスキップして即表示
   if (sessionStorage.getItem('revealed')) {
@@ -217,6 +234,7 @@ function initScrollReveal(): void {
       entry.target.classList.add('is-visible');
     });
   }, { threshold: 0.15 });
+  observers.push(globalObserver);
 
   // セクション内の要素用：1つ表示したら次の1つだけを監視
   function observeNext(section: Element | string): void {
@@ -239,6 +257,7 @@ function initScrollReveal(): void {
       threshold: 0.1,
       rootMargin: '0px 0px -60px 0px'
     });
+    observers.push(obs);
 
     obs.observe(el);
   }
@@ -247,14 +266,14 @@ function initScrollReveal(): void {
     el.classList.add('is-visible');
 
     if (el.classList.contains('dir-entry')) {
-      setTimeout(() => {
+      timeouts.push(setTimeout(() => {
         el.classList.add('is-open');
         const innerBtn = el.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
         if (innerBtn) innerBtn.setAttribute('aria-expanded', 'true');
-        setTimeout(onDone, 100);
-      }, 120);
+        timeouts.push(setTimeout(onDone, 100));
+      }, 120));
     } else {
-      setTimeout(onDone, 150);
+      timeouts.push(setTimeout(onDone, 150));
     }
   }
 
@@ -269,7 +288,7 @@ function initScrollReveal(): void {
 }
 
 // 個別エントリのクリック開閉
-function initDirToggle(): void {
+function initDirToggle(signal: AbortSignal): void {
   document.querySelectorAll<HTMLElement>('.dir-entry[data-toggle]').forEach(entry => {
     const btn = entry.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
     if (!btn) return;
@@ -278,12 +297,15 @@ function initDirToggle(): void {
       const opening = !entry.classList.contains('is-open');
       entry.classList.toggle('is-open');
       btn.setAttribute('aria-expanded', String(opening));
-    });
+    }, { signal });
   });
 }
 
 // コマンド行クリックでセクション内全エントリを一括開閉
-function initToggleAll(): void {
+function initToggleAll(signal: AbortSignal): void {
+  const timeouts: ReturnType<typeof setTimeout>[] = [];
+  signal.addEventListener('abort', () => timeouts.forEach(clearTimeout), { once: true });
+
   document.querySelectorAll<HTMLButtonElement>('[data-toggle-all]').forEach(btn => {
     btn.addEventListener('click', () => {
       const section = btn.closest('.dir-section');
@@ -293,21 +315,21 @@ function initToggleAll(): void {
       const allOpen = Array.from(entries).every(e => e.classList.contains('is-open'));
 
       entries.forEach((entry, i) => {
-        setTimeout(() => {
+        timeouts.push(setTimeout(() => {
           const isOpening = !allOpen;
           entry.classList.toggle('is-open', isOpening);
           const innerBtn = entry.querySelector<HTMLButtonElement>(':scope > .dir-entry-toggle');
           if (innerBtn) innerBtn.setAttribute('aria-expanded', String(isOpening));
-        }, i * 80);
+        }, i * 80));
       });
 
       btn.setAttribute('aria-expanded', String(!allOpen));
-    });
+    }, { signal });
   });
 }
 
 // ライトボックス（画像オーバーレイ）
-function initLightbox(): void {
+function initLightbox(signal: AbortSignal): void {
   const dialog = document.getElementById('lightbox') as HTMLDialogElement | null;
   const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
   if (!dialog || !img) return;
@@ -322,13 +344,13 @@ function initLightbox(): void {
       } else {
         dialog.setAttribute('open', '');
       }
-    });
+    }, { signal });
   });
 
   // Click on backdrop (dialog itself, not the image) closes it.
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
-  });
+  }, { signal });
 }
 
 // フォームフィールド取得（null-safe）
@@ -338,7 +360,7 @@ function getField<T extends HTMLElement>(form: HTMLFormElement, name: string): T
 }
 
 // コンタクトフォーム
-function initContactForm(): void {
+function initContactForm(signal: AbortSignal): void {
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   if (!form) return;
 
@@ -401,5 +423,5 @@ function initContactForm(): void {
         btn.disabled = false;
       }, 2000);
     }
-  });
+  }, { signal });
 }
