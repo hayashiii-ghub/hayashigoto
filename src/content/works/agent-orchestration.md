@@ -68,9 +68,13 @@ Claude Code 利用者は plugin 経由が推奨経路です。`.git` 付き HTTP
 [Agent Skills 標準](https://agentskills.io) にも沿っているため、ハーネス別に `skills` CLI で配置できます。
 
 ```bash
-npx skills add github:hayashiii-ghub/hikizan -g -a cursor
-npx skills add github:hayashiii-ghub/hikizan -g -a claude-code
-npx skills add github:hayashiii-ghub/hikizan -g -a codex
+# ローカル: 全プロジェクト共通
+npx skills add github:hayashiii-ghub/hikizan -g -a cursor -y
+npx skills add github:hayashiii-ghub/hikizan -g -a claude-code -y
+npx skills add github:hayashiii-ghub/hikizan -g -a codex -y
+
+# Cloud Agent / チーム共有: リポジトリに固定（-g なし → .agents/skills/ をコミット）
+npx skills add github:hayashiii-ghub/hikizan -a cursor -y
 ```
 
 Claude Code 上で Codex に委譲したい場合は、hikizan 自体が orchestration 本体を抱え込まず、OpenAI 公式の `openai/codex-plugin-cc` を並行 install する設計です。シンボル探索が必要な言語では CC 公式 marketplace の LSP plugin を併用し、hikizan 側の skill は「シンボル系は LSP、テキスト系は grep、LSP 未設定なら grep にフォールバック」という規約で動きます。
