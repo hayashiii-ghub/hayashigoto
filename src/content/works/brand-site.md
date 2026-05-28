@@ -5,14 +5,9 @@ year: 2025
 role: "DX Enablement / Tool Coaching"
 stack: ["GWS", "Canva", "Cursor"]
 description: "Google Workspace の導入、Canva での画像編集レクチャー、Cursor を使った Web サイト制作レクチャーを通じて、中小企業の AI/DX ツール活用を伴走支援。累計3件。"
-url: "https://ancgrp.biz"
 order: 1
 featured: false
 category: "受託案件"
-card:
-  front: "../../assets/works/anc-card-front.png"
-  back: "../../assets/works/anc-card-back.png"
-  orientation: "landscape"
 ---
 
 中小企業を対象に、Google Workspace の導入、Canva を使った画像編集のレクチャー、Cursor を使った Web サイト制作のレクチャーなどを通じて、AI/DX ツールの活用を伴走支援しています。累計3件の支援実績があります。
