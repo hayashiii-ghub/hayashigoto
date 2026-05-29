@@ -5,6 +5,7 @@ output
 *.local
 .astro
 .claude
+.cursor
 .env
 .env.*
 .vercel
