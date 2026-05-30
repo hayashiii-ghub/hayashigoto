@@ -479,14 +479,15 @@ body {
 }
 
 .file-value a {
-  color: var(--text);
+  color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: var(--border-accent);
-  transition: text-decoration-color 0.3s;
+  transition: color 0.2s, text-decoration-color 0.3s;
 }
 
 .file-value a:hover {
+  color: var(--accent-hover);
   text-decoration-color: var(--accent-light);
 }
 
