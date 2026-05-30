@@ -478,6 +478,18 @@ body {
   word-break: break-word;
 }
 
+.file-value a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-accent);
+  transition: text-decoration-color 0.3s;
+}
+
+.file-value a:hover {
+  text-decoration-color: var(--accent-light);
+}
+
 /* More link */
 .file-more {
   font-family: var(--font-mono);
