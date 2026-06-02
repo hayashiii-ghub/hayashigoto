@@ -23,7 +23,7 @@ const nav = [
   { href: '#contact', label: '/contact' },
 ];
 
-const reading = [
+const books = [
   { title: 'エピクロス『教説と手紙』', url: 'https://www.amazon.co.jp/dp/4003360613' },
   { title: 'ショーペンハウアー『読書について』', url: 'https://www.amazon.co.jp/dp/4334752713' },
   { title: 'ドストエフスキー『罪と罰』', url: 'https://www.amazon.co.jp/dp/4334751687' },
@@ -114,9 +114,9 @@ const reading = [
           </button>
           <div class="dir-expand">
             <div class="dir-file">
-              <span class="dir-pipe">│</span><span class="file-label">reading:</span><span class="file-value" aria-hidden="true"></span>
+              <span class="dir-pipe">│</span><span class="file-label">books:</span><span class="file-value"><a href={books[0].url} target="_blank" rel="noopener noreferrer">{books[0].title}</a></span>
             </div>
-            {reading.map((book) => (
+            {books.slice(1).map((book) => (
               <div class="dir-file">
                 <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer">{book.title}</a></span>
               </div>
