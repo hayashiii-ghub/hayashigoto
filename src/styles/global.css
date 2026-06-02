@@ -449,6 +449,7 @@ body {
 .dir-entry.is-open > .dir-expand {
   max-height: 600px;
   opacity: 1;
+  margin-top: 0.5rem;
 }
 
 .dir-file {

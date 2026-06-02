@@ -22,6 +22,13 @@ const nav = [
   { href: '#works', label: '/works' },
   { href: '#contact', label: '/contact' },
 ];
+
+const reading = [
+  { title: 'エピクロス『教説と手紙』', url: 'https://www.amazon.co.jp/dp/4003360613' },
+  { title: 'ショーペンハウアー『読書について』', url: 'https://www.amazon.co.jp/dp/4334752713' },
+  { title: 'ドストエフスキー『罪と罰』', url: 'https://www.amazon.co.jp/dp/4334751687' },
+  { title: 'セネカ『人生の短さについて』', url: 'https://www.amazon.co.jp/dp/4334753507' },
+];
 ---
 <Layout title="はやしごと" canonical={`${Astro.site!.origin}/`} nav={nav} showFooterSns={true}>
   <Fragment slot="head">
@@ -103,13 +110,17 @@ const nav = [
         <div class="dir-entry cli-reveal" data-toggle>
           <button type="button" class="dir-entry-toggle" aria-expanded="false">
             <span class="dir-branch">├──</span>
-            <span class="dir-name">philosophy.md</span>
+            <span class="dir-name">philosophy.yml</span>
           </button>
           <div class="dir-expand">
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label" aria-hidden="true">-</span><span class="file-value"><a href="https://www.amazon.co.jp/dp/4003360613" target="_blank" rel="noopener noreferrer">エピクロス『教説と手紙』</a></span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label" aria-hidden="true">-</span><span class="file-value"><a href="https://www.amazon.co.jp/dp/4334752713" target="_blank" rel="noopener noreferrer">ショーペンハウアー『読書について』</a></span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label" aria-hidden="true">-</span><span class="file-value"><a href="https://www.amazon.co.jp/dp/4334751687" target="_blank" rel="noopener noreferrer">ドストエフスキー『罪と罰』</a></span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label" aria-hidden="true">-</span><span class="file-value"><a href="https://www.amazon.co.jp/dp/4334753507" target="_blank" rel="noopener noreferrer">セネカ『人生の短さについて』</a></span></div>
+            <div class="dir-file">
+              <span class="dir-pipe">│</span><span class="file-label">reading:</span><span class="file-value"><a href={reading[0].url} target="_blank" rel="noopener noreferrer">{reading[0].title}</a></span>
+            </div>
+            {reading.slice(1).map((book) => (
+              <div class="dir-file">
+                <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer">{book.title}</a></span>
+              </div>
+            ))}
           </div>
         </div>
 
