@@ -107,16 +107,16 @@ const reading = [
           </div>
         </div>
 
-        <div class="dir-entry cli-reveal" data-toggle>
+        <div class="dir-entry dir-entry--philosophy cli-reveal" data-toggle>
           <button type="button" class="dir-entry-toggle" aria-expanded="false">
             <span class="dir-branch">├──</span>
             <span class="dir-name">philosophy.yml</span>
           </button>
           <div class="dir-expand">
             <div class="dir-file">
-              <span class="dir-pipe">│</span><span class="file-label">reading:</span><span class="file-value"><a href={reading[0].url} target="_blank" rel="noopener noreferrer">{reading[0].title}</a></span>
+              <span class="dir-pipe">│</span><span class="file-label">reading:</span><span class="file-value" aria-hidden="true"></span>
             </div>
-            {reading.slice(1).map((book) => (
+            {reading.map((book) => (
               <div class="dir-file">
                 <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer">{book.title}</a></span>
               </div>

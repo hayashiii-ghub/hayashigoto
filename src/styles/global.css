@@ -452,6 +452,11 @@ body {
   margin-top: 0.5rem;
 }
 
+/* philosophy.yml: 展開先頭の余白を直下 meishi/ との間隔（dir-entry margin-bottom）に揃える */
+.dir-entry--philosophy.is-open > .dir-expand {
+  margin-top: 1rem;
+}
+
 .dir-file {
   font-family: var(--font-jp);
   display: flex;
