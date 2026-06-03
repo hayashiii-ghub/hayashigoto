@@ -454,7 +454,7 @@ body {
 
 /* philosophy.yml: 展開先頭の余白 */
 .dir-entry--philosophy.is-open > .dir-expand {
-  margin-top: 0.8rem;
+  margin-top: 1rem;
 }
 
 .dir-file {
