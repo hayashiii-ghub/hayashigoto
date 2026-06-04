@@ -21,7 +21,20 @@ category: "個人開発"
 
 マーケティング用LP（`/about`）とResend連携の問い合わせフォーム、`sitemap.xml`・`robots.txt`の動的生成によるSEO基盤も備えています。運用面ではSentryによるエラー監視、HSTS・CSP・Permissions-Policyなどのセキュリティヘッダーを導入し、本番環境の信頼性を確保しています。
 
+[WebMCP](https://developer.chrome.com/docs/ai/webmcp)（実験的）にも対応し、対応ブラウザ上のAIエージェントが当番表の閲覧・編集・印刷などをブラウザ内ツールとして直接操作できます。非対応環境では登録を行わない no-op 設計のため、通常利用への影響はありません。
+
 本プロジェクトは、Claude Codeのエージェント機能を活用した実験的な開発体制でも進行しています。想定ユーザーのペルソナ（保育士・小学校教諭・事務担当者など）を持つエージェントと、PMロールのエージェントでチームを構成し、要件定義・UI設計・ユーザビリティ検証をAIチーム内で回しながら開発するワークフローを検証しています。人間の開発者は最終的な判断とコードレビューに集中し、AIエージェントがユーザー視点のフィードバックループを担う——という協業モデルの実践です。
+
+## WebMCP対応（実験的）
+
+Home画面（`/`）で [WebMCP](https://developer.chrome.com/docs/ai/webmcp) のツールを公開しています。`navigator.modelContext` / `document.modelContext` を feature-detect し、対応ブラウザでのみ `registerTool` します。データは既存の localStorage / React state 経路をそのまま使うため、ツール経由の変更も通常操作と同様に自動保存されます。
+
+| 種別 | ツール例 |
+|------|----------|
+| 読み取り | 当番表一覧・担当割り当て・設定詳細・既存共有URLの参照 |
+| 操作 | 当番表の切り替え・回転の進行/設定・表示形式の変更・テンプレートからの新規作成・メンバー追加/削除・印刷 |
+
+共有（外部公開）の実行はツールに含めていません。実名を含む当番表の公開は誤操作を避けるため、ユーザの共有ボタン操作に限定し、エージェントは `get_share_link` で既存リンクの参照のみ行えます。実装は `useTobanTools`（`client/src/hooks/useTobanTools.ts`）に集約し、型定義は `client/src/types/webmcp.d.ts` で吸収しています。ツール一覧の詳細は [GitHub README](https://github.com/hayashiii-ghub/toban-app#webmcp-対応実験的) を参照してください。
 
 ## 技術スタック
 
@@ -59,7 +72,8 @@ toban-app/
 │   ├── contexts/                   # React Context（状態共有）
 │   ├── components/                 # 共有UIコンポーネント（shadcn/ui）
 │   ├── rotation/                   # コア型・ユーティリティ・定数・デフォルト状態
-│   ├── hooks/                      # カスタムフック（useAutoSync等）
+│   ├── hooks/                      # カスタムフック（useAutoSync・WebMCP登録 useTobanTools 等）
+│   ├── types/                      # 型定義（webmcp.d.ts 等）
 │   └── lib/                        # APIクライアント・同期マネージャ
 ├── server/
 │   ├── worker.ts                   # Cloudflare Workers エントリーポイント
