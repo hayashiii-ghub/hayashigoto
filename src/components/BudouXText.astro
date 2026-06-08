@@ -1,0 +1,11 @@
+---
+import { applyJaLineBreaks } from '../lib/budoux';
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<Fragment set:html={applyJaLineBreaks(text)} />

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import BudouXText from '../../components/BudouXText.astro';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
 import CliLine from '../../components/works/CliLine.astro';
@@ -30,7 +31,7 @@ const nav = [
       <CliLine variant="heading" cmd="cat"><a href="/#works">/works</a>/{work.data.dirName}/README.md</CliLine>
 
       <div class="dir-tree">
-        <DirField label="title:">{work.data.title}</DirField>
+        <DirField label="title:"><BudouXText text={work.data.title} /></DirField>
         <DirField label="year:">{work.data.year}</DirField>
         <DirField label="role:">{work.data.role}</DirField>
         {work.data.category && (
