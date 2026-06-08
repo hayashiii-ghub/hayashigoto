@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import BudouXText from '../components/BudouXText.astro';
 import SnsLinks from '../components/SnsLinks.astro';
 import { getCollection } from 'astro:content';
 const works = (await getCollection('works'))
@@ -114,11 +115,11 @@ const books = [
           </button>
           <div class="dir-expand">
             <div class="dir-file">
-              <span class="dir-pipe">│</span><span class="file-label">books:</span><span class="file-value"><a href={books[0].url} target="_blank" rel="noopener noreferrer">{books[0].title}</a></span>
+              <span class="dir-pipe">│</span><span class="file-label">books:</span><span class="file-value"><a href={books[0].url} target="_blank" rel="noopener noreferrer"><BudouXText text={books[0].title} /></a></span>
             </div>
             {books.slice(1).map((book) => (
               <div class="dir-file">
-                <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer">{book.title}</a></span>
+                <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer"><BudouXText text={book.title} /></a></span>
               </div>
             ))}
           </div>
@@ -170,7 +171,7 @@ const books = [
               <span class="dir-name">{work.data.dirName}/</span>
             </button>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
             <div class="dir-expand">
-              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc">{work.data.description}</span></div>
+              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc"><BudouXText text={work.data.description} /></span></div>
               <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
               <div class="dir-file"><span class="dir-pipe">│</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
             </div>
@@ -183,7 +184,7 @@ const books = [
             <span class="dir-name">more/</span>
           </button>
           <div class="dir-expand">
-            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc">その他の制作実績はこちらからご覧いただけます。</span></div>
+            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc"><BudouXText text="その他の制作実績はこちらからご覧いただけます。" /></span></div>
             <div class="dir-file"><span class="dir-pipe">&nbsp;</span><a href="/works" class="file-more">./index.html →</a></div>
           </div>
         </div>

@@ -18,6 +18,7 @@
 | メール送信 | Resend | モダンなAPI設計・独自ドメイン送信対応・無料枠で十分 |
 | スパム対策 | ハニーポット + 入力バリデーション + 簡易レート制限 | 外部サービス不要で最低限の不正送信対策を維持 |
 | フォント | Fontsource (IBM Plex Mono, latin サブセット) + システム日本語フォント | 欧文だけを配信して日本語はOS標準に寄せ、転送量を抑制 |
+| 日本語改行 | BudouX（ビルド時 rehype + Astro コンポーネント） | ML ベースのフレーズ区切りで不自然な途中改行を防ぎ、ランタイム JS を増やさない |
 | ブランド画像 | sharp + to-ico（`prebuild`） | `assets/brand/logo-master.png` から軽量ロゴと各種ファビコンを同じ再現性で生成 |
 | セキュリティ | vercel.json ヘッダー (CSP, HSTS, Permissions-Policy 等) | 外部依存最小限の構成で CSP/HSTS/Permissions-Policy を厳格に設定 |
 | パッケージマネージャ / runtime | Bun | install が高速、`.ts` をネイティブ実行できるので prebuild script に runner 不要 (lock file は text 形式 `bun.lock` を採用) |

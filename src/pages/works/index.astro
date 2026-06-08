@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import BudouXText from '../../components/BudouXText.astro';
 import CliLine from '../../components/works/CliLine.astro';
 import DirField from '../../components/works/DirField.astro';
 import WorkBackLink from '../../components/works/WorkBackLink.astro';
@@ -34,7 +35,7 @@ const nav = [
                 <span class="dir-name">{work.data.dirName}/</span>
               </button>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
               <div class="dir-expand">
-                <DirField pipe={pipe} valueClass="file-value dir-desc">{work.data.description}</DirField>
+                <DirField pipe={pipe} valueClass="file-value dir-desc"><BudouXText text={work.data.description} /></DirField>
                 <DirField pipe={pipe} label="stack:">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</DirField>
                 <div class="dir-file"><span class="dir-pipe">{pipe}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
               </div>
