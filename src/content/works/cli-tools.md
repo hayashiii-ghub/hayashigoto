@@ -4,7 +4,7 @@ dirName: "agent-tooling"
 year: 2026
 role: "Solo dev"
 stack: ["TypeScript", "Bun", "Playwright", "Puppeteer", "Node.js", "Skill"]
-description: "AIエージェント(Claude Code等)から自然言語で呼び出せるCLIツール群。Webサイトのスクリーンショット一括取得(sitesnap)とHTML/MarkdownのPDF化(pdfmint)。"
+description: "AIエージェント(Claude Code等)から自然言語で呼び出せるCLIツール群。Webサイトのスクリーンショット一括取得(sitesnap)とHTML/MarkdownのPDF/PNG化(pdfmint)。"
 note: "https://note.com/hayashiii_note/n/ne1336671f1a3"
 order: 5
 featured: false
@@ -24,17 +24,35 @@ AIエージェント(Claude Code・Codex等)から自然言語で呼び出せる
 
 ### sitesnap — Webサイト一括スクリーンショット
 
-ウェブサイトのデスクトップ + モバイル版スクリーンショットを sitemap から一気にキャプチャしてローカル保管するツールです。Playwright のブラウザコンテキストに `prefers-reduced-motion: reduce` を送信し、全要素の `animation/transition` を `0.001s` に短縮するCSSを自動注入することで、AOSや wow.js 等のスクロール連動アニメによる撮影漏れを抑えます。データはJSON + PNG構成でDB不要、ポートフォリオ向けにサイトを集めたいというユースケースから派生し、AIエージェントが「このサイト保存して」とお願いするだけで実行できる設計に発展しました。
+ウェブサイトのデスクトップ + モバイル版スクリーンショットを sitemap から一気にキャプチャしてローカル保管するツールです。**ポートフォリオ用のサイト集め**を主目的に設計し、出力は JSON + PNG 構成でDB不要。`meta.json` を Astro 等の静的サイトジェネレーターから読み込んで公開ポートフォリオに統合できるスキーマを備えています。
 
-### pdfmint — HTML/Markdown to PDF
+Playwright のブラウザコンテキストに `prefers-reduced-motion: reduce` を送信し、全要素の `animation/transition` を `0.001s` に短縮するCSSを自動注入することで、AOSや wow.js 等のスクロール連動アニメによる撮影漏れを抑えます。それでも真っ白な場合は `--force-visible` で強制表示。失敗ページは `retry` で再取得、`doctor` でキャプチャ結果を診断し再取得案やエージェント向け調査票を生成できます。
 
-HTML / Markdown を綺麗な日本語PDFに変換する Puppeteer ベースのCLIです。AIエージェントが生成したHTMLをコマンド一発でPDF化できるよう設計し、`--json` でメタ情報(出力パス・ファイルサイズ・処理時間)を構造化出力。Markdown入力時はデフォルトCSSで Hiragino Sans を指定し、印刷用 `@page` ルールにも対応。`--format` `--margin` `--landscape` `--no-background` といった用紙オプションを揃えて、請求書・履歴書・レポートまで幅広く扱えます。
+| コマンド | 用途 |
+|----------|------|
+| `sitesnap site <sitemap-url>` | sitemapから全URL展開 → 全ページキャプチャ |
+| `sitesnap page <url>` | 単一ページのみキャプチャ |
+| `sitesnap list` | キャプチャ済みサイト一覧 |
+| `sitesnap retry <domain>` | 失敗したページのみ再取得 |
+| `sitesnap doctor <run-dir>` | キャプチャ結果を診断（`--agent-task` で調査票生成） |
+
+### pdfmint — HTML/Markdown to PDF/PNG
+
+HTML / Markdown を綺麗な日本語PDF（＋任意のPNG）に変換する Puppeteer ベースのCLIです。AIエージェントが生成した原稿を、提出・共有しやすい成果物へコマンド一発で変換することを目的に設計。`--json` でメタ情報（出力パス・ファイルサイズ・ページ数・処理時間）を構造化出力します。
+
+Markdown入力時は `--font sans`（既定）で Noto Sans JP、`--font serif` で Noto Serif JP を優先。`--css` でスタイルを固定、`--format` `--margin` `--landscape` `--no-background` といった用紙オプションに加え、`batch` で一括変換、`--png` で高解像度PNG同時生成、`--expect-pages` でページ数の品質チェックが可能です。
+
+| コマンド | 用途 |
+|----------|------|
+| `pdfmint <input> <output>` | 単一HTML/Markdown→PDF |
+| `pdfmint batch <pattern> <out-dir>` | バッチ処理 |
 
 ## 共通設計
 
 - **AIエージェントファースト**: stdoutにJSON / stderrに進捗ログを分離し、エラーは `code` + `hint` 構造体で返してリトライしやすくする
 - **Bun開発・Node.js配布**: `bun src/cli.ts` でローカル開発しつつ、`dist/cli.js` として Node.js 22+ 環境に配布するハイブリッド構成
 - **Claude Code Skill 同梱**: パッケージ内に `skills/<name>/SKILL.md` を含めることで、`npm install -g` 直後にClaude Codeが自動認識
+- **DB不要**: sitesnap は JSON + PNG、pdfmint は PDF + 任意PNG として成果物をファイル保存
 
 ## 技術スタック
 
@@ -42,6 +60,6 @@ HTML / Markdown を綺麗な日本語PDFに変換する Puppeteer ベースのCL
 |----------|--------|----------|
 | 言語/ランタイム | TypeScript / Bun / Node.js 22+ | 開発はBunで高速、配布はNode.jsで広い互換性を確保 |
 | ブラウザ自動化 | Playwright (sitesnap) / Puppeteer (pdfmint) | スクショ精度とPDF印刷品質、それぞれの目的に最適なものを選定 |
-| エージェント連携 | Claude Code Skill / `--json` 出力 | パッケージ同梱の SKILL.md で自然言語呼び出しを実現 |
+| エージェント連携 | Claude Code Skill / `--json` 出力 / AGENTS.md | パッケージ同梱の SKILL.md で自然言語呼び出しを実現 |
 | 配布 | npm (`@hayashiii` スコープ) | 単一コマンドでグローバルインストール可能 |
 | 開発パッケージマネージャ | Bun | 高速インストールと TypeScript 直接実行で開発体験を向上 |
