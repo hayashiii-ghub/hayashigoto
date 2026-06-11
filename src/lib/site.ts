@@ -15,3 +15,24 @@ export const SNS = {
 } as const;
 
 export const SNS_URLS: readonly string[] = Object.values(SNS);
+
+// ---- ナビゲーション ----
+export interface NavItem {
+  href: string;
+  label: string;
+}
+
+// トップページ用（同一ページ内アンカー）
+export const HOME_NAV: NavItem[] = [
+  { href: '#about', label: '/about' },
+  { href: '#works', label: '/works' },
+  { href: '#contact', label: '/contact' },
+];
+
+// 下層ページ用（トップへ戻るリンク + トップ内アンカー）
+export const SUB_NAV: NavItem[] = [
+  { href: '/', label: '/home' },
+  { href: '/#about', label: '/about' },
+  { href: '/#works', label: '/works' },
+  { href: '/#contact', label: '/contact' },
+];

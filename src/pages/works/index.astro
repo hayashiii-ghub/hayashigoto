@@ -2,9 +2,11 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import BudouXText from '../../components/BudouXText.astro';
-import CliLine from '../../components/works/CliLine.astro';
-import DirField from '../../components/works/DirField.astro';
-import WorkBackLink from '../../components/works/WorkBackLink.astro';
+import CliLine from '../../components/dir/CliLine.astro';
+import DirEntry from '../../components/dir/DirEntry.astro';
+import DirField from '../../components/dir/DirField.astro';
+import WorkBackLink from '../../components/dir/WorkBackLink.astro';
+import { SUB_NAV } from '../../lib/site';
 
 const works = (await getCollection('works')).sort(
   (a, b) => a.data.order - b.data.order
@@ -14,11 +16,8 @@ const workEntries = works.map((work, i) => ({
   isLast: i === works.length - 1,
 }));
 
-const nav = [
-  { href: '/', label: '/home' },
-  { href: '/#about', label: '/about' },
-  { href: '/#contact', label: '/contact' },
-];
+// 一覧では /works リンクを除く（現在地のため）
+const nav = SUB_NAV.filter((item) => item.href !== '/#works');
 ---
 <Layout title="works/" canonical={`${Astro.site!.origin}/works`} nav={nav}>
   <section class="dir-section work-detail">
@@ -29,17 +28,12 @@ const nav = [
         {workEntries.map(({ work, isLast }) => {
           const pipe = isLast ? '\u00a0' : '│';
           return (
-            <div class="dir-entry" data-toggle>
-              <button type="button" class="dir-entry-toggle" aria-expanded="false">
-                <span class="dir-branch">{isLast ? '└──' : '├──'}</span>
-                <span class="dir-name">{work.data.dirName}/</span>
-              </button>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
-              <div class="dir-expand">
-                <DirField pipe={pipe} valueClass="file-value dir-desc"><BudouXText text={work.data.description} /></DirField>
-                <DirField pipe={pipe} label="stack:">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</DirField>
-                <div class="dir-file"><span class="dir-pipe">{pipe}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
-              </div>
-            </div>
+            <DirEntry name={`${work.data.dirName}/`} branch={isLast ? '└──' : '├──'} reveal={false}>
+              <Fragment slot="tags">{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}</Fragment>
+              <DirField pipe={pipe} valueClass="file-value dir-desc"><BudouXText text={work.data.description} /></DirField>
+              <DirField pipe={pipe} label="stack:">{work.data.stack.map((s) => <span class="tag">{s}</span>)}</DirField>
+              <div class="dir-file"><span class="dir-pipe">{pipe}</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
+            </DirEntry>
           );
         })}
 

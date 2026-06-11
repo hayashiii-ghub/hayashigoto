@@ -37,7 +37,8 @@
 │   │       └── [id].astro  # 制作実績詳細（動的ルート）
 │   ├── layouts/
 │   │   └── Layout.astro    # 共通レイアウト（ヘッダー・フッター・OGP）
-│   ├── components/         # Header / Footer / SnsLinks / CardViewer / DirEntry / DirSectionHeading 等
+│   ├── components/         # Header / Footer / SnsLinks / CardViewer / BudouXText
+│   │   └── dir/            # ディレクトリツリー UI 部品（DirEntry / DirSectionHeading / DirField / CliLine / WorkBackLink）
 │   ├── lib/
 │   │   ├── site.ts         # 連絡先・SNS・プロフィールの単一の真実（JSON-LD/各コンポーネント共有）
 │   │   └── budoux.ts       # 日本語改行ヘルパ

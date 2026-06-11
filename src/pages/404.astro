@@ -1,14 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-const nav = [
-  { href: '/', label: '/home' },
-  { href: '/#about', label: '/about' },
-  { href: '/#works', label: '/works' },
-  { href: '/#contact', label: '/contact' },
-];
+import { SUB_NAV } from '../lib/site';
 ---
-<Layout title="404" description="ページが見つかりません" nav={nav}>
+<Layout title="404" description="ページが見つかりません" nav={SUB_NAV}>
   <section class="dir-section work-detail">
     <div class="dir-section-inner">
       <h1 class="cli-line">

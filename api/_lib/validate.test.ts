@@ -43,8 +43,12 @@ describe('isAllowedOrigin', () => {
   test('同一ホストを許可', () => {
     expect(isAllowedOrigin('https://shigoto.dev', ctx)).toBe(true);
   });
-  test('localhost を許可', () => {
+  test('非本番では localhost を許可', () => {
     expect(isAllowedOrigin('http://localhost:4322', ctx)).toBe(true);
+    expect(isAllowedOrigin('http://localhost:4322', { siteUrl: 'https://shigoto.dev', vercelEnv: 'preview' })).toBe(true);
+  });
+  test('本番では localhost を拒否（Origin 偽装対策）', () => {
+    expect(isAllowedOrigin('http://localhost:4322', { siteUrl: 'https://shigoto.dev', vercelEnv: 'production' })).toBe(false);
   });
   test('別ホストは拒否', () => {
     expect(isAllowedOrigin('https://evil.example.com', ctx)).toBe(false);
