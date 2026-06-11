@@ -70,6 +70,13 @@ Home画面（`/`）で [WebMCP](https://developer.chrome.com/docs/ai/webmcp) の
 | メール送信 | Resend | お問い合わせフォーム送信用（`wrangler secret put RESEND_API_KEY`） |
 | パッケージマネージャ | pnpm | 高速・ディスク効率の良い依存管理 |
 
+## データベース運用
+
+- 本番デプロイは `pnpm run deploy:cf` を正規ルートにする（migration 適用込み）
+- `wrangler deploy` 単体では D1 migration が適用されず、保存や共有が 500 になることがある
+- API には `GET /api/health/schema` を用意しており、スキーマの状態を確認できる（200: 正常 / 503: カラム不足）
+- サーバーは安全網として不足カラムを自動補完するが、基本は migration を先に適用する運用が前提
+
 ## 構成
 
 ```

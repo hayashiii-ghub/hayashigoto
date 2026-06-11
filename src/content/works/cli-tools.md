@@ -33,19 +33,26 @@ Playwright のブラウザコンテキストに `prefers-reduced-motion: reduce`
 | `sitesnap site <sitemap-url>` | sitemapから全URL展開 → 全ページキャプチャ |
 | `sitesnap page <url>` | 単一ページのみキャプチャ |
 | `sitesnap list` | キャプチャ済みサイト一覧 |
+| `sitesnap open <domain>` | サイトのフォルダを Finder で開く（macOS） |
 | `sitesnap retry <domain>` | 失敗したページのみ再取得 |
 | `sitesnap doctor <run-dir>` | キャプチャ結果を診断（`--agent-task` で調査票生成） |
+
+出力は `sites/<domain>/meta.json` にページ一覧と画像パスを、`runs/latest/result.json` に最新 run の診断サマリを保存します。`--limit` `--exclude` `--strict` `--allow-private` などのフラグで取得範囲や CI 向け厳格モードを制御できます。
 
 ### pdfmint — HTML/Markdown to PDF/PNG
 
 HTML / Markdown を綺麗な日本語PDF（＋任意のPNG）に変換する Puppeteer ベースのCLIです。AIエージェントが生成した原稿を、提出・共有しやすい成果物へコマンド一発で変換することを目的に設計。`--json` でメタ情報（出力パス・ファイルサイズ・ページ数・処理時間）を構造化出力します。
 
-Markdown入力時は `--font sans`（既定）で Noto Sans JP、`--font serif` で Noto Serif JP を優先。`--css` でスタイルを固定、`--format` `--margin` `--landscape` `--no-background` といった用紙オプションに加え、`batch` で一括変換、`--png` で高解像度PNG同時生成、`--expect-pages` でページ数の品質チェックが可能です。
+Markdown入力時は `--font sans`（既定）で Noto Sans JP、`--font serif` で Noto Serif JP を優先。`--css` でスタイルを固定、`--format` `--margin` `--landscape` `--no-background` といった用紙オプションに加え、`batch` で一括変換、`--png` で高解像度PNG同時生成（`--viewport` / `--scale` で解像度指定）、`--expect-pages` でページ数の品質チェックが可能です。
+
+色・書体・余白・用紙サイズは `brand.md`（`./pdfmint.brand.md` → `~/.config/pdfmint/brand.md` の順に自動探索）に一度書いておけば Markdown 変換すべてに適用され、毎回フラグ指定が不要です。`--brand` で明示指定、`--no-brand` で無効化できます。
 
 | コマンド | 用途 |
 |----------|------|
-| `pdfmint <input> <output>` | 単一HTML/Markdown→PDF |
+| `pdfmint convert <input> <output>` | 単一HTML/Markdown→PDF（推奨） |
+| `pdfmint <input> <output>` | 上記と同じ（互換 alias） |
 | `pdfmint batch <pattern> <out-dir>` | バッチ処理 |
+| `pdfmint doctor` | 環境診断 |
 
 ## 共通設計
 
