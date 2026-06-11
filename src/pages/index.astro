@@ -2,6 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import BudouXText from '../components/BudouXText.astro';
 import SnsLinks from '../components/SnsLinks.astro';
+import CardViewer from '../components/CardViewer.astro';
+import DirSectionHeading from '../components/DirSectionHeading.astro';
+import DirEntry from '../components/DirEntry.astro';
+import { EMAIL, WEBSITE_URL } from '../lib/site';
 import { getCollection } from 'astro:content';
 const works = (await getCollection('works'))
   .filter((w) => w.data.featured !== false)
@@ -52,8 +56,8 @@ const books = [
         <div class="hero-logo-fallback">はやしごと</div>
       </div>
       <p class="hero-tagline">Web開発 & UXデザイン</p>
-      <p class="hero-sub">&mdash; <a href="mailto:hay@shigoto.dev">hay@shigoto.dev</a></p>
-      <p class="hero-sub">&mdash; <a href="https://shigoto.website" target="_blank" rel="noopener noreferrer">shigoto.website</a></p>
+      <p class="hero-sub">&mdash; <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+      <p class="hero-sub">&mdash; <a href={WEBSITE_URL} target="_blank" rel="noopener noreferrer">{WEBSITE_URL.replace(/^https?:\/\//, '')}</a></p>
       <div class="hero-sns">
         <SnsLinks />
       </div>
@@ -87,69 +91,31 @@ const books = [
   <!-- About Section -->
   <section class="dir-section" id="about">
     <div class="dir-section-inner">
-      <h2 class="cli-line cli-reveal">
-        <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls="about">
-          <span class="cli-prompt">></span> <span class="cli-path">/about</span>
-        </button>
-      </h2>
+      <DirSectionHeading path="/about" controls="about" />
 
       <div class="dir-tree">
-        <div class="dir-entry cli-reveal" data-toggle>
-          <button type="button" class="dir-entry-toggle" aria-expanded="false">
-            <span class="dir-branch">├──</span>
-            <span class="dir-name">profile.yml</span>
-          </button>
-          <div class="dir-expand">
-            <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/profile.webp" alt="林 祐太" class="profile-logo" width="240" height="240" loading="lazy" decoding="async" /></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">name:</span><span class="file-value">林 祐太 / yuta hayashi</span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">brand:</span><span class="file-value">はやしごと</span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">email:</span><span class="file-value">hay@shigoto.dev</span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">tag:</span><span class="file-value">04 / INTP</span></div>
-          </div>
-        </div>
+        <DirEntry name="profile.yml">
+          <div class="dir-file profile-logo-row"><span class="dir-pipe">│</span><img src="/profile.webp" alt="林 祐太" class="profile-logo" width="240" height="240" loading="lazy" decoding="async" /></div>
+          <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">name:</span><span class="file-value">林 祐太 / yuta hayashi</span></div>
+          <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">brand:</span><span class="file-value">はやしごと</span></div>
+          <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">email:</span><span class="file-value">{EMAIL}</span></div>
+          <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">tag:</span><span class="file-value">04 / INTP</span></div>
+        </DirEntry>
 
-        <div class="dir-entry dir-entry--philosophy cli-reveal" data-toggle>
-          <button type="button" class="dir-entry-toggle" aria-expanded="false">
-            <span class="dir-branch">├──</span>
-            <span class="dir-name">philosophy.yml</span>
-          </button>
-          <div class="dir-expand">
+        <DirEntry name="philosophy.yml" class="dir-entry--philosophy">
+          <div class="dir-file">
+            <span class="dir-pipe">│</span><span class="file-label">books:</span><span class="file-value"><a href={books[0].url} target="_blank" rel="noopener noreferrer"><BudouXText text={books[0].title} /></a></span>
+          </div>
+          {books.slice(1).map((book) => (
             <div class="dir-file">
-              <span class="dir-pipe">│</span><span class="file-label">books:</span><span class="file-value"><a href={books[0].url} target="_blank" rel="noopener noreferrer"><BudouXText text={books[0].title} /></a></span>
+              <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer"><BudouXText text={book.title} /></a></span>
             </div>
-            {books.slice(1).map((book) => (
-              <div class="dir-file">
-                <span class="dir-pipe">│</span><span class="file-label" aria-hidden="true"></span><span class="file-value"><a href={book.url} target="_blank" rel="noopener noreferrer"><BudouXText text={book.title} /></a></span>
-              </div>
-            ))}
-          </div>
-        </div>
+          ))}
+        </DirEntry>
 
-        <div class="dir-entry dir-entry--meishi cli-reveal" data-toggle>
-          <button type="button" class="dir-entry-toggle" aria-expanded="false">
-            <span class="dir-branch">└──</span>
-            <span class="dir-name">meishi/</span>
-          </button>
-          <div class="dir-expand">
-            <div class="card-wrapper card-wrapper--inline" id="card-wrapper">
-              <div class="card-canvas" id="card-canvas">
-                <div class="card-tilt" id="card-tilt">
-                  <div class="card-orientation" id="card-orientation" data-orientation="portrait">
-                    <div class="card-body" id="card-body" data-side="front">
-                      <div class="card-face card-front">
-                        <img src="/card-front.webp" alt="名刺 表面" width="1024" height="618" decoding="async" draggable="false" loading="lazy" />
-                      </div>
-                      <div class="card-face card-back">
-                        <img src="/card-back.webp" alt="名刺 裏面" width="1024" height="618" decoding="async" draggable="false" loading="lazy" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card-overlay" id="card-overlay" data-orientation="portrait" tabindex="0" aria-label="名刺ビューアー — タップで裏返し、ドラッグで傾き"></div>
-            </div>
-          </div>
-        </div>
+        <DirEntry name="meishi/" branch="└──" class="dir-entry--meishi">
+          <CardViewer front="/card-front.webp" back="/card-back.webp" orientation="portrait" inline />
+        </DirEntry>
       </div>
     </div>
   </section>
@@ -157,37 +123,22 @@ const books = [
   <!-- Works Section -->
   <section class="dir-section" id="works">
     <div class="dir-section-inner">
-      <h2 class="cli-line cli-reveal">
-        <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls="works">
-          <span class="cli-prompt">></span> <span class="cli-path">/works</span>
-        </button>
-      </h2>
+      <DirSectionHeading path="/works" controls="works" />
 
       <div class="dir-tree">
         {works.map((work) => (
-          <div class="dir-entry cli-reveal" data-toggle>
-            <button type="button" class="dir-entry-toggle" aria-expanded="false">
-              <span class="dir-branch">├──</span>
-              <span class="dir-name">{work.data.dirName}/</span>
-            </button>{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}
-            <div class="dir-expand">
-              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc"><BudouXText text={work.data.description} /></span></div>
-              <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
-              <div class="dir-file"><span class="dir-pipe">│</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
-            </div>
-          </div>
+          <DirEntry name={`${work.data.dirName}/`}>
+            <Fragment slot="tags">{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}</Fragment>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc"><BudouXText text={work.data.description} /></span></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
+          </DirEntry>
         ))}
 
-        <div class="dir-entry cli-reveal" data-toggle>
-          <button type="button" class="dir-entry-toggle" aria-expanded="false">
-            <span class="dir-branch">└──</span>
-            <span class="dir-name">more/</span>
-          </button>
-          <div class="dir-expand">
-            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc"><BudouXText text="その他の制作実績はこちらからご覧いただけます。" /></span></div>
-            <div class="dir-file"><span class="dir-pipe">&nbsp;</span><a href="/works" class="file-more">./index.html →</a></div>
-          </div>
-        </div>
+        <DirEntry name="more/" branch="└──">
+          <div class="dir-file"><span class="dir-pipe">&nbsp;</span><span class="file-value dir-desc"><BudouXText text="その他の制作実績はこちらからご覧いただけます。" /></span></div>
+          <div class="dir-file"><span class="dir-pipe">&nbsp;</span><a href="/works" class="file-more">./index.html →</a></div>
+        </DirEntry>
       </div>
     </div>
   </section>
@@ -195,11 +146,7 @@ const books = [
   <!-- Contact Section -->
   <section class="dir-section" id="contact">
     <div class="dir-section-inner">
-      <h2 class="cli-line cli-reveal">
-        <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls="contact">
-          <span class="cli-prompt">></span> <span class="cli-path">/contact</span>
-        </button>
-      </h2>
+      <DirSectionHeading path="/contact" controls="contact" />
 
       <form class="dir-tree contact-form" id="contact-form">
         <div class="hp-field" aria-hidden="true">

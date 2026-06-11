@@ -1,0 +1,15 @@
+---
+// セクション見出し（CLI プロンプト風）。クリックでセクション内の全エントリを一括開閉。
+// data-toggle-all は main.ts の initToggleAll が拾う。
+interface Props {
+  path: string;       // 例: '/about'
+  controls: string;   // aria-controls 対象セクションの id
+}
+
+const { path, controls } = Astro.props;
+---
+<h2 class="cli-line cli-reveal">
+  <button type="button" class="cli-toggle" data-toggle-all aria-expanded="true" aria-controls={controls}>
+    <span class="cli-prompt">&gt;</span> <span class="cli-path">{path}</span>
+  </button>
+</h2>

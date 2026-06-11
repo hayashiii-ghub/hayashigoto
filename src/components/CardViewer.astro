@@ -1,0 +1,55 @@
+---
+// 名刺ビューアー（傾き + 裏返し）。index と works/[id] で共用。
+// 制御 JS は src/scripts/card.ts。利用ページ側で別途 import すること（id ベースのため 1 ページ 1 インスタンス）。
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+// public 配下の文字列パス（index）と Content Collections の ImageMetadata（works）の両対応。
+type CardImage = ImageMetadata | string;
+
+interface Props {
+  front: CardImage;
+  back: CardImage;
+  orientation: 'portrait' | 'landscape';
+  /** index のツリー内に埋め込むとき true（card-wrapper--inline を付与） */
+  inline?: boolean;
+  /** alt / aria-label の接頭辞（works では作品タイトル、index では空） */
+  altPrefix?: string;
+  sizes?: string;
+}
+
+const {
+  front,
+  back,
+  orientation,
+  inline = false,
+  altPrefix = '',
+  sizes = '(max-width: 768px) 88vw, (max-width: 1024px) 68vw, 500px',
+} = Astro.props;
+
+const prefix = altPrefix ? `${altPrefix} ` : '';
+const faces: { side: 'front' | 'back'; img: CardImage; label: string }[] = [
+  { side: 'front', img: front, label: `${prefix}名刺 表面` },
+  { side: 'back', img: back, label: `${prefix}名刺 裏面` },
+];
+---
+<div class:list={['card-wrapper', { 'card-wrapper--inline': inline }]} id="card-wrapper">
+  <div class="card-canvas" id="card-canvas">
+    <div class="card-tilt" id="card-tilt">
+      <div class="card-orientation" id="card-orientation" data-orientation={orientation}>
+        <div class="card-body" id="card-body" data-side="front">
+          {faces.map(({ side, img, label }) => (
+            <div class={`card-face card-${side}`}>
+              {typeof img === 'string' ? (
+                <img src={img} alt={label} width="1024" height="618" decoding="async" draggable="false" loading="lazy" />
+              ) : (
+                <Image src={img} alt={label} widths={[400, 800, 1200]} sizes={sizes} decoding="async" draggable="false" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-overlay" id="card-overlay" data-orientation={orientation} tabindex="0" aria-label={`${prefix}名刺ビューアー — タップで裏返し、ドラッグで傾き`}></div>
+</div>

@@ -1,0 +1,148 @@
+/* ---- Hero ---- */
+.hero {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  position: relative;
+}
+
+.hero-inner {
+  text-align: center;
+}
+
+.hero-logo {
+  margin-bottom: 2rem;
+}
+
+.hero-logo-img {
+  max-width: clamp(240px, 40vw, 400px);
+  height: auto;
+  opacity: 0.75;
+}
+
+.hero-logo-fallback {
+  font-family: var(--font-jp);
+  display: none;
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.hero-tagline {
+  font-family: var(--font-mono);
+  color: var(--text);
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.hero-sub {
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.hero-sub:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.hero-sub a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.hero-sub a:hover {
+  color: var(--accent-light);
+}
+
+.hero-sns {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.hero-sns a {
+  color: var(--text-dim);
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.hero-sns a svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-sns a[aria-label="Instagram"] svg {
+  width: 90%;
+  height: 90%;
+}
+
+.hero-sns a[aria-label="X"] svg {
+  width: 90%;
+  height: 90%;
+}
+
+.hero-sns a:hover {
+  color: var(--accent-light);
+}
+
+/* PNG icon via CSS mask (inherits currentColor like SVGs) */
+.sns-icon-mask {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  -webkit-mask-image: var(--icon-url);
+  mask-image: var(--icon-url);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Scroll hint */
+.scroll-hint {
+  font-family: var(--font-mono);
+  position: absolute;
+  bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  opacity: 0.5;
+  animation: scroll-fade 2.5s ease-in-out infinite;
+}
+
+@keyframes scroll-fade {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 0.6; transform: translateY(4px); }
+}
+
+@media (max-width: 768px) {
+  .hero-logo-fallback {
+    font-size: 2.8rem;
+  }
+
+  .scroll-hint {
+    bottom: 1.5rem;
+  }
+}

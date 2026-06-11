@@ -6,6 +6,7 @@ import { Image } from 'astro:assets';
 import CliLine from '../../components/works/CliLine.astro';
 import DirField from '../../components/works/DirField.astro';
 import WorkBackLink from '../../components/works/WorkBackLink.astro';
+import CardViewer from '../../components/CardViewer.astro';
 
 export async function getStaticPaths() {
   const works = await getCollection('works');
@@ -78,23 +79,12 @@ const nav = [
         )}
 
         {work.data.card && (
-          <div class="card-wrapper" id="card-wrapper">
-            <div class="card-canvas" id="card-canvas">
-              <div class="card-tilt" id="card-tilt">
-                <div class="card-orientation" id="card-orientation" data-orientation={work.data.card.orientation}>
-                  <div class="card-body" id="card-body" data-side="front">
-                    <div class="card-face card-front">
-                      <Image src={work.data.card.front} alt={`${work.data.title} 名刺 表面`} widths={[400, 800, 1200]} sizes="(max-width: 768px) 88vw, (max-width: 1024px) 68vw, 500px" decoding="async" draggable="false" />
-                    </div>
-                    <div class="card-face card-back">
-                      <Image src={work.data.card.back} alt={`${work.data.title} 名刺 裏面`} widths={[400, 800, 1200]} sizes="(max-width: 768px) 88vw, (max-width: 1024px) 68vw, 500px" decoding="async" draggable="false" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-overlay" id="card-overlay" data-orientation={work.data.card.orientation} tabindex="0" aria-label={`${work.data.title} 名刺ビューアー — タップで裏返し、ドラッグで傾き`}></div>
-          </div>
+          <CardViewer
+            front={work.data.card.front}
+            back={work.data.card.back}
+            orientation={work.data.card.orientation}
+            altPrefix={work.data.title}
+          />
         )}
 
         <div class="work-detail-body">

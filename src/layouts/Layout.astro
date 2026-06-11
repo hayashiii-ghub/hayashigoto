@@ -7,6 +7,7 @@ import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { EMAIL, SNS_URLS } from '../lib/site';
 
 interface Props {
   title: string;
@@ -64,13 +65,8 @@ const fullTitle = title === 'はやしごと'
           name: '林 祐太',
           alternateName: 'はやしごと',
           url: siteUrl,
-          email: 'hay@shigoto.dev',
-          sameAs: [
-            'https://instagram.com/hayashiii_inst',
-            'https://x.com/hayashiii_X',
-            'https://github.com/hayashiii-ghub',
-            'https://note.com/hayashiii_note',
-          ],
+          email: EMAIL,
+          sameAs: SNS_URLS,
         },
         {
           '@type': 'WebSite',
