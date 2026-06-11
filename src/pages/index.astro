@@ -3,16 +3,16 @@ import Layout from '../layouts/Layout.astro';
 import BudouXText from '../components/BudouXText.astro';
 import SnsLinks from '../components/SnsLinks.astro';
 import CardViewer from '../components/CardViewer.astro';
-import DirSectionHeading from '../components/DirSectionHeading.astro';
-import DirEntry from '../components/DirEntry.astro';
-import { EMAIL, WEBSITE_URL } from '../lib/site';
+import DirSectionHeading from '../components/dir/DirSectionHeading.astro';
+import DirEntry from '../components/dir/DirEntry.astro';
+import { EMAIL, WEBSITE_URL, HOME_NAV } from '../lib/site';
 import { getCollection } from 'astro:content';
-const works = (await getCollection('works'))
+const allWorks = await getCollection('works');
+const works = allWorks
   .filter((w) => w.data.featured !== false)
   .sort((a, b) => a.data.order - b.data.order);
 
 /* ---------- Tech Stack: worksから自動収集 + 追加ツール ---------- */
-const allWorks = await getCollection('works');
 const hiddenTech = ['D3.js'];
 const worksStacks = [...new Set(allWorks.flatMap((w) => w.data.stack))].filter((t) => !hiddenTech.includes(t));
 const extraTools = ['Astro', 'Vercel', 'Vite', 'Figma', 'Codex'];
@@ -22,12 +22,6 @@ const mid = Math.ceil(allTech.length / 2);
 const track1 = allTech.slice(0, mid);
 const track2 = allTech.slice(mid);
 
-const nav = [
-  { href: '#about', label: '/about' },
-  { href: '#works', label: '/works' },
-  { href: '#contact', label: '/contact' },
-];
-
 const books = [
   { title: 'エピクロス『教説と手紙』', url: 'https://www.amazon.co.jp/dp/4003360613' },
   { title: 'ショーペンハウアー『読書について』', url: 'https://www.amazon.co.jp/dp/4334752713' },
@@ -35,7 +29,7 @@ const books = [
   { title: 'セネカ『人生の短さについて』', url: 'https://www.amazon.co.jp/dp/4334753507' },
 ];
 ---
-<Layout title="はやしごと" canonical={`${Astro.site!.origin}/`} nav={nav} showFooterSns={true}>
+<Layout title="はやしごと" canonical={`${Astro.site!.origin}/`} nav={HOME_NAV} showFooterSns={true}>
   <Fragment slot="head">
     <link rel="preload" as="image" type="image/webp" href="/logo.webp" />
   </Fragment>
@@ -130,7 +124,7 @@ const books = [
           <DirEntry name={`${work.data.dirName}/`}>
             <Fragment slot="tags">{work.data.category && <span class="category-tag">{work.data.category}</span>}{work.data.status && <span class="status-tag">{work.data.status}</span>}</Fragment>
             <div class="dir-file"><span class="dir-pipe">│</span><span class="file-value dir-desc"><BudouXText text={work.data.description} /></span></div>
-            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</span></div>
+            <div class="dir-file"><span class="dir-pipe">│</span><span class="file-label">stack:</span><span class="file-value">{work.data.stack.map((s) => <span class="tag">{s}</span>)}</span></div>
             <div class="dir-file"><span class="dir-pipe">│</span><a href={`/works/${work.id}`} class="file-more">./README.md →</a></div>
           </DirEntry>
         ))}

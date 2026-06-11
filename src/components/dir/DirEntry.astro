@@ -7,11 +7,12 @@ interface Props {
   name: string;
   branch?: string;   // '├──'（既定） or '└──'
   class?: string;    // 追加修飾クラス（例: dir-entry--meishi）
+  reveal?: boolean;  // スクロール表示アニメ (.cli-reveal)。works 一覧など即表示したい所では false
 }
 
-const { name, branch = '├──', class: className } = Astro.props;
+const { name, branch = '├──', class: className, reveal = true } = Astro.props;
 ---
-<div class:list={['dir-entry', 'cli-reveal', className]} data-toggle>
+<div class:list={['dir-entry', { 'cli-reveal': reveal }, className]} data-toggle>
   <button type="button" class="dir-entry-toggle" aria-expanded="false">
     <span class="dir-branch">{branch}</span>
     <span class="dir-name">{name}</span>

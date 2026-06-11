@@ -3,10 +3,11 @@ import Layout from '../../layouts/Layout.astro';
 import BudouXText from '../../components/BudouXText.astro';
 import { getCollection, render } from 'astro:content';
 import { Image } from 'astro:assets';
-import CliLine from '../../components/works/CliLine.astro';
-import DirField from '../../components/works/DirField.astro';
-import WorkBackLink from '../../components/works/WorkBackLink.astro';
+import CliLine from '../../components/dir/CliLine.astro';
+import DirField from '../../components/dir/DirField.astro';
+import WorkBackLink from '../../components/dir/WorkBackLink.astro';
 import CardViewer from '../../components/CardViewer.astro';
+import { SUB_NAV } from '../../lib/site';
 
 export async function getStaticPaths() {
   const works = await getCollection('works');
@@ -18,15 +19,8 @@ export async function getStaticPaths() {
 
 const { work } = Astro.props;
 const { Content } = await render(work);
-
-const nav = [
-  { href: '/', label: '/home' },
-  { href: '/#about', label: '/about' },
-  { href: '/#works', label: '/works' },
-  { href: '/#contact', label: '/contact' },
-];
 ---
-<Layout title={`${work.data.dirName}/`} description={work.data.description} canonical={`${Astro.site!.origin}/works/${work.id}`} nav={nav}>
+<Layout title={`${work.data.dirName}/`} description={work.data.description} canonical={`${Astro.site!.origin}/works/${work.id}`} nav={SUB_NAV}>
   <section class="dir-section work-detail">
     <div class="dir-section-inner">
       <CliLine variant="heading" cmd="cat"><a href="/#works">/works</a>/{work.data.dirName}/README.md</CliLine>
@@ -38,7 +32,7 @@ const nav = [
         {work.data.category && (
           <DirField label="category:"><span class="category-tag">{work.data.category}</span></DirField>
         )}
-        <DirField label="stack:">{work.data.stack.map((s: string) => <span class="tag">{s}</span>)}</DirField>
+        <DirField label="stack:">{work.data.stack.map((s) => <span class="tag">{s}</span>)}</DirField>
 
         {work.data.url && (
           <CliLine cmd="open"><a href={work.data.url} target="_blank" rel="noopener noreferrer">{work.data.url}</a></CliLine>

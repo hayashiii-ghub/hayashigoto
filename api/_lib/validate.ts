@@ -29,9 +29,12 @@ export function isAllowedOrigin(origin: string | undefined, ctx: OriginContext):
   try {
     const requestUrl = new URL(origin);
     const siteHost = new URL(ctx.siteUrl).host;
-    if (requestUrl.host === siteHost || requestUrl.hostname === 'localhost') return true;
-    if (ctx.vercelEnv !== 'production' && ctx.vercelUrl && requestUrl.host === ctx.vercelUrl) {
-      return true;
+    if (requestUrl.host === siteHost) return true;
+    // localhost / Vercel preview は本番では許可しない（本番で Origin を localhost に
+    // 偽装した非ブラウザ経由の送信が許可リストを素通りするのを防ぐ）。
+    if (ctx.vercelEnv !== 'production') {
+      if (requestUrl.hostname === 'localhost') return true;
+      if (ctx.vercelUrl && requestUrl.host === ctx.vercelUrl) return true;
     }
     return false;
   } catch {
