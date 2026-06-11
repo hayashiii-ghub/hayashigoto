@@ -21,6 +21,7 @@
 | 日本語改行 | BudouX（ビルド時 rehype + Astro コンポーネント） | ML ベースのフレーズ区切りで不自然な途中改行を防ぎ、ランタイム JS を増やさない |
 | ブランド画像 | sharp + to-ico（`prebuild`） | `assets/brand/logo-master.png` から軽量ロゴと各種ファビコンを同じ再現性で生成 |
 | セキュリティ | vercel.json ヘッダー (CSP, HSTS, Permissions-Policy 等) | 外部依存最小限の構成で CSP/HSTS/Permissions-Policy を厳格に設定 |
+| テスト | Bun 組み込みテストランナー (`bun test`) | 依存ゼロでフォーム検証ロジック（`api/_lib/validate.ts`）を回帰ガード |
 | パッケージマネージャ / runtime | Bun | install が高速、`.ts` をネイティブ実行できるので prebuild script に runner 不要 (lock file は text 形式 `bun.lock` を採用) |
 
 ## 構成
@@ -36,21 +37,24 @@
 │   │       └── [id].astro  # 制作実績詳細（動的ルート）
 │   ├── layouts/
 │   │   └── Layout.astro    # 共通レイアウト（ヘッダー・フッター・OGP）
-│   ├── components/
-│   │   ├── Header.astro    # ヘッダーナビゲーション
-│   │   ├── Footer.astro    # フッター
-│   │   └── SnsLinks.astro  # SNSリンク（Hero・Footer共通）
+│   ├── components/         # Header / Footer / SnsLinks / CardViewer / DirEntry / DirSectionHeading 等
+│   ├── lib/
+│   │   ├── site.ts         # 連絡先・SNS・プロフィールの単一の真実（JSON-LD/各コンポーネント共有）
+│   │   └── budoux.ts       # 日本語改行ヘルパ
 │   ├── content/works/      # 制作実績データ（Markdown + Content Collections）
 │   ├── content.config.ts   # Content Collections スキーマ定義（image() ヘルパで画像も型付き）
 │   ├── scripts/
 │   │   ├── main.ts         # メインページ用 TypeScript
 │   │   └── card.ts         # 名刺ビューアー用 TypeScript
-│   └── styles/global.css   # グローバルスタイル
+│   └── styles/             # global.css は @import バーレル。セクションごとに _*.css へ分割
 ├── assets/
 │   ├── brand/              # ロゴの原本（非公開）
 │   └── meishi-source/      # 名刺画像の原本（非公開）
 ├── api/
-│   └── send.ts             # お問い合わせ送信 (Vercel Serverless Function)
+│   ├── send.ts             # お問い合わせ送信 (Vercel Serverless Function)
+│   └── _lib/
+│       ├── validate.ts     # 送信元/入力/レート制限の純粋な検証ロジック
+│       └── validate.test.ts # bun test による回帰テスト
 ├── public/                 # 静的アセット（画像・robots.txt・sitemap.xml）
 ├── astro.config.ts
 └── vercel.json             # デプロイ設定・セキュリティヘッダー
@@ -64,6 +68,7 @@ bun dev           # 開発サーバー起動
 bun run build     # 本番ビルド (prebuild で `bun scripts/optimize-brand-assets.ts` 実行)
 bun preview       # ビルド後プレビュー
 bun run check     # Astro の型・コンテンツ検証 + tsc --noEmit
+bun test          # フォーム検証ロジックのユニットテスト
 ```
 
 ## 環境変数（Vercel側で設定）

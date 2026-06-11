@@ -1,0 +1,27 @@
+/* ========================================
+   Design Tokens
+   ======================================== */
+:root {
+  --bg: #0a0a0a;
+  --text: #e8e8e8;
+  --text-dim: #999;
+  --accent: #4a6741;
+  --accent-light: #6a9a5c;
+  --border: #2a2a2a;
+  --border-accent: #3a5332;
+  --accent-hover: #7aad6e;
+  --error: #c44;
+  --bg-elev1: #111;
+  --bg-elev2: #1a1a1a;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
+  --font-jp: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  --header-h: 80px;
+  --content-h: calc(100dvh - var(--header-h));
+  --scroll-h: calc(100svh - var(--header-h));
+  --section-gap: clamp(6rem, 12dvh, 10rem);
+  /* セクション左右の共通インセット（header / hero / footer で共有） */
+  --gutter: clamp(1.5rem, 4vw, 3rem);
+  /* 角丸スケール */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}

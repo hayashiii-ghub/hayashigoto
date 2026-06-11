@@ -299,21 +299,21 @@ function initCard(): void {
 
       beginDrag(event.pointerId, event.clientX, event.clientY);
       safeSetPointerCapture(event.pointerId);
-    });
+    }, { signal });
 
     overlay.addEventListener('pointermove', (event: PointerEvent) => {
       moveDrag(event.pointerId, event.clientX, event.clientY);
-    });
+    }, { signal });
 
     overlay.addEventListener('pointerup', (event: PointerEvent) => {
       endDrag(event.pointerId);
       safeReleasePointerCapture(event.pointerId);
-    });
+    }, { signal });
 
     overlay.addEventListener('pointercancel', (event: PointerEvent) => {
       cancelDrag(event.pointerId);
       safeReleasePointerCapture(event.pointerId);
-    });
+    }, { signal });
   } else {
     overlay.addEventListener('mousedown', (event: MouseEvent) => {
       if (event.button !== 0) return;
@@ -325,7 +325,7 @@ function initCard(): void {
         window.addEventListener('mouseup', onLegacyMouseUp, { signal });
         legacyMouseListenersAttached = true;
       }
-    });
+    }, { signal });
 
     overlay.addEventListener('touchstart', (event: TouchEvent) => {
       const [touch] = event.changedTouches;
@@ -333,7 +333,7 @@ function initCard(): void {
 
       event.preventDefault();
       beginDrag(touch.identifier, touch.clientX, touch.clientY);
-    }, { passive: false });
+    }, { passive: false, signal });
 
     overlay.addEventListener('touchmove', (event: TouchEvent) => {
       if (state.pointerId !== null && typeof state.pointerId === 'number') {
@@ -343,7 +343,7 @@ function initCard(): void {
         event.preventDefault();
         moveDrag(touch.identifier, touch.clientX, touch.clientY);
       }
-    }, { passive: false });
+    }, { passive: false, signal });
 
     overlay.addEventListener('touchend', (event: TouchEvent) => {
       if (state.pointerId !== null && typeof state.pointerId === 'number') {
@@ -353,7 +353,7 @@ function initCard(): void {
         event.preventDefault();
         endDrag(touch.identifier);
       }
-    }, { passive: false });
+    }, { passive: false, signal });
 
     overlay.addEventListener('touchcancel', (event: TouchEvent) => {
       if (state.pointerId !== null && typeof state.pointerId === 'number') {
@@ -362,7 +362,7 @@ function initCard(): void {
 
         cancelDrag(touch.identifier);
       }
-    }, { passive: false });
+    }, { passive: false, signal });
   }
 
   window.addEventListener('blur', handleInterruptedInteraction, { signal });
@@ -394,7 +394,7 @@ function initCard(): void {
       event.stopPropagation();
       resetCard();
     }
-  });
+  }, { signal });
 
   render();
   requestAnimationFrame(() => {

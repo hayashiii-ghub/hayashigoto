@@ -1,6 +1,17 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
 import { createHash } from 'node:crypto';
+import { EMAIL } from '../src/lib/site';
+import {
+  type RateLimitEntry,
+  cleanupRateLimitStore,
+  escapeHtml,
+  isAllowedOrigin,
+  parseContactBody,
+  pickHeader,
+  rateLimitCheck,
+  validateContact,
+} from './_lib/validate';
 
 const SITE_URL = process.env.SITE_URL || 'https://shigoto.dev';
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -10,21 +21,8 @@ const RATE_LIMIT_CLEANUP_INTERVAL = 60 * 1000;
 // State resets on cold starts and is not shared across regions or instances.
 // The honeypot field and origin/method checks are the primary spam barrier.
 
-interface RateLimitEntry {
-  count: number;
-  startedAt: number;
-}
-
 const rateLimitStore = new Map<string, RateLimitEntry>();
 let lastCleanup: number = Date.now();
-
-type HeaderValue = string | string[] | undefined;
-
-function pickHeader(value: HeaderValue): string | undefined {
-  const v = Array.isArray(value) ? value[0] : value;
-  if (typeof v !== 'string' || !v) return undefined;
-  return v.split(',')[0].trim();
-}
 
 function getClientIp(req: VercelRequest): string {
   return (
@@ -36,54 +34,16 @@ function getClientIp(req: VercelRequest): string {
   );
 }
 
-function escapeHtml(s: string): string {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function cleanupRateLimitStore(): void {
-  const now = Date.now();
-  if (now - lastCleanup < RATE_LIMIT_CLEANUP_INTERVAL) return;
-  lastCleanup = now;
-  for (const [ip, entry] of rateLimitStore) {
-    if (now - entry.startedAt > RATE_LIMIT_WINDOW_MS) {
-      rateLimitStore.delete(ip);
-    }
-  }
-}
-
 function isRateLimited(ip: string): boolean {
-  cleanupRateLimitStore();
   const now = Date.now();
-  const entry = rateLimitStore.get(ip);
-
-  if (!entry || now - entry.startedAt > RATE_LIMIT_WINDOW_MS) {
-    rateLimitStore.set(ip, { count: 1, startedAt: now });
-    return false;
+  if (now - lastCleanup >= RATE_LIMIT_CLEANUP_INTERVAL) {
+    lastCleanup = now;
+    cleanupRateLimitStore(rateLimitStore, now, RATE_LIMIT_WINDOW_MS);
   }
-
-  entry.count += 1;
-  return entry.count > RATE_LIMIT_MAX_REQUESTS;
-}
-
-function sanitizeLine(value: unknown): string {
-  return String(value ?? '').replace(/[\r\n]+/g, ' ').trim();
-}
-
-function isAllowedOrigin(origin: string | undefined): boolean {
-  if (!origin) return false;
-
-  try {
-    const requestUrl = new URL(origin);
-    const siteHost = new URL(SITE_URL).host;
-    if (requestUrl.host === siteHost || requestUrl.hostname === 'localhost') return true;
-    if (process.env.VERCEL_ENV !== 'production') {
-      const vercelUrl = process.env.VERCEL_URL;
-      if (vercelUrl && requestUrl.host === vercelUrl) return true;
-    }
-    return false;
-  } catch {
-    return false;
-  }
+  return rateLimitCheck(rateLimitStore, ip, now, {
+    windowMs: RATE_LIMIT_WINDOW_MS,
+    max: RATE_LIMIT_MAX_REQUESTS,
+  });
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<VercelResponse | void> {
@@ -93,7 +53,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
 
   const origin = pickHeader(req.headers.origin);
-  if (!isAllowedOrigin(origin)) {
+  if (!isAllowedOrigin(origin, {
+    siteUrl: SITE_URL,
+    vercelEnv: process.env.VERCEL_ENV,
+    vercelUrl: process.env.VERCEL_URL,
+  })) {
     return res.status(403).json({ error: '許可されていない送信元です' });
   }
 
@@ -116,44 +80,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const body: Record<string, unknown> =
     req.body && typeof req.body === 'object' ? (req.body as Record<string, unknown>) : {};
-  const category = sanitizeLine(body.category);
-  const name = sanitizeLine(body.name);
-  const email = sanitizeLine(body.email).toLowerCase();
-  const message = String(body.message ?? '').trim();
-  const website = sanitizeLine(body.website);
+  const input = parseContactBody(body);
+  const result = validateContact(input);
 
-  // Honeypot check
-  if (website) {
+  // Honeypot 反応時は送信せず success を装う
+  if (result.ok === 'honeypot') {
     return res.status(200).json({ success: true });
   }
-
-  const validCategories = ['work', 'other'];
-  if (!validCategories.includes(category)) {
-    return res.status(400).json({ error: 'カテゴリを選択してください' });
+  if (result.ok === false) {
+    return res.status(result.status).json({ error: result.error });
   }
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: '必須項目が入力されていません' });
-  }
-
-  if (String(name).length > 100) {
-    return res.status(400).json({ error: '名前は100文字以内で入力してください' });
-  }
-  if (String(message).length > 5000) {
-    return res.status(400).json({ error: 'メッセージは5000文字以内で入力してください' });
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: 'メールアドレスの形式が正しくありません' });
-  }
+  const { category, name, email, message } = result.data;
 
   try {
     const resend = new Resend(apiKey);
     const textBody = `カテゴリ: ${category === 'work' ? 'お仕事の相談' : 'その他'}\n名前: ${name}\nメール: ${email}\n\n${message}`;
     await resend.emails.send({
       from: 'はやしごと <noreply@send.shigoto.dev>',
-      to: 'hay@shigoto.dev',
+      to: EMAIL,
       replyTo: email,
       subject: category === 'work' ? `【お仕事の相談】${name} さんより` : `【お問い合わせ】${name} さんより`,
       text: textBody,

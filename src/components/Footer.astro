@@ -1,11 +1,13 @@
 ---
 import SnsLinks from './SnsLinks.astro';
+import { EMAIL, WEBSITE_URL } from '../lib/site';
 
 interface Props {
   showSns?: boolean;
 }
 
 const { showSns = false } = Astro.props;
+const websiteLabel = WEBSITE_URL.replace(/^https?:\/\//, '');
 ---
 <footer class="footer">
   <div class="footer-inner">
@@ -17,9 +19,9 @@ const { showSns = false } = Astro.props;
     <p class="footer-copy">
       <span class="footer-copy-item">&copy; はやしごと</span>
       <span class="footer-copy-sep" aria-hidden="true">&mdash;</span>
-      <span class="footer-copy-item"><a href="mailto:hay@shigoto.dev" class="footer-link">hay@shigoto.dev</a></span>
+      <span class="footer-copy-item"><a href={`mailto:${EMAIL}`} class="footer-link">{EMAIL}</a></span>
       <span class="footer-copy-sep" aria-hidden="true">&mdash;</span>
-      <span class="footer-copy-item"><a href="https://shigoto.website" target="_blank" rel="noopener noreferrer" class="footer-link">shigoto.website</a></span>
+      <span class="footer-copy-item"><a href={WEBSITE_URL} target="_blank" rel="noopener noreferrer" class="footer-link">{websiteLabel}</a></span>
     </p>
   </div>
 </footer>

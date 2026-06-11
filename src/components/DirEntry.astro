@@ -1,0 +1,22 @@
+---
+// クリックで開閉するディレクトリツリーのエントリ。
+// data-toggle / .dir-entry-toggle は main.ts の initDirToggle / initScrollReveal が拾う。
+// デフォルトスロット = 展開部 (.dir-expand) の中身。
+// "tags" スロット = ボタン直後に置く category/status タグ（間に空白を入れない）。
+interface Props {
+  name: string;
+  branch?: string;   // '├──'（既定） or '└──'
+  class?: string;    // 追加修飾クラス（例: dir-entry--meishi）
+}
+
+const { name, branch = '├──', class: className } = Astro.props;
+---
+<div class:list={['dir-entry', 'cli-reveal', className]} data-toggle>
+  <button type="button" class="dir-entry-toggle" aria-expanded="false">
+    <span class="dir-branch">{branch}</span>
+    <span class="dir-name">{name}</span>
+  </button><slot name="tags" />
+  <div class="dir-expand">
+    <slot />
+  </div>
+</div>

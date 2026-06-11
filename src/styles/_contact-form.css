@@ -72,7 +72,7 @@
   font-weight: 500;
   cursor: pointer;
   padding: 0.5rem 1.25rem;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   transition: color 0.3s, border-color 0.3s, background 0.3s;
 }
 
@@ -97,6 +97,18 @@
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .contact-form textarea {
+    margin-left: 0;
+  }
 }
 
 /* ---- Reduced Motion ---- */

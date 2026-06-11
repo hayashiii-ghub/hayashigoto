@@ -1,0 +1,318 @@
+/* ========================================
+   Directory Tree / CLI Section
+   ======================================== */
+.dir-section {
+  padding: var(--section-gap) clamp(1.5rem, 4vw, 4rem);
+  display: flex;
+  justify-content: center;
+}
+
+.dir-section-inner {
+  max-width: 800px;
+  width: 100%;
+}
+
+/* ---- CLI Command Line (now h2) ---- */
+.cli-line {
+  font-family: var(--font-mono);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 400;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.cli-toggle {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s;
+}
+
+.cli-toggle:hover .cli-path {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--border-accent);
+}
+
+.cli-toggle:focus-visible {
+  outline: 1px solid var(--accent-light);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.cli-prompt {
+  color: var(--accent-light);
+}
+
+.cli-cmd {
+  color: var(--text);
+}
+
+.cli-path {
+  color: var(--accent-light);
+}
+
+.cli-path a {
+  color: var(--accent-light);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.cli-path a:hover {
+  border-bottom-color: var(--accent-light);
+}
+
+/* ---- Directory Tree ---- */
+.dir-tree {
+  padding-left: 0.5rem;
+}
+
+.dir-entry {
+  margin-bottom: 1rem;
+}
+
+.dir-branch {
+  color: var(--border-accent);
+  user-select: none;
+}
+
+.dir-pipe {
+  flex-shrink: 0;
+  color: var(--border-accent);
+  user-select: none;
+  margin-right: 0.5ch;
+}
+
+.dir-name {
+  font-family: var(--font-mono);
+  color: var(--accent-light);
+  font-weight: 500;
+  cursor: default;
+}
+
+.status-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  color: var(--bg);
+  background: var(--accent-light);
+  padding: 0.1em 0.5em;
+  border-radius: var(--radius-sm);
+  margin-left: 0.75ch;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.category-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.1em 0.5em;
+  border-radius: var(--radius-sm);
+  margin-left: 0;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.dir-entry > .category-tag {
+  margin-left: 1.5ch;
+}
+
+/* Toggleable entries — button-based */
+.dir-entry-toggle {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  display: inline;
+  transition: color 0.2s;
+}
+
+.dir-entry-toggle:hover .dir-name {
+  color: var(--accent-hover);
+}
+
+.dir-entry-toggle:focus-visible {
+  outline: 1px solid var(--accent-light);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.dir-entry[data-toggle] .dir-entry-toggle .dir-name::before {
+  content: "[+] ";
+  color: var(--text-dim);
+  font-weight: 300;
+  font-size: 0.8em;
+}
+
+.dir-entry[data-toggle].is-open .dir-entry-toggle .dir-name::before {
+  content: "[-] ";
+  color: var(--accent-light);
+}
+
+/* ---- Directory expand (sub-files) ---- */
+.dir-expand {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+  padding-left: 2.5ch;
+}
+
+.dir-entry.is-open > .dir-expand {
+  max-height: 600px;
+  opacity: 1;
+  margin-top: 0.5rem;
+}
+
+/* philosophy.yml: 展開先頭の余白 */
+.dir-entry--philosophy.is-open > .dir-expand {
+  margin-top: 1rem;
+}
+
+.dir-file {
+  font-family: var(--font-jp);
+  display: flex;
+  align-items: baseline;
+  font-size: clamp(0.78rem, 1.1vw, 0.88rem);
+  color: var(--text-dim);
+  line-height: 2;
+  padding: 0.35rem 0;
+}
+
+.file-label {
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  display: inline-block;
+  width: 9ch;
+  text-align: right;
+  color: var(--text-dim);
+  opacity: 0.6;
+  margin-right: 0.75ch;
+}
+
+.file-value {
+  flex: 1;
+  min-width: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.budoux {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.file-value a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-accent);
+  transition: color 0.2s, text-decoration-color 0.3s;
+}
+
+.file-value a:hover {
+  color: var(--accent-hover);
+  text-decoration-color: var(--accent-light);
+}
+
+/* More link */
+.file-more {
+  font-family: var(--font-mono);
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-accent);
+  font-size: clamp(0.78rem, 1.1vw, 0.88rem);
+  transition: color 0.3s, text-decoration-color 0.3s;
+  margin-left: 0.75ch;
+}
+
+.file-more:hover {
+  color: var(--text);
+  text-decoration-color: var(--accent-light);
+}
+
+/* Works description text */
+.dir-desc {
+  color: var(--text);
+  opacity: 0.8;
+  line-height: 2;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  display: inline-block;
+  font-size: 0.7rem;
+  color: var(--accent-light);
+  border: 1px solid var(--border-accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin: 0.15rem 0.25rem 0.15rem 0;
+}
+
+/* ---- Profile Logo inside tree ---- */
+.profile-logo {
+  width: clamp(80px, 12vw, 120px);
+  height: auto;
+  opacity: 0.75;
+  margin: 0.5rem 0 0.25rem;
+}
+
+/* ---- Scroll Reveal Animation ---- */
+.cli-reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.cli-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .dir-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .dir-tree {
+    padding-left: 0;
+  }
+
+  .dir-expand {
+    padding-left: 1.5ch;
+  }
+
+  .dir-pipe {
+    display: none;
+  }
+
+  .dir-file {
+    font-size: 0.78rem;
+    line-height: 1.7;
+    padding: 0.2rem 0;
+  }
+
+  .dir-entry {
+    margin-bottom: 1.25rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+}
