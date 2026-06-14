@@ -8,7 +8,6 @@
   padding: var(--gutter);
   padding-top: 5rem;
   padding-bottom: 5rem;
-  position: relative;
 }
 
 .hero-inner {
@@ -116,33 +115,8 @@
   mask-position: center;
 }
 
-/* Scroll hint */
-.scroll-hint {
-  font-family: var(--font-mono);
-  position: absolute;
-  bottom: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  opacity: 0.5;
-  animation: scroll-fade 2.5s ease-in-out infinite;
-}
-
-@keyframes scroll-fade {
-  0%, 100% { opacity: 0.3; transform: translateY(0); }
-  50% { opacity: 0.6; transform: translateY(4px); }
-}
-
 @media (max-width: 768px) {
   .hero-logo-fallback {
     font-size: 2.8rem;
-  }
-
-  .scroll-hint {
-    bottom: 1.5rem;
   }
 }
