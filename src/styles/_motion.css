@@ -1,10 +1,6 @@
 /* ---- Reduced Motion ----
    セクション横断のアニメーション抑制。各セクションを読み込んだ後に適用する。 */
 @media (prefers-reduced-motion: reduce) {
-  .scroll-hint {
-    animation: none;
-  }
-
   .cli-reveal {
     opacity: 1;
     transform: none;
